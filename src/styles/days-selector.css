@@ -1,0 +1,72 @@
+.days-selector {
+  flex:0 0 auto;
+  display:flex;
+  flex-direction:row;
+
+  align-items:center;
+  gap:10px;
+
+  overflow-x:auto;
+  padding:10px 12px;
+
+  /* ❌ МАХНИ ТОВА */
+  /* position: sticky; */
+  /* top:0; */
+
+  z-index:20;
+  background:white;
+
+  -webkit-overflow-scrolling:touch;
+}
+
+.day-item{
+
+display:flex;
+flex-direction:column;
+
+align-items:center;
+justify-content:center;
+
+min-width:55px;
+
+padding:8px 10px;
+
+border-radius:12px;
+
+background:#f2f4f8;
+
+cursor:pointer;
+
+}
+
+.day-name{
+font-size:11px;
+color:#777;
+}
+
+
+
+.day-number{
+font-size:16px;
+font-weight:700;
+}
+
+.day-item.today{
+color:#ff3b30;
+}
+
+.day-item.selected .day-name{
+
+color:white;
+
+}
+.day-item.selected{
+
+background:linear-gradient(135deg,#4f63ff,#ed1717);
+color:white;
+
+}
+
+.days-selector::-webkit-scrollbar{
+display:none;
+}

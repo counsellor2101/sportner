@@ -1,0 +1,457 @@
+.game-card {
+
+  position: relative;
+
+  background: #f9f9f9;
+  border: 1px solid #f0eded;
+  border-left: 6px solid var(--sport-color) !important; /* 🔥 */
+
+  border-radius: 12px;
+
+  padding: 6px 6px 6px 12px;
+
+  margin: 3px 0;
+
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+
+  font-size: 12px;
+
+  display: flex;
+  flex-direction: column;
+
+  min-height: 70px;
+
+  min-width: 240px;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.game-card.my-games {
+  width: 100%;
+  max-width: 600px;
+}
+
+.game-card.finished-game{
+opacity:0.50;
+background:#ffeaea;
+}
+
+/* GROUP GAMES */
+
+.game-card.group-game{
+background:#c9d4f4;
+}
+
+
+/* JOINED GAME */
+
+.game-card.joined-game{
+background:#88f6aa;
+transform:scale(1.01);
+}
+
+
+/* FULL GAME */
+
+.game-card.full-game{
+opacity:0.50;
+background:#ffeaea;
+}
+
+
+/* SPORT BAR */
+
+.sport-bar {
+  position: absolute;
+
+  left: 6px;     /* 🔥 не е 0 */
+  top: 6px;      /* 🔥 spacing */
+  bottom: 6px;
+
+  width: 6px;
+
+  border-radius: 6px; /* 🔥 меко, не 12px */
+}
+
+
+/* ROW 1 */
+
+.game-row1{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:2px;
+gap: 8px;
+}
+
+.sport-info{
+display:flex;
+align-items:center;
+gap:6px;
+font-weight:600;
+}
+
+.sport-icon{
+width:22px;
+height:22px;
+}
+
+.sport-name{
+font-size:14px;
+}
+
+
+/* LEVEL */
+
+.level-badge{
+display:flex;
+align-items:center;
+gap:5px;
+padding:2px 6px;
+background:#f2f2f2;
+border-radius:6px;
+font-size:11px;
+}
+
+.level-dot{
+width:8px;
+height:8px;
+border-radius:50%;
+}
+
+
+/* DIVIDER */
+
+.game-divider{
+height:1px;
+background:#444;
+opacity: 0.3;
+margin:2px 0;
+}
+
+
+/* ROWS */
+
+.game-row{
+display:flex;
+align-items:center;
+gap:6px;
+margin-top:1px;
+font-size:12px;
+}
+
+.row-icon{
+width:14px;
+height:14px;
+opacity:0.75;
+}
+
+
+/* VENUE */
+
+.venue-text{
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.venue-divider{
+margin:0 6px;
+color:#bbb;
+}
+
+
+/* BUTTON */
+
+.game-row-button{
+display:flex;
+
+margin-top:2px;
+}
+
+
+/* BUTTON STYLE */
+
+.game-card-btn{
+
+width:100%;
+
+padding:3px 0;
+
+border:none;
+
+border-radius:8px;
+
+font-size:12px;
+
+font-weight:600;
+
+color:white;
+
+cursor:pointer;
+
+background:linear-gradient(
+135deg,
+#4f63ff,
+#2d377b
+);
+
+box-shadow:0 2px 6px rgba(0,0,0,0.15);
+
+}
+
+.game-card-btn.profile-required{
+
+background:linear-gradient(
+135deg,
+#ff4f4f,
+#7b2d2d
+);
+
+}
+
+
+/* MINI CARDS */
+
+.mini-game-card{
+
+display:flex;
+align-items:center;
+gap:6px;
+
+background:#f4f6fb;
+
+padding:4px 8px;
+
+border-radius:6px;
+
+font-size:12px;
+
+}
+
+.mini-level{
+
+width:6px;
+height:6px;
+
+background:#2ecc71;
+
+border-radius:50%;
+
+}
+
+.mini-players{
+font-weight:600;
+}
+
+.mini-time{
+color:#666;
+font-size:11px;
+}
+
+.level-badge{
+display:flex;
+align-items:center;
+gap:5px;
+padding:1px 4px;
+border-radius:7px;
+font-size:11px;
+border:1px solid transparent;
+}
+
+.level-dot{
+width:8px;
+height:8px;
+border-radius:50%;
+}
+
+/* BEGINNER */
+
+.level-beginner{
+background:#e9fbe9;
+border:0px solid #3ae766;
+color:#1f7a33;
+}
+
+.level-beginner .level-dot{
+background:#3ae766;
+}
+
+/* INTERMEDIATE */
+
+.level-intermediate{
+background:#e8f1ff;
+border:0px solid #2D7DF6;
+color:#1c4fb8;
+}
+
+.level-intermediate .level-dot{
+background:#2D7DF6;
+}
+
+/* ADVANCED */
+
+.level-advanced{
+background:#fcddb4;
+border:0px solid #fff000;
+color:#c58600;
+}
+
+.level-advanced .level-dot{
+background:#c58600;
+}
+
+/* PRO */
+
+.level-pro{
+background:#ffecec;
+border:0px solid #FF3B30;
+color:#c01818;
+}
+
+.level-pro .level-dot{
+background:#FF3B30;
+}
+
+.level-text{
+text-transform:capitalize;
+font-weight:600;
+}
+
+.cancelled-game {
+  opacity: 0.5;
+  filter: grayscale(0.6);
+}
+
+.game-card-btn.cancelled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+.game-card-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.game-card-actions .game-card-btn {
+  flex: 1;
+}
+
+/* 🔥 OWNER ACTIONS FULL WIDTH */
+/* 🔥 wrapper */
+.owner-actions{
+  display:flex;
+  width:100%;
+  gap:6px; /* малък spacing */
+}
+
+/* 🔥 бутоните да се разпъват */
+.owner-actions .game-card-btn{
+  flex:1;
+}
+
+/* 🔥 CANCEL gradient */
+.owner-actions .cancel{
+  background:linear-gradient(
+    135deg,
+    #ff4f4f,
+    #7b2d2d
+  );
+}
+
+/* 🔥 LEAVE gradient (по-светъл вариант) */
+.owner-actions .leave{
+  background:linear-gradient(
+    135deg,
+    #ff6b6b,
+    #a33a3a
+  );
+}
+
+.game-card.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.game-card.conflict {
+  opacity: 0.5;
+}
+
+/* court badge */
+.court-badge.reserved {
+  background: #e8f5e9; /* light green */
+  color: #2e7d32;
+}
+
+
+.court-badge.not-reserved {
+  background: #ffebee; /* light red */
+  color: #c62828;
+}
+
+.gc-group-chip {
+  display: flex;
+  align-items: center;
+
+  padding: 2px 7px;
+  border-radius: 9px;
+
+  font-size: 12px;
+  font-weight: 650;
+  font-style: italic;
+line-height: 1.2;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  
+
+  background: linear-gradient(
+    135deg,
+    rgba(54,178,80,0.9),
+    rgba(45,55,123,0.9)
+  );
+
+  color: #fff;
+}
+
+.venue-divider {
+  margin: 0 6px;
+  color: #555; /* тъмно сиво */
+  font-weight: 500;
+}
+
+.gc-tournament-chip {
+  display: flex;
+  align-items: center;
+
+  padding: 2px 7px;
+  border-radius: 9px;
+
+  font-size: 12px;
+  font-weight: 650;
+  font-style: italic;
+  line-height: 1.2;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.95),
+    rgba(255, 170, 0, 0.95),
+    rgba(200, 150, 0, 0.95)
+  );
+
+  color: #3b2f00;
+}
+
+.tournament-game {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.18),
+    rgba(255, 170, 0, 0.12)
+  );
+}

@@ -1,0 +1,58 @@
+/* =========================
+   MY GAMES (clean version)
+   ========================= */
+
+/* Day wrapper */
+.my-day {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+/* Day title */
+.my-day-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #666;
+  margin: 6px 0;
+}
+
+/* Games list inside day */
+.my-day-games {
+  width: 100%;              /* 🔥 КЛЮЧОВО */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Optional future slot (ads etc.) */
+.my-day-slot {
+  width: 100%;
+}
+
+/* =========================
+   SAFETY FIXES (important)
+   ========================= */
+
+/* Ensure timeline doesn't shrink content */
+.timeline-inner {
+  width: 100%;
+}
+
+/* Ensure cards behave normally inside MyGames */
+.game-card.my-games {
+  width: 100%;              /* 🔥 прави ги full width */
+}
+
+/* =========================
+   REMOVE OLD STRUCTURE
+   (остави това изтрито)
+   ========================= */
+
+/*
+.date-slot {}
+.date-label {}
+.date-line {}
+.date-content {}
+.my-games {}
+.my-games-list {}
+*/

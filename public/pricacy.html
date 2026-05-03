@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sportner Privacy Policy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 900px;
+      margin: auto;
+      line-height: 1.6;
+      color: #222;
+    }
+    .lang-switch {
+      text-align: right;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 6px 12px;
+      margin-left: 5px;
+      cursor: pointer;
+    }
+    .section {
+      display: none;
+    }
+    .active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<div class="lang-switch">
+  <button onclick="setLang('en')">EN</button>
+  <button onclick="setLang('bg')">BG</button>
+</div>
+
+<div id="en" class="section active">
+  <h1>Privacy Policy</h1>
+  <p><strong>Last updated:</strong> April 2026</p>
+
+  <p>Sportner ("we", "our", or "us") operates the Sportner mobile and web application.</p>
+
+  <h2>Information We Collect</h2>
+  <ul>
+    <li>Account information (email, username)</li>
+    <li>Profile data (sports preferences, level, city)</li>
+    <li>Game activity (created and joined games)</li>
+    <li>Device information (used for notifications)</li>
+  </ul>
+
+  <h2>How We Use Information</h2>
+  <ul>
+    <li>To provide and improve the app</li>
+    <li>To match users with relevant games</li>
+    <li>To send notifications</li>
+    <li>To maintain security</li>
+  </ul>
+
+  <h2>Data Sharing</h2>
+  <p>We do not sell your personal data.</p>
+
+  <h2>Your Rights</h2>
+  <ul>
+    <li>You can update your profile information</li>
+    <li>You can request account deletion</li>
+  </ul>
+
+  <h2>Contact</h2>
+  <p>Email: support@sportner.online</p>
+</div>
+
+<div id="bg" class="section">
+  <h1>Политика за поверителност</h1>
+  <p><strong>Последна актуализация:</strong> Април 2026</p>
+
+  <p>Sportner предоставя мобилно и уеб приложение за организиране на спортни игри.</p>
+
+  <h2>Каква информация събираме</h2>
+  <ul>
+    <li>Имейл и потребителско име</li>
+    <li>Профилни данни (спорт, ниво, град)</li>
+    <li>Активност в игрите</li>
+    <li>Данни за устройството (за известия)</li>
+  </ul>
+
+  <h2>Как използваме информацията</h2>
+  <ul>
+    <li>За работа на приложението</li>
+    <li>За намиране на игри</li>
+    <li>За изпращане на известия</li>
+    <li>За сигурност</li>
+  </ul>
+
+  <h2>Споделяне на данни</h2>
+  <p>Ние не продаваме лични данни.</p>
+
+  <h2>Вашите права</h2>
+  <ul>
+    <li>Можете да редактирате профила си</li>
+    <li>Можете да поискате изтриване</li>
+  </ul>
+
+  <h2>Контакт</h2>
+  <p>Имейл: support@sportner.online</p>
+</div>
+
+<script>
+function setLang(lang) {
+  document.getElementById('en').classList.remove('active');
+  document.getElementById('bg').classList.remove('active');
+  document.getElementById(lang).classList.add('active');
+}
+</script>
+
+</body>
+</html>

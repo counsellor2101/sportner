@@ -1,0 +1,45 @@
+.venue-name{
+  font-size:17px;
+  font-weight:700;
+  margin-bottom:4px;
+}
+
+.venue-city{
+  font-size:15px;
+font-weight:600;
+  color:#777;
+  margin-bottom:6px;
+  display:flex;
+  align-items:center;
+  gap:6px; /* 🔥 разстояние между иконата и текста */
+}
+
+.cgm-chip.readonly{
+  cursor:default;
+  pointer-events:none;
+}
+
+.venue-header{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-bottom:8px;
+}
+
+
+
+.venue-separator{
+  font-size:14px;
+  color:#999;
+}
+
+.venue-sports .cgm-row-icon{
+  width:20px;
+  height:20px;
+}
+
+.venue-sports .cgm-row-icon img{
+  width:20px;
+  height:20px;
+}
+

@@ -1,0 +1,319 @@
+.timeline{
+width:100%;
+padding:20px 10px 80px 10px;
+position:relative;
+
+flex:1;
+overflow-y:auto;
+-webkit-overflow-scrolling:touch;
+
+background:rgba(255,255,255,0.90);
+
+
+}
+
+/* SLOT */
+
+.timeline-slot{
+display:flex;
+align-items:flex-start;
+height:130px;
+position:relative;
+
+scroll-margin-top:120px;
+}
+
+.timeline-slot.empty{
+height:40px;
+}
+
+/* LEFT TIME COLUMN */
+
+.timeline-time{
+
+width:50px;
+cursor:pointer;
+position:relative;
+
+display:flex;
+align-items:flex-start;
+
+font-weight:700;
+font-size:13px;
+color:#555;
+
+}
+
+/* TIME TEXT */
+
+.time-label{
+margin-right:6px;
+font-size:13px;
+padding:2px 4px;
+border: 1px solid #e3e4e5;
+  border-radius:4px;
+background: rgba(227, 228, 229, 0.3);
+}
+
+.time-label.hour{
+font-weight:700;
+color:#444;
+}
+
+.time-label.half{
+font-weight:400;
+color:#969799;
+}
+
+/* TIME LINES */
+
+.time-line{
+position:absolute;
+left:50px;
+right:0;
+top:0;
+height:1px;
+}
+
+.hour-line{
+background:#d9dce2;
+}
+
+.half-line{
+background:#e2e5eb;
+}
+
+/* CONTENT AREA */
+
+.timeline-content{
+flex:1;
+min-width:0;
+padding-left:4px;
+overflow:visible;
+}
+
+.timeline-slot.expanded{
+height:auto;
+}
+
+.timeline-slot.expanded .slot-games-row{
+flex-direction:column;
+overflow:visible;
+align-items:flex-start;
+}
+
+/* ROW WHEN 2 GAMES */
+
+
+
+/* MINI PREVIEW */
+
+.mini-preview{
+
+display:flex;
+align-items:center;
+gap:6px;
+
+padding:6px 0;
+
+}
+
+.mini-more{
+
+font-size:12px;
+font-weight:700;
+
+color:#ff5a5a;
+
+}
+
+/* CURRENT TIME LINE */
+
+.current-time-line{
+
+position:absolute;
+
+left:60px;
+right:0;
+
+height:2px;
+
+background:#ff3b30;
+
+z-index:1;
+
+}
+
+.current-time-dot{
+
+position:absolute;
+
+left:-6px;
+top:-4px;
+
+width:10px;
+height:10px;
+
+background:#ff3b30;
+
+border-radius:50%;
+
+}
+
+
+.more-games{
+
+flex:0 0 auto;
+padding:0 6px;
+display:flex;
+align-items:center;
+justify-content:center;
+
+min-width:30px;
+height: 60px;       /* 🔥 малко по-нисък от картата */
+
+  margin: auto 0;     /* 🔥 ВЕРТИКАЛНО ЦЕНТРИРАНЕ */         /* 🔥 ключовото */
+
+border-radius: 12px;
+border: 1px solid #f0eded;
+font-size:12px;
+font-weight:700;
+ background: linear-gradient(
+    135deg,
+    rgba(79,99,255,0.9),
+    rgba(45,55,123,0.9)
+  );
+
+  color: #fff;
+box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+cursor:pointer;
+
+}
+
+.collapse-games{
+
+display: inline-flex;        /* 🔥 вместо block */
+  align-items: center;
+  justify-content: center;
+
+padding:2px 6px;
+border-radius: 12px;
+border: 1px solid #f0eded;
+font-size:12px;
+font-weight:700;
+ background: linear-gradient(
+    135deg,
+    rgba(79,99,255,0.9),
+    rgba(45,55,123,0.9)
+  );
+
+  color: #fff;
+box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+cursor:pointer;
+
+margin:4px;
+
+}
+
+.timeline-slot.expanded .slot-games-row{
+flex-direction:column;
+overflow-x:visible;
+}
+
+.timeline-slot.expanded{
+height:auto;
+}
+
+.slot-games-row{
+display:flex;
+gap:8px;
+
+overflow-x:auto;
+overflow-y:hidden;
+
+scrollbar-width:none;
+-webkit-overflow-scrolling:touch;
+}
+
+.slot-games-row::-webkit-scrollbar{
+display:none;
+}
+
+.timeline-slot.selected {
+  background: rgba(79, 99, 255, 0.15);
+}
+
+.timeline-slot.selected-start,
+.timeline-slot.selected-end {
+  background: rgba(79, 99, 255, 0.35);
+}
+
+.timeline-slot.has-alert {
+  position: relative; /* 🔥 важно */
+}
+
+.timeline-slot.has-alert::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: rgba(100, 200, 120, 0.1);
+
+  pointer-events: none;
+}
+
+.alert-inline {
+  font-size: 13px;
+  font-weight: 600;
+
+  padding: 6px 8px;
+
+  color: #7a1a1a;
+
+  white-space: nowrap;
+}
+
+.alert-inline{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+
+.alert-text{
+  flex:1;
+}
+
+.alert-delete{
+  cursor:pointer;
+  font-size:14px;
+  opacity:0.6;
+  padding:2px 6px;
+  border-radius:6px;
+}
+
+.alert-delete:hover{
+  opacity:1;
+  background:rgba(0,0,0,0.05);
+}
+
+.timeline-slot.past {
+  opacity: 1; /* връщаме нормално */
+}
+
+.timeline-slot.past .time-label {
+  opacity: 0.4;
+}
+
+.availability-alert-inline{
+  position: relative;
+
+transform: translateY(-6px);
+}
+
+.availability-alert-delete{
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  z-index: 5;
+}

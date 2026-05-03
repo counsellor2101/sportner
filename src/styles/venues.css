@@ -1,0 +1,23 @@
+.venues-page{
+  display:flex;
+  flex-direction:column;
+}
+
+.venues-title{
+  font-size:16px;
+  font-weight:600;
+  padding:10px 12px 0 12px;
+}
+
+.venues-loading{
+  padding:12px;
+  font-size:13px;
+  color:#777;
+}
+
+.venues-empty{
+  padding:12px;
+  font-size:13px;
+  color:#777;
+}
+

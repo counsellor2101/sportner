@@ -1,0 +1,135 @@
+1. ❗ Global control (context)
+
+Ти вече го дефинира — това е next step:
+
+👉 CreateGameContext
+👉 махаме нуждата modal-а да се mount-ва локално
+
+2. ❗ Portal (много важно)
+
+В момента модалът е вътре в app DOM → това ще ти създаде проблеми:
+
+z-index
+iOS overlay
+scroll bleed
+
+👉 трябва да мине през createPortal
+
+3. ❗ Form state не е стабилен
+
+В момента:
+
+const [form, setForm] = useState(initialData)
+
+⚠️ Това е проблем:
+
+може да е undefined
+няма defaults
+няма контрол върху shape-а
+
+👉 трябва да имаме стабилен initial form
+
+4. ❗ Нямаш level изобщо
+
+Ти сам го каза:
+
+level не се хваща от филтрите
+
+👉 в момента:
+
+няма UI
+няма state
+няма binding
+5. ❗ Нямаш game_type
+
+Това е първото нещо, което искаш:
+
+public
+group
+tournament
+
+👉 в момента липсва напълно
+
+6. ❗ Нямаш max_players
+
+Сега е hardcoded implicit
+👉 трябва да стане editable
+
+7. ❗ Нямаш note / court_reserved
+
+Също липсват напълно
+
+8. ❗ Нямаш submit логика
+
+Няма:
+
+validation
+POST /games
+loading state
+error handling
+9. ❗ texts.js не се ползва
+
+В момента имаш:
+
+Create Game
+City
+Sport
+Venue
+
+👉 това трябва да стане:
+
+t.create_game
+t.city
+t.sport
+t.venue
+10. ❗ Auto-select е semi-correct
+
+Имаш:
+
+if(!form?.sport_id && sports.length){
+
+👉 но:
+
+няма "touched" логика
+ще override-ва user избори при някои случаи
+
+
+
+
+🧠 Реалният план (production)
+
+Ще го направим в този ред:
+
+STEP 1 (без риск)
+
+👉 стабилизираме form state
+
+default структура
+merge с initialData
+връзка с filters
+STEP 2
+
+👉 добавяме липсващите полета:
+
+game_type
+level
+max_players
+note
+court_reserved
+STEP 3
+
+👉 подобряваме selection logic:
+
+auto-select само когато трябва
+reset logic стабилен
+STEP 4
+
+👉 UI cleanup + texts.js
+
+STEP 5
+
+👉 submit (POST /games)
+
+STEP 6
+
+👉 context + portal (global control)

@@ -1,0 +1,44 @@
+.screen{
+
+  width:100%;
+  height:100%;
+
+  display:flex;
+  flex-direction:column;
+  position:relative;
+
+
+padding-bottom:0px;
+
+  background:transparent;
+}
+
+.app-layout .discover-panel {
+  /* position: sticky; ❌ */
+  /* top: 60px; ❌ */
+
+  position: relative;   /* или просто го махни */
+
+  z-index: 20;
+
+  background: white;
+  border-top-left-radius: 26px;
+  border-top-right-radius: 26px;
+
+  padding: 4px 16px;
+
+  box-shadow: 0 -3px 12px rgba(0,0,0,0.08);
+
+  flex-shrink: 0;   /* 🔥 това е важното */
+}
+
+.app-layout .discover-title{
+
+text-align:center;
+
+font-size:20px;
+font-weight:600;
+
+color:#1d2a44;
+
+}

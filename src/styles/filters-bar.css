@@ -1,0 +1,190 @@
+.filters-rail{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:8px 10px;
+  background:#fff;
+}
+
+.filters-rail::-webkit-scrollbar{
+  display:none;
+}
+
+.filters-item{
+  flex:0 0 auto;
+  padding:6px 12px;
+  border-radius:20px;
+  background:#eee;
+  font-size:12px;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.filters-item.active{
+  background:#2D7DF6;
+  color:#fff;
+}
+
+.filters-item.clear{
+  margin-left:auto;
+  background:#ffeaea;
+  color:#c00;
+}
+
+
+.filters-wrapper{
+  position:sticky;   /* 🔥 ключово */
+  top:110px;         /* същото като преди */
+  z-index:10;
+
+  background:#fff;
+}
+
+/* общо */
+.filters-categories,
+.filters-selected,
+.filters-options{
+  display:flex;
+  gap:6px;
+  overflow-x:auto;
+  padding:4px 8px;           /* 🔥 по-ниско */
+  -webkit-overflow-scrolling:touch;
+}
+
+.filters-selected{
+  display:flex;
+  gap:6px;
+  overflow-x:auto;
+
+  padding:6px 10px;
+
+  background:rgba(255,255,255,0.15);   /* 🔥 по-прозрачно */
+  backdrop-filter:blur(10px);          /* 🔥 по-силен blur */
+
+  border-radius:12px;
+
+}
+
+.filters-options{
+  position:absolute;
+  left:0;
+  right:0;
+  top:100%;
+  width:100%;
+padding-right: 40px;
+  display:flex;
+  flex-wrap:nowrap;
+  overflow-x:auto;
+
+  gap:6px;
+  padding:6px 10px;
+
+  background:rgba(255,255,255,0.95);
+  backdrop-filter: blur(6px);
+
+  z-index:20;
+
+
+
+  -webkit-overflow-scrolling:touch;
+
+  /* 🔥 animation base */
+  opacity:0;
+  transform:translateY(-8px) scale(0.98);
+  pointer-events:none;
+
+transition:
+  opacity 0.25s ease,
+  transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+.filters-options.show{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+.filters-options::after{
+  content:"";
+  position:absolute;
+  right:0;
+  top:0;
+  bottom:0;
+  width:30px;
+ 
+
+pointer-events: none; /* 🔥 това добави */
+}
+
+
+
+
+/* chips */
+.filter-chip,
+.filter-cat{
+
+  flex:0 0 auto;
+
+  padding:6px 16px;      /* 🔥 същата височина като бутона */
+  border:none;
+  border-radius:4px;     /* 🔥 същото като card */
+
+  font-size:13px; 
+  font-weight:600;
+
+  color:white;
+  cursor:pointer;
+
+
+  white-space:nowrap;
+
+  background:linear-gradient(
+    135deg,
+    rgba(79,99,255,0.9),   /* 🔥 по-бледо */
+    rgba(45,55,123,0.9)
+  );
+
+  transition: all 0.15s ease;
+}
+
+.filters-options .filter-chip.active{
+  background:linear-gradient(
+    135deg,
+    #ff4f4f,
+    #7b2d2d
+  );
+
+  color:white;
+}
+
+.filters-selected .filter-chip.active{
+  background:linear-gradient(
+    135deg,
+    rgba(255,79,79,0.25),
+    rgba(123,45,45,0.25)
+  );
+
+  backdrop-filter:blur(4px);
+}
+
+
+.filter-chip.clear{
+  background:linear-gradient(
+    135deg,
+    rgba(255,0,0,0.7),
+    rgba(120,0,0,0.7)
+  );
+}
+
+.filters-options .filter-chip{
+  background:linear-gradient(
+    135deg,
+    rgba(79,99,255,0.25),   /* 🔥 по-бледо */
+    rgba(45,55,123,0.25)
+  );
+}
+
+.filter-cat.disabled{
+  opacity: 0;
+  pointer-events: none;
+}

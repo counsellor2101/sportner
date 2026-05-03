@@ -1,0 +1,126 @@
+.app-header{
+  position:fixed;
+
+  top:0;
+  left:0;
+  right:0;
+
+  height: calc(60px + var(--safe-top));
+  padding-top: var(--safe-top);
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding-left:14px;
+  padding-right:14px;
+
+  background:linear-gradient(
+    180deg,
+    rgba(0,0,0,0.65),
+    rgba(0,0,0,0)
+  );
+
+  color:white;
+
+  z-index:1000;
+}
+
+.header-left,
+.header-right{
+
+display:flex;
+align-items:center;
+gap:14px;
+
+}
+
+.header-center{
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+flex:1;
+
+}
+
+.menu-btn{
+
+background:none;
+border:none;
+
+font-size:20px;
+color:white;
+
+cursor:pointer;
+
+}
+
+
+
+/* 🔝 main logo */
+.app-logo {
+  height:40px;
+  display:block;
+}
+
+.header-icon{
+
+position:relative;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+width:28px;
+height:28px;
+cursor:pointer;
+
+}
+
+.header-icon img{
+
+width:35px;
+height:30px;
+
+}
+
+.notification-badge{
+
+position:absolute;
+
+top:-2px;
+right:-4px;
+
+background:#ff3b30;
+color:white;
+
+font-size:11px;
+font-weight:700;
+
+border-radius:10px;
+
+padding:2px 5px;
+
+min-width:16px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+}
+
+.notification-icon img{
+animation:bellShake 0.6s ease;
+}
+
+@keyframes bellShake{
+
+0%{ transform:rotate(0) }
+25%{ transform:rotate(-10deg) }
+50%{ transform:rotate(10deg) }
+75%{ transform:rotate(-6deg) }
+100%{ transform:rotate(0) }
+
+}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "318493173925",
+    "project_id": "sportner-4746a",
+    "storage_bucket": "sportner-4746a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:318493173925:android:a2cde682e6b0ed181b454c",
+        "android_client_info": {
+          "package_name": "com.sportner.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD84RtMelEIzKmm2JSM-hRSGseynDZkcw4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

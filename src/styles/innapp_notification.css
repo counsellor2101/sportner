@@ -1,0 +1,189 @@
+/* === INAPP NOTIFICATIONS === */
+
+.inappnotifications {
+  display: flex;
+  flex-direction: column;
+gap: 10px; /* 🔥 това е въздуха */
+}
+
+.inappnotifications-item {
+    background:#fff;
+  border-radius:12px;
+  padding:12px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.06);
+border:1px solid rgba(255,255,255,0.3);
+  cursor: pointer;
+}
+
+.inappnotifications-item.unread {
+  background: rgba(79, 99, 255, 0.2);
+}
+
+.inappnotifications-content {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.inappnotifications-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4f63ff;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.inappnotifications-texts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+flex: 1;
+width: 100%;
+}
+
+.inappnotifications-title {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.inappnotifications-title.unread {
+  font-weight: 600;
+}
+
+.inappnotifications-date {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.inappnotifications-body {
+  font-size: 13px;
+  color: #444;
+  margin-top: 4px;
+}
+
+.inappnotifications-body.unread {
+  font-weight: 600;
+  color: #474747;
+}
+
+.inappnotifications-meta {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.inappnotifications-meta.unread {
+  font-weight: 600;
+  color: #474747;
+}
+
+.inappnotifications-btn {
+  margin-top: 6px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: none;
+  background: #4f63ff;
+  color: white;
+  font-size: 14px;
+font-weight: 600;
+  cursor: pointer;
+}
+
+.notif-header-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.notif-sport {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.notif-level {
+  font-size: 13px;
+}
+
+.notif-court {
+  font-size: 13px;
+  color: #4f63ff;
+  font-weight: 500;
+}
+
+.notif-divider {
+  height: 1px;
+  background: #eee;
+  margin: 8px 0;
+}
+
+.gdm-group-name {
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 4px;
+  color: #444;
+}
+
+.gdm-info-row-compact {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  margin-bottom: 2px;   /* 🔥 по-малко разстояние */
+  
+  font-size: 14px;
+}
+
+.gdm-info-row-compact:last-child {
+  margin-bottom: 0;
+}
+
+.gdm-info-row-compact .row-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.gdm-content-compact {
+  padding: 0px;
+}
+
+.gdm-sport-header-compact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-top: 8px;      /* 🔥 от 30 → 8 */
+  margin-bottom: 4px;   /* 🔥 по-стегнато */
+}
+
+
+.inappnotifications-content .gdm-content-compact {
+  flex: 1;
+width: 100%;
+}
+
+.notif-clear-btn{
+width:100%;
+margin-bottom:10px; /* 🔥 това ще го отдели */
+padding:8px 0;
+
+border:none;
+
+border-radius:10px;
+
+font-size:14px;
+
+font-weight:600;
+
+color:white;
+
+cursor:pointer;
+
+background:linear-gradient(135deg,#4f63ff,#ed1717);
+
+box-shadow:0 3px 8px rgba(0,0,0,0.15);
+z-index:20;
+}

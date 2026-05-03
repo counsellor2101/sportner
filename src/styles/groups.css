@@ -1,0 +1,352 @@
+.groups-page{
+  padding:16px 16px 100px;
+}
+
+.groups-header{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  margin-bottom:16px;
+}
+
+.groups-title{
+  font-size:24px;
+  font-weight:800;
+  color:#1e293b;
+}
+
+.groups-subtitle{
+  margin-top:4px;
+  font-size:14px;
+  color:#64748b;
+}
+
+.groups-primary-btn,
+.groups-open-btn,
+.groups-danger-btn,
+.groups-danger-wide-btn,
+.groups-secondary-wide-btn,
+.groups-close-btn{
+  border:none;
+  cursor:pointer;
+  transition:0.2s ease;
+}
+
+.groups-primary-btn{
+  height:44px;
+  border-radius:14px;
+  padding:0 16px;
+  background:linear-gradient(135deg,#4f63ff,#ed1717);
+  color:#fff;
+  font-weight:700;
+}
+
+.groups-list{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.groups-card{
+  width:100%; /* 🔥 ключово */
+
+  display:flex;
+  flex-direction:column; /* 🔥 вертикален layout */
+
+  gap:10px;
+
+  padding:14px;
+
+  border-radius:16px;
+
+  background:rgba(255,255,255,0.9);
+
+  border:1px solid rgba(226,232,240,0.7);
+
+  box-shadow:0 4px 12px rgba(15,23,42,0.04); /* 🔥 по-леко */
+}
+
+.groups-card-main{
+  display:flex;
+  align-items:center;
+  gap:8px; /* 🔥 разстояние между име и роля */
+}
+
+.groups-card-name{
+  font-size:16px;
+  font-weight:800;
+  color:#0f172a;
+  word-break:break-word;
+}
+
+.groups-open-btn{
+  flex-shrink:0;
+  height:40px;
+  padding:0 14px;
+  border-radius:12px;
+  background:#eef2ff;
+  color:#3143c7;
+  font-weight:700;
+}
+
+.groups-role-badge{
+  width:max-content;
+  padding:5px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.groups-role-badge.role-owner{
+  background:#fee2e2;
+  color:#b91c1c;
+}
+
+.groups-role-badge.role-admin{
+  background:#ede9fe;
+  color:#6d28d9;
+}
+
+.groups-role-badge.role-member{
+  background:#e0f2fe;
+  color:#0369a1;
+}
+
+.groups-empty-card,
+.groups-empty-state{
+  padding:18px;
+  border-radius:18px;
+  background:rgba(255,255,255,0.88);
+  border:1px solid rgba(226,232,240,0.9);
+  color:#64748b;
+}
+
+.groups-empty-title{
+  font-size:16px;
+  font-weight:800;
+  color:#0f172a;
+  margin-bottom:6px;
+}
+
+.groups-empty-text{
+  font-size:14px;
+  color:#64748b;
+}
+
+.groups-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:3000;
+  background:rgba(15,23,42,0.35);
+  display:flex;
+  align-items:flex-end;
+}
+
+.groups-sheet{
+  width:100%;
+  max-height:82vh;
+  overflow-y:auto;
+  background:#f8fafc;
+  border-radius:22px 22px 0 0;
+  padding:10px 16px 24px;
+}
+
+.groups-sheet-handle{
+  width:56px;
+  height:6px;
+  border-radius:999px;
+  background:#cbd5e1;
+  margin:4px auto 14px;
+}
+
+.groups-sheet-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:16px;
+}
+
+.groups-sheet-title{
+  font-size:22px;
+  font-weight:800;
+  color:#0f172a;
+}
+
+.groups-sheet-subtitle{
+  margin-top:6px;
+  font-size:14px;
+  color:#64748b;
+}
+
+.groups-close-btn{
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:#e2e8f0;
+  color:#334155;
+  font-size:24px;
+  line-height:1;
+}
+
+.groups-members-section{
+  margin-top:8px;
+}
+
+.groups-section-title{
+  margin-bottom:12px;
+  font-size:14px;
+  font-weight:800;
+  color:#475569;
+  text-transform:uppercase;
+  letter-spacing:0.04em;
+}
+
+.groups-members-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.groups-member-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:12px;
+  border-radius:16px;
+  background:#fff;
+  border:1px solid #e2e8f0;
+}
+
+.groups-member-left{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.groups-member-avatar{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  object-fit:cover;
+  flex-shrink:0;
+}
+
+.groups-member-placeholder{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#4f63ff,#ed1717);
+  color:#fff;
+  font-weight:800;
+}
+
+.groups-member-meta{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.groups-member-name{
+  font-size:15px;
+  font-weight:700;
+  color:#0f172a;
+  word-break:break-word;
+}
+
+.groups-danger-btn{
+  flex-shrink:0;
+  min-width:80px;
+  height:36px;
+  border-radius:12px;
+  background:#fee2e2;
+  color:#b91c1c;
+  font-weight:700;
+}
+
+.groups-actions{
+  margin-top:18px;
+}
+
+.groups-danger-wide-btn,
+.groups-secondary-wide-btn{
+  width:100%;
+  height:46px;
+  border-radius:14px;
+  font-weight:800;
+}
+
+.groups-danger-wide-btn{
+  background:#dc2626;
+  color:#fff;
+}
+
+.groups-secondary-wide-btn{
+  background:#e2e8f0;
+  color:#0f172a;
+}
+
+.groups-primary-btn:disabled,
+.groups-open-btn:disabled,
+.groups-danger-btn:disabled,
+.groups-danger-wide-btn:disabled,
+.groups-secondary-wide-btn:disabled{
+  opacity:0.6;
+  cursor:default;
+}
+
+@media (min-width: 768px){
+  .groups-page{
+    max-width:700px;
+    margin:0 auto;
+  }
+
+  .groups-header{
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+  }
+
+  .groups-primary-btn{
+    min-width:160px;
+  }
+
+  .groups-sheet{
+    max-width:700px;
+    margin:0 auto;
+    border-radius:22px 22px 0 0;
+  }
+}
+
+.gdm-invite-btn.groupinvite{
+margin-left: 1px;
+  font-size: 12px;
+font-weight: 600;
+}
+
+
+.gdm-invite-btn.groupdelete{
+  background:linear-gradient(135deg, #ff4f4f, #7b2d2d);
+  color:#fff;
+  font-size: 12px;
+font-weight: 600;
+margin-left: 1px;
+}
+
+.groups-card-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+}
+
+.groups-actions-right{
+  display:flex;
+  justify-content:flex-end; /* 🔥 това е ключът */
+  gap:8px;
+  margin-top:6px;
+  width:100%; /* 🔥 гарантира десен align */
+}

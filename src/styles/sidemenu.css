@@ -1,0 +1,160 @@
+.sm-header {
+  position: relative;
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: center;   /* 🔥 центрира блока */
+}
+
+.sm-bottomline{
+  padding: 0px 0px 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.sm-user.vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* малко по-голям avatar */
+.sm-user.vertical .sm-avatar {
+  width: 64px;
+  height: 64px;
+}
+
+/* име центрирано */
+.sm-user.vertical .sm-user-name {
+  text-align: center;
+  font-size: 15px;
+}
+
+/* X бутон */
+.sm-close {
+  position: absolute;
+  top: 0px;      /* по-нагоре */
+  right: 0px;    /* по-вдясно */
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  cursor: pointer;
+  color: #444;
+  line-height: 1;
+  z-index: 10;
+}
+
+.sm-close:hover {
+  transform: scale(1.15);
+}
+
+/* USER BLOCK */
+.sm-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* AVATAR */
+.sm-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sm-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sm-avatar span {
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* NAME */
+.sm-user-name {
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.sm-item {
+  padding: 6px 10px;
+  font-size: 14px;
+font-weight: 650;
+  cursor: pointer;
+  margin: 4px 4px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.sm-item:hover {
+  background: #f3f4f6;
+  transform: translateX(2px);
+}
+
+.sm-item.logout {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.sm-lang {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* бутоните */
+.sm-lang button {
+background: transparent;
+  border: none;
+  font-size:18px;
+  font-style:italic;
+  font-weight:700;
+  cursor: pointer;
+  color: #555;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.sm-lang button.inactive{
+  opacity:0.5;
+}
+
+.report-textarea {
+  width: 100%;
+  height: 100px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 10px;
+  font-size: 14px;
+  resize: none;
+  outline: none;
+}
+
+.report-textarea:focus {
+  border-color: #4f63ff;
+}
+
+.sm-item.report {
+text-align: center;
+  font-size: 13px;
+  color: #888;
+margin-top: 8px;
+}
+
+.pwa-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

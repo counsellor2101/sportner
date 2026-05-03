@@ -1,0 +1,11 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.sportner.app",
+      "sha256_cert_fingerprints":
+        ["15:9B:83:17:CE:33:02:1A:8B:AE:72:DC:33:CF:57:65:F2:F0:B4:58:27:64:89:CC:C5:67:03:5E:3C:41:AD:8C"]
+    }
+  }
+]

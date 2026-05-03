@@ -1,0 +1,9 @@
+{
+  "appId": "com.sportner.app",
+  "appName": "Sportner",
+  "webDir": "dist",
+  "server": {
+    "url": "https://sportner.online",
+    "cleartext": true
+  }
+}

@@ -1,0 +1,756 @@
+/* BACKDROP */
+
+.gdm-backdrop{
+
+position:fixed;
+inset:0;
+
+background:rgba(0,0,0,0.35);
+
+display:flex;
+align-items:flex-end;
+
+z-index:2000;
+backdrop-filter: blur(4px);
+}
+
+
+/* SHEET */
+
+.gdm-sheet{
+
+position:relative;
+
+width:100%;
+height:85vh;
+
+background:#f5fbfc;
+
+border-radius:18px 18px 0 0;
+
+overflow-y:auto;
+
+padding:0px 0px 20px;
+
+
+animation:gdm-slideUp .25s ease;
+
+will-change:transform;
+
+}
+
+.gdm-content{
+  padding:0 16px;
+}
+
+/* SPORT GRADIENT BAR */
+
+.gdm-sport-bar{
+
+position:absolute;
+
+top:0;
+left:0;
+right:0;
+
+height:8px;
+
+border-radius:18px 18px 0 0;
+z-index:5;
+
+}
+
+
+/* HANDLE */
+
+.gdm-handle{
+
+width:50px;
+height:10px;
+
+background:#ccc;
+
+border-radius:10px;
+
+margin:12px auto 16px;
+
+cursor:grab;
+box-shadow:0 3px 10px rgba(0,0,0,0.15);
+
+}
+
+
+/* ANIMATION */
+
+@keyframes gdm-slideUp{
+
+from{
+transform:translateY(100%);
+}
+
+to{
+transform:translateY(0);
+}
+
+}
+
+
+/* SPORT HEADER */
+
+.gdm-sport-header{
+
+display:inline-flex;
+align-items:left;
+justify-content:space-between;
+gap:10px;
+margin-bottom:6px;
+margin-top:30px;
+
+}
+
+
+.gdm-sport-left{
+
+display:flex;
+align-items:center;
+gap:8px;
+
+font-weight:600;
+
+}
+
+
+.gdm-sport-icon{
+
+width:26px;
+height:26px;
+
+}
+
+
+.gdm-sport-title{
+
+font-size:16px;
+font-weight:600;
+
+}
+
+
+/* DIVIDER */
+
+.gdm-divider{
+
+height:1px;
+
+background:#e5e5e5;
+
+margin:6px 0 10px;
+
+}
+
+
+/* INFO SECTION */
+
+.gdm-info{
+
+font-size:16px;
+
+}
+
+
+.gdm-info-row{
+
+display:flex;
+align-items:center;
+gap:8px;
+
+margin-bottom:6px;
+
+}
+
+
+.gdm-icon{
+
+width:16px;
+height:16px;
+
+opacity:.8;
+
+}
+
+
+/* PLAYERS */
+
+.gdm-players-section{
+
+margin-top:14px;
+
+}
+
+
+.gdm-players-title{
+
+font-size:14px;
+font-weight:600;
+
+margin-bottom:6px;
+
+}
+
+
+.gdm-players-grid{
+
+display:grid;
+
+grid-template-columns:repeat(4,1fr);
+
+gap:8px;
+
+}
+
+
+/* PLAYER CARD */
+
+.gdm-player-card{
+
+display:flex;
+flex-direction:column;
+align-items:center;
+
+padding:8px 4px;
+
+border-radius:10px;
+
+background:#f4f6fb;
+
+font-size:12px;
+
+}
+
+
+.gdm-avatar{
+
+width:34px;
+height:34px;
+
+border-radius:50%;
+
+background:#2D7DF6;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+color:white;
+
+font-weight:700;
+
+margin-bottom:4px;
+
+}
+
+
+.gdm-player-name{
+
+font-weight:600;
+font-size:14px;
+
+display:flex;
+align-items:center;
+gap:6px;
+
+}
+
+
+/* FREE SLOT */
+
+.gdm-free{
+
+opacity:.5;
+
+}
+
+
+.gdm-free-avatar{
+
+background:#ddd;
+color:#555;
+
+}
+
+
+/* ACTION BAR */
+
+.gdm-action{
+
+margin-top:16px;
+margin-bottom: calc(20px + env(safe-area-inset-bottom));
+}
+
+
+/* JOIN BUTTON */
+
+.gdm-join-btn{
+
+width:100%;
+
+padding:8px 0;
+
+border:none;
+
+border-radius:10px;
+
+font-size:14px;
+
+font-weight:600;
+
+color:white;
+
+cursor:pointer;
+
+background:linear-gradient(
+135deg,
+#4f63ff,
+#2d377b
+);
+
+box-shadow:0 3px 8px rgba(0,0,0,0.15);
+
+}
+
+.gdm-join-btn.profile-required{
+
+background:linear-gradient(
+135deg,
+#ff4f4f,
+#7b2d2d
+);
+
+}
+
+.gdm-sheet{
+touch-action:pan-y;
+}
+
+/* TOP SPORT GRADIENT */
+
+.gdm-top-gradient{
+
+position:sticky;
+top:0;
+z-index:10;
+left:0;
+right:0;
+
+height:30px;
+
+border-radius:18px 18px 0 0;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+z-index:2;
+
+background:linear-gradient(
+135deg,
+var(--sport-color),
+color-mix(in srgb, var(--sport-color) 70%, white)
+);
+
+}
+
+.gdm-players-list{
+display:flex;
+flex-direction:column;
+gap:10px;
+margin-top:10px;
+}
+
+.gdm-player-row{
+
+display:flex;
+align-items:center;
+
+gap:12px;
+
+padding:10px 12px;
+
+border-radius:12px;
+
+background:white;
+
+box-shadow:0 1px 4px rgba(0,0,0,0.06);
+
+}
+
+.gdm-player-avatar{
+
+width:40px;
+height:40px;
+
+border-radius:50%;
+
+background:#2D7DF6;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+color:white;
+font-weight:700;
+
+overflow:hidden;
+flex-shrink:0;
+
+}
+
+.gdm-player-avatar img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.gdm-player-info{
+display:flex;
+flex-direction:column;
+flex:1;
+}
+
+.gdm-player-name{
+font-weight:600;
+font-size:14px;
+}
+
+/* PLAYER META */
+
+.gdm-player-meta{
+display:flex;
+align-items:center;
+flex-wrap:wrap;
+gap:8px;
+
+font-size:12px;
+color:#666;
+
+margin-top:2px;
+}
+
+.player-level{
+
+padding:2px 8px;
+
+border-radius:10px;
+
+font-size:11px;
+font-weight:600;
+
+background:#eee;
+
+text-transform:capitalize;
+
+}
+
+.level-beginner{
+background:#3ae76633;
+color:#1e8d36;
+}
+
+.level-intermediate{
+background:#2D7DF633;
+color:#2D7DF6;
+}
+
+.level-advanced{
+background:#c5860033;
+color:#c58600;
+}
+
+.level-pro{
+background:#FF3B3033;
+color:#FF3B30;
+}
+
+.player-rating{
+
+display:inline-flex;
+align-items:center;
+
+background:#fff3d6;
+color:#c68b00;
+
+padding:2px 6px;
+
+border-radius:6px;
+
+font-size:11px;
+font-weight:600;
+
+}
+
+.gdm-free{
+opacity:.6;
+}
+
+.gdm-free-avatar{
+background:#ddd;
+color:#555;
+}
+
+.player-owner{
+
+margin-left:6px;
+
+background:#fff3d6;
+color:#c68b00;
+
+padding:2px 5px;
+
+border-radius:6px;
+
+font-size:11px;
+font-weight:600;
+
+flex-shrink:0;
+
+}
+
+.player-side{
+font-size:11px;
+color:#888;
+}
+
+.player-side-row{
+display:block;
+width:100%;
+margin-top:1px;
+font-size:11px;
+color:#888;
+}
+
+.player-row1{
+display:flex;
+align-items:center;
+gap:6px;
+font-size:13px;
+}
+
+.player-row2{
+margin-top:3px;
+font-size:11px;
+color:#777;
+}
+
+.owner-actions{
+  display:flex;
+  width:100%;
+  gap:8px; /* малко повече въздух */
+}
+
+/* 🔥 бутоните да са равни */
+.owner-actions .game-card-btn{
+  flex:1;
+  border-radius:10px;
+  font-weight:600;
+  transition:all 0.2s ease;
+}
+
+/* 🔥 hover ефект (важно за “premium feel”) */
+.owner-actions .game-card-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* 🔥 active */
+.owner-actions .game-card-btn:active{
+  transform:scale(0.98);
+}
+
+/* 🔥 CANCEL */
+.owner-actions .cancel{
+  background:linear-gradient(135deg, #ff4f4f, #7b2d2d);
+  color:#fff;
+}
+
+/* 🔥 LEAVE */
+.owner-actions .leave{
+  background:linear-gradient(135deg, #ff6b6b, #a33a3a);
+  color:#fff;
+}
+
+/* 🔥 disabled */
+.owner-actions .game-card-btn:disabled{
+  opacity:0.6;
+  pointer-events:none;
+}
+
+/* 🔥 направи бутоните като в card */
+.gdm-action .game-card-btn{
+  padding:5px 16px;      /* 🔥 ключово */
+  min-height:30px;        /* 🔥 еднаква височина */
+  font-size:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.gdm-note-card {
+  margin: 12px 0px 12px 0px;
+  padding: 12px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  border-left: 4px solid var(--sport-color);
+}
+
+.gdm-note-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #888;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.gdm-note-text {
+  font-size: 15px;
+  line-height: 1.4;
+  color: #333;
+font-style:italic;
+}
+
+.gdm-share-btn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.gdm-invite-btn {
+  font-size: 14px;
+margin-left: 10px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #e0e0e0;
+  color: #222;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.gdm-note-edit-btn{
+  margin-left:auto;
+  background:none;
+  border:none;
+  font-size:14px;
+  cursor:pointer;
+}
+
+.gdm-note-input{
+  width:100%;
+  margin-top:8px;
+  padding:8px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,0.2);
+  background:#fff;   /* 🔥 това ти оправя фона */
+  color:#333;        /* 🔥 нормален текст */
+font-style:italic;
+  resize:none;
+}
+
+.gdm-note-actions{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+}
+
+.userprofile{
+
+background:linear-gradient(135deg,#4f63ff,#ed1717);
+
+
+}
+
+.court-badge.clickable {
+  cursor: pointer;
+}
+
+.gdm-group-chip {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 2px 7px;
+  border-radius: 9px;
+margin: 6px 0;
+  font-size: 15px;
+  font-weight: 700;
+  font-style: italic;
+line-height: 1.5;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  
+
+  background: linear-gradient(
+    135deg,
+    rgba(54,178,80,0.9),
+    rgba(45,55,123,0.9)
+  );
+
+  color: #fff;
+}
+
+.gdm-tournament-chip {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 2px 7px;
+  border-radius: 9px;
+  margin: 6px 0;
+
+  font-size: 15px;
+  font-weight: 700;
+  font-style: italic;
+  line-height: 1.5;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.95),
+    rgba(255, 170, 0, 0.95),
+    rgba(200, 150, 0, 0.95)
+  );
+
+  color: #fff;
+}
+
+.gdm-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+  color: #999;
+  font-size: 12px;
+}
+
+.gdm-divider::before,
+.gdm-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(0,0,0,0.15);
+}
+
+.gdm-divider span {
+  background: #fff;   /* или цвета на картата */
+  padding: 0 8px;
+  position: relative;
+  z-index: 1;
+font-size:15px;
+font-weight:700;
+}

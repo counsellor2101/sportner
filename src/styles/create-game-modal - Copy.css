@@ -1,0 +1,385 @@
+.cgm-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.4);
+  z-index:1000;
+  display:flex;
+  align-items:flex-end;
+backdrop-filter: blur(4px);
+}
+
+.cgm-sheet{
+
+position:relative;
+
+  width:100%;
+  height:90vh;
+background-image:url("/images/back.jpg");
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  border-top-left-radius:18px;
+  border-top-right-radius:18px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  transform:translateY(0);
+}
+
+.cgm-sheet::before{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  background:rgba(255,255,255,0.7); /* 🔥 тук контролираш */
+
+  z-index:0;
+}
+
+/* 🔥 content да е отгоре */
+.cgm-content,
+.cgm-header{
+  position:relative;
+  z-index:1;
+}
+
+.cgm-header{
+  position:sticky;
+  top:0;
+  z-index:10;
+
+  background:#fff; /* същия фон като sheet */
+  padding:4px 10px;
+
+
+}
+
+.cgm-top{
+  padding:2px;
+  display:flex;
+  justify-content:center;
+  cursor:grab;
+}
+
+.cgm-handle{
+  width:40px;
+  height:4px;
+  border-radius:2px;
+  background:#ccc;
+margin:0 auto;
+}
+
+.cgm-content{
+  flex:1;
+  overflow-y:auto;
+  padding:8px 12px 16px 12px; /* 🔥 по-малко отгоре */
+  -webkit-overflow-scrolling:touch;
+}
+
+.cgm-title{
+font-size:17px;
+  font-weight:600;
+  text-align:center;
+margin-top:2px; /* 🔥 почти никакво разстояние */
+text-transform:uppercase;
+}
+
+.cgm-debug{
+  font-size:12px;
+  color:#888;
+}
+
+.cgm-section{
+  margin-top:6px;
+}
+
+.cgm-section-title{
+  font-size:13px;
+  font-weight:600;
+text-transform:uppercase;
+}
+
+.cgm-row{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+
+  scroll-snap-type:x mandatory;
+
+  padding-bottom:4px;
+}
+
+.cgm-row::-webkit-scrollbar{
+  display:none;
+}
+
+.cgm-row-wrap{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+
+
+
+
+
+
+
+
+
+.cgm-chip{
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+padding:3px 8px;          /* 🔥 по-малки */
+  border-radius:9px;        /* 🔥 малко по-soft */
+
+  font-size:13px;           /* 🔥 по-компактно */
+font-weight:600;
+  cursor:pointer;
+
+
+
+  /* 🔥 INACTIVE (сива обемна) */
+background:linear-gradient(
+  135deg,
+  rgba(40,92,184,0.08),
+  rgba(19,61,136,0.1)
+);
+
+  color:#444;
+
+
+}
+
+.cgm-chip.active{
+background:linear-gradient(
+    135deg,
+    rgba(79,99,255,0.9),   /* 🔥 по-бледо */
+    rgba(45,55,123,0.9)
+  );
+
+  color:#fff;
+}
+
+.cgm-chip.disabled{
+  opacity:0.5;
+  cursor:not-allowed;
+}
+
+.cgm-sport-icon{
+  width:28px;
+  height:28px;
+
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  overflow:hidden;
+}
+
+.cgm-sport-icon img{
+  width:25px;
+  height:25px;
+  object-fit:contain;
+}
+
+
+.cgm-venue-chip{
+  padding:4px 9px; 
+  font-size:14px;
+font-weight:650;
+font-style:italic;
+
+}
+
+.cgm-venue-chip.active{
+background:linear-gradient(
+    135deg,
+    rgba(54,178,80,0.9),   /* 🔥 по-бледо */
+    rgba(45,55,123,0.9)
+  );
+
+  color:#fff;
+}
+
+.cgm-time-info{
+  margin-top:12px;
+}
+
+.cgm-time-row{
+  margin-top:6px;
+  font-size:13px;
+}
+
+.cgm-section.error{
+  border:1px solid #ff4d4f;
+  border-radius:10px;
+  padding:8px;
+}
+
+.cgm-error{
+  color:#ff4d4f;
+  font-size:12px;
+  margin-top:4px;
+}
+
+.cgm-create-btn:disabled{
+  opacity:0.5;
+  pointer-events:none;
+}
+
+.cgm-card{
+  background:rgba(255,255,255,0.8);
+  border-radius:16px;
+  padding:10px;
+  margin-top:5px;
+
+  box-shadow:0 2px 8px rgba(0,0,0,0.2);
+}
+
+.gdm-note-card{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.gdm-note-title{
+  font-size:14px;
+  font-weight:600;
+  color:#333;
+}
+
+.gdm-note-input{
+  width:100%;
+  border:none;
+  outline:none;
+  resize:none;
+
+  background:#f6f7fb;
+  border-radius:10px;
+
+  padding:10px;
+  font-size:14px;
+
+  box-sizing:border-box;
+}
+
+.gdm-note-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.gdm-note-count{
+  font-size:12px;
+  color:#888;
+}
+
+.gdm-note-hint{
+  font-size:12px;
+  color:#aaa;
+}
+
+
+
+
+/* 🔥 SPORT CHIP BASE */
+.cgm-sport-chip{
+flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+padding:2px 7px;          /* 🔥 по-малки */
+  border-radius:9px;        /* 🔥 малко по-soft */
+
+  font-size:13px;           /* 🔥 по-компактно */
+font-weight:600;
+  cursor:pointer;
+
+
+
+  /* 🔥 INACTIVE (сива обемна) */
+background:linear-gradient(
+  135deg,
+  rgba(40,92,184,0.1),
+  rgba(19,61,136,0.1)
+);
+
+  color:#444;
+}
+
+.cgm-sport-chip.active{
+background:linear-gradient(
+    135deg,
+    rgba(79,99,255,0.9),   /* 🔥 по-бледо */
+    rgba(45,55,123,0.9)
+  );
+
+  color:#fff;
+}
+
+
+
+
+
+/* 🔥 LEVEL CHIP BASE */
+.cgm-level-chip{
+  padding:4px 8px;
+  border-radius:10px;
+
+  font-size:12px;
+  font-weight:600;
+
+  text-transform:capitalize;
+
+background:linear-gradient(
+  135deg,
+  rgba(40,92,184,0.1),
+  rgba(19,61,136,0.1)
+);
+
+  color:#333;
+}
+
+/* 🔥 OVERRIDE active (МАХА СИНИЯ ФОН) */
+.cgm-level-chip.active{
+  background:unset;
+  color:inherit;
+}
+
+
+.cgm-level-chip.active.level-beginner{
+  background:#70cb87;
+  color:#fff;
+}
+
+.cgm-level-chip.active.level-intermediate{
+  background:#6aa0f3;
+  color:#fff;
+}
+
+.cgm-level-chip.active.level-advanced{
+  background:#f8a900;
+  color:#fff;
+}
+
+.cgm-level-chip.active.level-pro{
+  background:#FF3B30;
+  color:#fff;
+}
+
+.cgm-chip.active.danger{
+  background:linear-gradient(
+    135deg,
+    #ff4f4f,
+    #7b2d2d
+  );
+
+  color:#fff;
+}

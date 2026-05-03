@@ -1,0 +1,312 @@
+/* BACKDROP */
+
+.psm-backdrop{
+  position:fixed;
+  inset:0;
+
+  background:rgba(0,0,0,0.35);
+
+  display:flex;
+  align-items:flex-end;
+
+  z-index:2000;
+}
+
+
+/* SHEET */
+
+.psm-sheet{
+  position:relative;
+
+  width:100%;
+  height:auto;
+  max-height:60vh;
+
+  background:#f5fbfc;
+
+  border-radius:18px 18px 0 0;
+
+  overflow-y:auto;
+
+  padding:50px 16px 26px;
+
+  animation:psm-slideUp .25s ease;
+
+  will-change:transform;
+
+  touch-action:pan-y;
+}
+
+
+/* TOP GRADIENT */
+
+.psm-top-gradient{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+
+  height:30px;
+
+  border-radius:18px 18px 0 0;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  z-index:2;
+
+  background:linear-gradient(
+    135deg,
+    var(--sport-color),
+    color-mix(in srgb, var(--sport-color) 70%, white)
+  );
+}
+
+
+/* HANDLE */
+
+.psm-handle{
+  width:50px;
+  height:10px;
+
+  background:#ccc;
+
+  border-radius:10px;
+
+  margin:6px auto 10px;
+
+  box-shadow:0 3px 10px rgba(0,0,0,0.15);
+
+  cursor:grab;
+}
+
+
+/* ANIMATION */
+
+@keyframes psm-slideUp{
+  from{
+    transform:translateY(100%);
+  }
+  to{
+    transform:translateY(0);
+  }
+}
+
+
+/* SPORT HEADER */
+
+.psm-sport-header{
+  display:flex;
+  align-items:center;
+  justify-content:center; /* центрира целия блок */
+
+  gap:8px;
+
+  margin-bottom:8px;
+}
+
+.psm-sport-icon{
+  width:34px;
+  height:34px;
+  object-fit:contain;
+}
+
+.psm-sport-title{
+  font-size:15px;
+  font-weight:600;
+  
+}
+
+
+/* DIVIDER */
+
+.game-divider{
+  height:1px;
+  background:#e5e5e5;
+  margin:6px 0 12px;
+}
+
+
+/* TITLE */
+
+.psm-title{
+  text-align:center;
+  font-weight:600;
+  font-size:16px;
+  margin:6px 0 14px;
+}
+
+
+/* SECTIONS */
+
+.psm-section{
+  margin-bottom:14px;
+}
+
+.psm-section-title{
+  font-size:13px;
+  font-weight:600;
+  color:#555;
+  margin-bottom:6px;
+}
+
+
+/* LEVELS */
+
+.psm-levels{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.psm-level{
+  padding:6px 12px;
+
+  border-radius:999px;
+
+  font-size:12px;
+  font-weight:600;
+
+  cursor:pointer;
+
+  border:1px solid transparent;
+
+  transition:all .15s ease;
+
+  opacity:.7;
+}
+
+.psm-level:hover{
+  background:#ddd;
+}
+
+.psm-level.active{
+  background:#000;
+  color:#fff;
+}
+
+
+/* SIDES */
+
+.psm-sides{
+  display:flex;
+  gap:10px;
+  margin-top:6px;
+}
+
+.psm-side{
+  padding:8px 14px;
+
+  border-radius:10px;
+
+  background:#eee;
+
+  cursor:pointer;
+
+  font-size:13px;
+  font-weight:600;
+
+  transition:all .15s ease;
+}
+
+.psm-side:hover{
+  background:#ddd;
+}
+
+.psm-side.active{
+  background:#000;
+  color:#fff;
+}
+
+
+/* ACTION */
+
+.psm-action{
+  margin-top:20px;
+margin-bottom: calc(20px + env(safe-area-inset-bottom));
+}
+
+
+/* SAVE BUTTON */
+
+.psm-save-btn{
+  width:100%;
+  padding:10px;
+
+  border:none;
+  border-radius:10px;
+
+  font-size:14px;
+  font-weight:600;
+
+  color:white;
+
+  cursor:pointer;
+
+  background:linear-gradient(
+    135deg,
+    #4f63ff,
+    #2d377b
+  );
+
+  box-shadow:0 3px 8px rgba(0,0,0,0.15);
+
+  transition:all .15s ease;
+}
+
+.psm-save-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 5px 12px rgba(0,0,0,0.2);
+}
+
+.psm-save-btn:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+  transform:none;
+  box-shadow:none;
+}
+
+.psm-level.level-beginner{
+  background:#e9fbe9;
+  color:#1f7a33;
+}
+
+
+/* INTERMEDIATE */
+
+.psm-level.level-intermediate{
+  background:#e8f1ff;
+  color:#1c4fb8;
+}
+
+
+/* ADVANCED */
+
+.psm-level.level-advanced{
+  background:#fcddb4;
+  color:#c58600;
+}
+
+
+/* PRO */
+
+.psm-level.level-pro{
+  background:#ffecec;
+  color:#c01818;
+}
+
+
+/* ACTIVE */
+
+.psm-level.active{
+  opacity:1;
+  transform:scale(1.05);
+  box-shadow:0 2px 6px rgba(0,0,0,0.15);
+}
+
+
+
+.psm-level:hover{
+  opacity:1;
+}

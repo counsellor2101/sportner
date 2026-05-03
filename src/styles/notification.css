@@ -1,0 +1,192 @@
+.rules-list{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  margin-bottom:16px;
+}
+
+.rule-card{
+  border:1px solid rgba(255,255,255,0.05);
+}
+
+.chip {
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #eee;
+  cursor: pointer;
+}
+
+.chip.active {
+  background: #4f63ff;
+  color: white;
+}
+
+.switch {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.switch-track {
+  width: 42px;
+  height: 22px;
+  background: #ccc;
+  border-radius: 999px;
+  position: relative;
+  transition: background 0.2s ease;
+}
+
+.switch-track.on {
+  background: #4f63ff;
+}
+
+.switch-thumb {
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s ease;
+}
+
+.switch-track.on .switch-thumb {
+  transform: translateX(20px);
+}
+
+.switch-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+
+.notification-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #444;
+}
+
+
+.notification-notification-label {
+  font-size: 16px;
+  font-weight: 650;
+  color: #444;
+text-transform: uppercase;
+min-width: 0;   /* 🔥 ТОВА ОПРАВЯ ВСИЧКО */
+}
+
+.notification-levels-vertical {
+  margin-top: 6px;
+
+  display: flex;
+  flex-direction: column; /* 🔥 ключът */
+min-width: 0;   /* 🔥 ТОВА ОПРАВЯ ВСИЧКО */
+  gap: 6px;
+}
+
+.notification-info-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.notification-inline-group {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+
+  width: 100%;
+  min-width: 0;
+
+  overflow-x: auto;   /* 🔥 rail */
+  overflow-y: hidden;
+
+  flex-wrap: nowrap;  /* 🔥 да не слизат */
+}
+
+.notification-inline-group::-webkit-scrollbar {
+  display: none;
+}
+
+.notification-inline-group {
+  scrollbar-width: none;
+}
+
+.profile-value.multi {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.notif-period-select-btn {
+  font-size: 14px;
+  padding: 10px 12px;
+  white-space: nowrap;
+}
+
+.notif-period-select {
+  font-size: 14px;
+  padding: 10px 12px;
+  outline: none;
+  box-shadow: none;
+}
+
+
+
+.notif-sport-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 0px;
+}
+
+.notif-venues-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.notification-create-btn{
+display: flex;
+  justify-content: center;
+  align-items: center;
+width:100%;
+margin-top:6px; /* 🔥 това ще го отдели */
+padding:8px 0;
+
+border:none;
+
+border-radius:10px;
+
+font-size:14px;
+
+font-weight:600;
+
+color:white;
+
+cursor:pointer;
+
+background:linear-gradient(135deg,#4f63ff,#ed1717);
+
+box-shadow:0 3px 8px rgba(0,0,0,0.15);
+z-index:20;
+}
+
+.notif-expanded{
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+}
+
+.notif-message-row{
+  padding: 6px 0;
+}
+
+.notif-message-text{
+  font-size: 14px;
+  color: #333;
+}

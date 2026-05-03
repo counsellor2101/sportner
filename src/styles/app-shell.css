@@ -1,0 +1,130 @@
+.app-shell{
+
+  display:flex;
+
+
+  min-height:100vh;
+  width:100%;
+
+}
+
+.install-popup {
+  position: fixed;
+  bottom: 90px; /* над BottomNav */
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.install-card {
+  background: white;
+  padding: 14px 16px;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  width: 90%;
+  max-width: 320px;
+  text-align: center;
+}
+
+.splash {
+  position: fixed;
+  inset: 0;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+}
+
+.splash img {
+  width: 150px;
+  height: 150px;
+}
+
+
+/* MENU */
+.side-menu{
+  position:fixed;
+  top:0;
+  left:0;
+  width:260px;
+  height:100vh;
+  background:#fff;
+  z-index:1200;
+
+  transform:translateX(-100%);
+  transition:transform 0.3s ease;
+}
+
+/* PUSH CONTENT */
+.app-content{
+  transition:transform 0.3s ease;
+}
+
+.app-shell.menu-open .side-menu{
+  transform:translateX(0);
+}
+
+.app-shell.menu-open .app-content{
+  transform:translateX(260px);
+}
+
+.side-menu{
+  position:fixed;
+  top:0;
+  left:0;
+  width:260px;
+  height:100vh;
+  background:#fff;
+  z-index:1200;
+
+  transform:translateX(-100%);
+  transition:transform 0.3s ease;
+
+  padding:20px;
+}
+
+.side-menu.open{
+  transform:translateX(0);
+}
+
+.sm-header{
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:20px;
+}
+
+.sm-item{
+  padding:12px 0;
+  font-size:15px;
+  cursor:pointer;
+}
+
+.sm-item.logout{
+  color:#ff3b30;
+}
+
+.sm-section{
+  margin-top:20px;
+}
+
+.sm-label{
+  font-size:12px;
+  opacity:0.6;
+  margin-bottom:6px;
+}
+
+.sm-lang-switch button{
+  border:none;
+  background:none;
+  font-size:14px;
+  margin-right:8px;
+  cursor:pointer;
+}
+
+.sm-lang-switch button.active{
+  font-weight:700;
+  text-decoration:underline;
+}

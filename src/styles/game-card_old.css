@@ -1,0 +1,308 @@
+.game-card{
+
+position:relative;
+
+overflow:hidden;
+background:#f5fbfc;
+border:1px solid #f0eded !important;
+border-radius:12px;
+
+padding:6px 6px 6px 18px;
+
+margin:3px 0;
+
+box-shadow:4px 4px 10px rgba(0,0,0,0.08);
+
+font-size:12px;
+
+display:flex;
+flex-direction:column;
+justify-content:center;
+
+min-height:70px;
+
+width:230px;
+flex:0 0 auto;
+
+z-index:2;
+
+}
+
+
+/* GROUP GAMES */
+
+.game-card.group-game{
+background:#c9d4f4;
+}
+
+
+/* JOINED GAME */
+
+.game-card.joined-game{
+background:#88f6aa;
+border:1px solid #b9e3c2 !important;
+transform:scale(1.01);
+}
+
+
+/* FULL GAME */
+
+.game-card.full-game{
+opacity:0.50;
+background:#ffeaea;
+}
+
+
+/* SPORT BAR */
+
+.sport-bar{
+position:absolute;
+left:0;
+top:0;
+bottom:0;
+width:10px;
+border-radius:12px 0 0 12px;
+}
+
+
+/* ROW 1 */
+
+.game-row1{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:2px;
+}
+
+.sport-info{
+display:flex;
+align-items:center;
+gap:6px;
+font-weight:600;
+}
+
+.sport-icon{
+width:22px;
+height:22px;
+}
+
+.sport-name{
+font-size:15px;
+}
+
+
+/* LEVEL */
+
+.level-badge{
+display:flex;
+align-items:center;
+gap:5px;
+padding:2px 6px;
+background:#f2f2f2;
+border-radius:6px;
+font-size:11px;
+}
+
+.level-dot{
+width:8px;
+height:8px;
+border-radius:50%;
+}
+
+
+/* DIVIDER */
+
+.game-divider{
+height:1px;
+background:#e5e5e5;
+margin:2px 0;
+}
+
+
+/* ROWS */
+
+.game-row{
+display:flex;
+align-items:center;
+gap:6px;
+margin-top:1px;
+font-size:12px;
+}
+
+.row-icon{
+width:14px;
+height:14px;
+opacity:0.75;
+}
+
+
+/* VENUE */
+
+.venue-text{
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.venue-divider{
+margin:0 6px;
+color:#bbb;
+}
+
+
+/* BUTTON */
+
+.game-row-button{
+display:flex;
+
+margin-top:2px;
+}
+
+
+/* BUTTON STYLE */
+
+.game-card-btn{
+
+width:100%;
+
+padding:3px 0;
+
+border:none;
+
+border-radius:8px;
+
+font-size:12px;
+
+font-weight:600;
+
+color:white;
+
+cursor:pointer;
+
+background:linear-gradient(
+135deg,
+#4f63ff,
+#2d377b
+);
+
+box-shadow:0 2px 6px rgba(0,0,0,0.15);
+
+}
+
+.game-card-btn.profile-required{
+
+background:linear-gradient(
+135deg,
+#ff4f4f,
+#7b2d2d
+);
+
+}
+
+
+/* MINI CARDS */
+
+.mini-game-card{
+
+display:flex;
+align-items:center;
+gap:6px;
+
+background:#f4f6fb;
+
+padding:4px 8px;
+
+border-radius:6px;
+
+font-size:12px;
+
+}
+
+.mini-level{
+
+width:6px;
+height:6px;
+
+background:#2ecc71;
+
+border-radius:50%;
+
+}
+
+.mini-players{
+font-weight:600;
+}
+
+.mini-time{
+color:#666;
+font-size:11px;
+}
+
+.level-badge{
+display:flex;
+align-items:center;
+gap:5px;
+padding:1px 4px;
+border-radius:7px;
+font-size:11px;
+border:1px solid transparent;
+}
+
+.level-dot{
+width:8px;
+height:8px;
+border-radius:50%;
+}
+
+/* BEGINNER */
+
+.level-beginner{
+background:#e9fbe9;
+border:0px solid #3ae766;
+color:#1f7a33;
+}
+
+.level-beginner .level-dot{
+background:#3ae766;
+}
+
+/* INTERMEDIATE */
+
+.level-intermediate{
+background:#e8f1ff;
+border:0px solid #2D7DF6;
+color:#1c4fb8;
+}
+
+.level-intermediate .level-dot{
+background:#2D7DF6;
+}
+
+/* ADVANCED */
+
+.level-advanced{
+background:#fcddb4;
+border:0px solid #fff000;
+color:#c58600;
+}
+
+.level-advanced .level-dot{
+background:#c58600;
+}
+
+/* PRO */
+
+.level-pro{
+background:#ffecec;
+border:0px solid #FF3B30;
+color:#c01818;
+}
+
+.level-pro .level-dot{
+background:#FF3B30;
+}
+
+.level-text{
+text-transform:capitalize;
+font-weight:600;
+}

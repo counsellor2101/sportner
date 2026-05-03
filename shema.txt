@@ -1,0 +1,55 @@
+src/
+
+App.css
+App.jsx
+index.css
+main.jsx
+
+/api
+api.js
+
+/components
+AppShell.jsx
+
+/context
+AuthContext.jsx
+
+/i18n
+texts.js
+
+/pages
+ForgotPassword.jsx
+Games.jsx
+Login.jsx
+Register.jsx
+ResetPassword.jsx
+
+/styles
+app-shell.css
+login.css
+page.css
+screen.css
+
+
+
+roadmap
+
+src
+│
+├── components
+│   ├── AppShell.jsx
+│   ├── AppLayout.jsx
+│   ├── Header.jsx
+│   └── BottomNav.jsx
+│
+├── pages
+│   ├── Login.jsx
+│   ├── Register.jsx
+│   ├── ForgotPassword.jsx
+│   ├── ResetPassword.jsx
+│   │
+│   ├── Discover.jsx
+│   ├── Games.jsx
+│   ├── Groups.jsx
+│   └── Profile.jsx
+

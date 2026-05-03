@@ -1,0 +1,101 @@
+.cm-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.35);
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  z-index:4000;
+  backdrop-filter: blur(4px);
+}
+
+/* 🔥 SHEET */
+.cm-sheet{
+  width:100%;
+  max-width:520px;
+  background:#fff;
+  border-radius:20px 20px 0 0;
+  padding:20px 16px calc(18px + env(safe-area-inset-bottom));
+  box-shadow:0 -10px 30px rgba(0,0,0,0.15);
+  animation:cm-slide-up 0.25s ease;
+
+}
+
+/* 🎬 ANIMATION */
+@keyframes cm-slide-up{
+  from{ transform:translateY(100%); }
+  to{ transform:translateY(0); }
+}
+
+/* 🟦 HANDLE */
+.cm-handle{
+  width:40px;
+  height:4px;
+  background:#ddd;
+  border-radius:2px;
+  margin:0 auto 12px;
+}
+
+/* 🔤 TITLE */
+.cm-title{
+  text-align:center;
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:8px;
+}
+
+/* 📝 MESSAGE */
+.cm-message{
+  text-align:center;
+  font-size:14px;
+  color:#666;
+  margin-bottom:18px;
+  line-height:1.4;
+}
+
+/* 🔘 ACTIONS */
+.cm-actions{
+  display:flex;
+  gap:10px;
+}
+
+/* 🔘 BUTTON */
+.cm-btn{
+  flex:1;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.15s ease;
+}
+
+/* ❌ CANCEL */
+.cm-cancel{
+  background:#f1f1f1;
+  color:#333;
+}
+
+.cm-cancel:hover{
+  background:#e5e5e5;
+}
+
+/* ✅ CONFIRM */
+.cm-confirm{
+  background:#2D7DF6;
+  color:#fff;
+}
+
+.cm-confirm:hover{
+  background:#1f63d1;
+}
+
+/* 🔥 DANGER */
+.cm-confirm.danger{
+  background:#FF3B30;
+}
+
+.cm-confirm.danger:hover{
+  background:#d92c22;
+}
