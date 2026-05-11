@@ -49,7 +49,17 @@ function handleLogout(){
 
 return (
 <>
-<div className={`side-menu ${open ? "open" : ""}`}>
+{open && (
+  <div
+    className="side-menu-overlay"
+    onClick={onClose}
+  />
+)}
+
+<div
+  className={`side-menu ${open ? "open" : ""}`}
+  onClick={(e) => e.stopPropagation()}
+>
 
   {/* 🔝 HEADER */}
   <div className="sm-header">

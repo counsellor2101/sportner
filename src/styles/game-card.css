@@ -21,9 +21,9 @@
 
   min-height: 70px;
 
-  min-width: 240px;
-  width: fit-content;
-  max-width: 100%;
+  width: 260px;
+
+  flex-shrink: 0;
 }
 
 .game-card.my-games {
@@ -81,13 +81,13 @@ display:flex;
 align-items:center;
 justify-content:space-between;
 margin-bottom:2px;
-gap: 8px;
+gap: 4px;
 }
 
 .sport-info{
 display:flex;
 align-items:center;
-gap:6px;
+gap:4px;
 font-weight:600;
 }
 
@@ -97,7 +97,7 @@ height:22px;
 }
 
 .sport-name{
-font-size:14px;
+font-size:12px;
 }
 
 
@@ -455,3 +455,4 @@ line-height: 1.2;
     rgba(255, 170, 0, 0.12)
   );
 }
+

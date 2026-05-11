@@ -1,22 +1,26 @@
 import { Capacitor } from "@capacitor/core";
 
 export async function openPushSettings() {
-  // Native Android (нашият bridge)
-  if (window.Android && typeof window.Android.openAppSettings === "function") {
-    window.Android.openAppSettings();
-    return true;
-  }
+    // Native iOS bridge
+    if (
+      window.webkit?.messageHandlers?.openAppSettings
+    ) {
 
-  // Native iOS (официален API)
-  if (Capacitor.isNativePlatform() && Capacitor.getPlatform() === "ios") {
-    try {
-      const { App } = await import("@capacitor/app");
-      await App.openSettings();
+      window.webkit.messageHandlers.openAppSettings.postMessage(null);
+
       return true;
-    } catch (e) {
-      console.log("ios settings error", e);
     }
-  }
+
+    // Native Android
+    if (
+      Capacitor.isNativePlatform() &&
+      Capacitor.getPlatform() === "android" &&
+      window.Android &&
+      typeof window.Android.openAppSettings === "function"
+    ) {
+      window.Android.openAppSettings();
+      return true;
+    }
 
   // Web fallback
   alert("Enable notifications from browser settings");

@@ -1,4 +1,4 @@
-﻿import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef } from "react"
 import api from "../api/api"
 import "../styles/game-details-modal.css"
 import { texts } from "../i18n/texts"
@@ -9,6 +9,8 @@ import {
 } from "../helpers/gameState"
 import ConfirmModal from "./ConfirmModal"
 import UserProfileModal from "./UserProfileModal"
+import { triggerPushPrompt } from "../push/pushBus"
+import { Capacitor } from "@capacitor/core"
 
 export default function GameDetailsModal({ gameId, onClose }) {
 
@@ -254,6 +256,42 @@ await api.post(`/games/${game.id}/join`)
 await reloadGame()
 
 window.dispatchEvent(new Event("gamesUpdated"))
+
+window.dispatchEvent(new Event("gameJoined"))
+
+const isNative = Capacitor.isNativePlatform()
+
+if (isNative) {
+
+  const { PushNotifications } = await import("@capacitor/push-notifications")
+
+  const perm = await PushNotifications.checkPermissions()
+
+  if (perm?.receive !== "granted") {
+
+    if (!window.__joinPushPromptShown) {
+
+      window.__joinPushPromptShown = true
+
+      triggerPushPrompt("join_game")
+    }
+  }
+
+} else {
+
+  if (
+    typeof Notification !== "undefined" &&
+    Notification.permission !== "granted"
+  ) {
+
+    if (!window.__joinPushPromptShown) {
+
+      window.__joinPushPromptShown = true
+
+      triggerPushPrompt("join_game")
+    }
+  }
+}
 
      
 
@@ -766,6 +804,7 @@ const reservePlayers = players.slice(maxPlayers)
       <>
         <textarea
           className="gdm-note-input"
+          
           value={noteValue}
           onChange={(e) => setNoteValue(e.target.value)}
           rows={3}

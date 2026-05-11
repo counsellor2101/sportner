@@ -29,6 +29,7 @@ import { registerPushIfAlreadyGranted } from "./push/pushService";
 
 import Venues from "./pages/Venues";
 import Privacy from "./pages/Privacy";
+import Safety from "./pages/Safety";
 
 import { Capacitor } from "@capacitor/core";
 import { initNativePushListeners } from "./push/pushService";
@@ -88,6 +89,41 @@ useEffect(() => {
   initNativePushListeners();
 
 }, [isNative]);
+
+useEffect(() => {
+
+  function handleNativeFCMToken(event) {
+
+    const token = event.detail?.token;
+
+    if (!token) return;
+
+    console.log(
+      "🔥 CACHE NATIVE FCM TOKEN",
+      token
+    );
+
+    window.nativeFCMToken = token;
+
+    localStorage.setItem(
+      "native_fcm_token",
+      token
+    );
+  }
+
+  window.addEventListener(
+    "nativeFCMToken",
+    handleNativeFCMToken
+  );
+
+  return () => {
+    window.removeEventListener(
+      "nativeFCMToken",
+      handleNativeFCMToken
+    );
+  };
+
+}, []);
 
 
 // 🔥 Native push navigation (enterprise)
@@ -352,6 +388,8 @@ element={
 />
 
 <Route path="/privacy" element={<Privacy />} />
+
+<Route path="/safety" element={<Safety />} />
 
 <Route path="/reset-password" element={<ResetPassword />} />
 

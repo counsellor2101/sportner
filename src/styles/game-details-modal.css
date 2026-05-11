@@ -655,6 +655,7 @@ margin-left: 10px;
   background:#fff;   /* 🔥 това ти оправя фона */
   color:#333;        /* 🔥 нормален текст */
 font-style:italic;
+font-size:16px !important;
   resize:none;
 }
 

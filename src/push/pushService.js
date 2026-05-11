@@ -3,6 +3,7 @@ import {
   getBackendPlatform,
   getPushEnvironment,
 } from "./pushEnvironment";
+import { Capacitor } from "@capacitor/core";
 
 const WEB_VAPID_KEY =
   "BLWboZV6VqGmbkM2Lc1lDcq371-E1f93M0dsNZW0l7fHSE5Tm-iKhP64RTss7K075sabozPQwCskmA0ztH0hz6A";
@@ -104,11 +105,77 @@ async function registerNativePush() {
               finish(false);
               return;
             }
+              
+              
 
-            await api.post("/me/push-token", {
-              token: token.value,
-              platform: getBackendPlatform(), // android / ios
-            });
+              let finalToken = token.value;
+
+              if (Capacitor.getPlatform() === "ios") {
+
+                finalToken = null;
+              }
+
+              if (Capacitor.getPlatform() === "ios") {
+
+                  let nativeFCMToken = null;
+
+                  // 🔥 FIRST wait for fresh token
+                  nativeFCMToken = await new Promise((resolve) => {
+
+                    const timeout = setTimeout(() => {
+
+                      resolve(
+                        window.nativeFCMToken ||
+                        localStorage.getItem("native_fcm_token")
+                      );
+
+                    }, 5000);
+
+                    function handler(event) {
+
+                      clearTimeout(timeout);
+
+                      window.removeEventListener(
+                        "nativeFCMToken",
+                        handler
+                      );
+
+                      resolve(event.detail?.token || null);
+                    }
+
+                    window.addEventListener(
+                      "nativeFCMToken",
+                      handler
+                    );
+                  });
+
+                  if (
+                    nativeFCMToken &&
+                    nativeFCMToken.includes(":APA91")
+                  ) {
+
+                  console.log(
+                    "🔥 USING NATIVE FCM TOKEN",
+                    nativeFCMToken
+                  );
+
+                  finalToken = nativeFCMToken;
+                }
+              }
+              
+              if (!finalToken) {
+
+                console.log("🔥 NO VALID FCM TOKEN");
+
+                clearTimeout(timeoutId);
+                finish(false);
+                return;
+              }
+
+              await api.post("/me/push-token", {
+                token: finalToken,
+                platform: getBackendPlatform(), // android / ios
+              });
 
             clearTimeout(timeoutId);
             finish(true);
@@ -140,9 +207,19 @@ async function registerNativePush() {
 export async function registerPushIfAlreadyGranted() {
   const env = getPushEnvironment();
 
-  if (env === "native") {
-    return false;
-  }
+    if (env === "native") {
+
+      const { PushNotifications } =
+        await import("@capacitor/push-notifications");
+
+      const perm = await PushNotifications.checkPermissions();
+
+      if (perm?.receive !== "granted") {
+        return false;
+      }
+
+      return registerNativePush();
+    }
 
   if (typeof Notification === "undefined") {
     return false;

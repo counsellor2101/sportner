@@ -8,6 +8,8 @@ import {
 } from "../helpers/gameState"
 import { useState } from "react"
 import ConfirmModal from "./ConfirmModal"
+import { triggerPushPrompt } from "../push/pushBus"
+import { Capacitor } from "@capacitor/core"
 
 
 
@@ -93,6 +95,41 @@ async function joinGame(e) {
 
     await api.post(`/games/${game.id}/join`)
     window.dispatchEvent(new Event("gamesUpdated"))
+    
+    window.dispatchEvent(new Event("gameJoined"))
+
+const isNative = Capacitor.isNativePlatform()
+
+if (isNative) {
+
+  const { PushNotifications } = await import("@capacitor/push-notifications")
+
+  const perm = await PushNotifications.checkPermissions()
+
+  if (perm?.receive !== "granted") {
+
+  if (!window.__joinPushPromptShown) {
+
+    window.__joinPushPromptShown = true
+
+    triggerPushPrompt("join_game")
+  }
+}
+
+} else {
+
+  if (
+    typeof Notification !== "undefined" &&
+    Notification.permission !== "granted"
+  ) {
+    if (!window.__joinPushPromptShown) {
+
+  window.__joinPushPromptShown = true
+
+  triggerPushPrompt("join_game")
+}
+  }
+}
 
   } catch (e) {
     const errorCode = e?.response?.data?.error?.code
@@ -290,11 +327,11 @@ const actions = renderActions()
         </div>
 {isTournament ? (
   <div className="gc-tournament-chip">
-    🏆 {t.card_type_tournament || "Tournament"}
+    🏆
   </div>
 ) : groupName ? (
   <div className="gc-group-chip">
-    {t.group || "Group"}
+    🔒
   </div>
 ) : null}
         <div className={`level-badge level-${game.level_required}`}>

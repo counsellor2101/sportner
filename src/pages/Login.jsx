@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import { texts } from "../i18n/texts";
 import AppShell from "../components/AppShell";
 import "../styles/login.css";
+import { registerPushIfAlreadyGranted } from "../push/pushService";
 
 export default function Login(){
 
@@ -140,6 +141,8 @@ password
 });
 
 login(res.data.access_token, res.data.refresh_token);
+
+await registerPushIfAlreadyGranted();
 
 
 
