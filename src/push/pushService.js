@@ -205,6 +205,11 @@ async function registerNativePush() {
 }
 
 export async function registerPushIfAlreadyGranted() {
+
+
+
+
+
   const env = getPushEnvironment();
 
     if (env === "native") {

@@ -4,7 +4,7 @@ const API_BASE = "https://sportech-store.com/sports-match-api";
 
 const api = axios.create({
   baseURL: API_BASE,
-  timeout: 8000
+  timeout: 30000
 });
 
 /*
@@ -14,7 +14,7 @@ ENTERPRISE LOADER STATE
 const activeRequests = new Set();
 let loaderTimeout = null;
 
-const LOADER_DELAY = 600;
+const LOADER_DELAY = 1000;
 
 function startLoading() {
   window.dispatchEvent(new Event("globalLoadingStart"));

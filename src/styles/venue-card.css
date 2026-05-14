@@ -43,3 +43,9 @@ font-weight:600;
   height:20px;
 }
 
+.venue-sports{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+

@@ -37,7 +37,7 @@ alerts = [],   // 🔥
 }){
 
 const timelineRef = useRef(null)
-const [currentTop, setCurrentTop] = useState(null)
+
 const [expandedSlots, setExpandedSlots] = useState({})
 
 const maxCards = isDesktop ? 4 : 2
@@ -177,55 +177,7 @@ setExpandedSlots({})
   JSON.stringify(filters?.group_ids) // 🔥
 ])
 
-/* red line realtime */
 
-useEffect(() => {
-
-function updateCurrentLine(){
-
-const now = new Date()
-
-let hours = now.getHours()
-let minutes = now.getMinutes()
-
-if(hours < 6){
-hours = 6
-minutes = 0
-}
-
-if(hours >= 24){
-hours = 23
-minutes = 59
-}
-
-const slotMinutes = minutes < 30 ? "00" : "30"
-
-const slotId =
-"slot-" + String(hours).padStart(2,"0") + ":" + slotMinutes
-
-const slotElement = document.getElementById(slotId)
-
-if(!slotElement) return
-
-const slotTop = slotElement.offsetTop
-const slotHeight = slotElement.offsetHeight
-
-const minutesInsideSlot = minutes % 30
-const pixelsPerMinute = slotHeight / 30
-
-const top = slotTop + minutesInsideSlot * pixelsPerMinute
-
-setCurrentTop(top)
-
-}
-
-updateCurrentLine()
-
-const interval = setInterval(updateCurrentLine,1000)
-
-return () => clearInterval(interval)
-
-},[])
 
 /* AUTO SCROLL */
 
@@ -284,18 +236,7 @@ return(
 
 <div className="timeline-inner">
 
-{currentTop !== null && (
 
-<div
-className="current-time-line"
-style={{top:currentTop+"px"}}
->
-
-<div className="current-time-dot"></div>
-
-</div>
-
-)}
 
 {slots.map(slot => {
 const dateStr = selectedDate.toISOString().split("T")[0]

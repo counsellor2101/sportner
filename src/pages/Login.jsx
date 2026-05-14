@@ -9,6 +9,8 @@ import { registerPushIfAlreadyGranted } from "../push/pushService";
 
 export default function Login(){
 
+
+
 const location = useLocation();
 
   const [lang,setLang] = useState(localStorage.getItem("lang") || "bg");
@@ -129,18 +131,28 @@ useEffect(() => {
 
   async function handleLogin(){
 
+
+
 setError(null);
 setMessage(null);
 setLoading(true);
 
 try{
 
+
+
 const res = await api.post("/login",{
 email: email.trim(),
 password
 });
 
+
+
+
+
 login(res.data.access_token, res.data.refresh_token);
+
+
 
 await registerPushIfAlreadyGranted();
 
@@ -163,6 +175,18 @@ sessionStorage.removeItem("pending_redirect");
 navigate(redirect || "/");
 
 }catch(err){
+
+console.error("🔥 HANDLE LOGIN ERROR", {
+
+  message: err.message,
+
+  code: err.code,
+
+  response: err.response?.status,
+
+  url: err.config?.url
+
+});
 
 let finalError = t.login_failed;
 
