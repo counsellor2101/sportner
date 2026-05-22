@@ -549,6 +549,70 @@ const players = game.players || []
 const mainPlayers = players.slice(0, maxPlayers)
 const reservePlayers = players.slice(maxPlayers)
 
+async function uploadActivity(e){
+
+  const file = e.target.files?.[0]
+
+  if (!file || !game) return
+
+  try {
+
+    const fd = new FormData()
+
+    fd.append(
+      "caption",
+      buildShareText(game)
+    )
+
+    fd.append(
+      "visibility",
+      "public"
+    )
+
+    fd.append(
+      "game_id",
+      game.id
+    )
+
+    fd.append(
+      "media",
+      file
+    )
+
+    const res = await api.post(
+      "/activities",
+      fd,
+      {
+        headers: {
+          "Content-Type":
+            "multipart/form-data"
+        }
+      }
+    )
+
+    console.log(res.data)
+
+    alert(
+      t.activity_uploaded ||
+      "Activity uploaded"
+    )
+
+  } catch(e) {
+
+    console.log(
+      "activity upload error",
+      e
+    )
+
+    alert(
+      t.upload_failed ||
+      "Upload failed"
+    )
+  }
+
+  e.target.value = ""
+}
+
 
   return (
 
@@ -669,6 +733,19 @@ const reservePlayers = players.slice(maxPlayers)
   >
     🔗 {t.invite_players || "Invite Players"}
   </button>
+
+<label className="gdm-invite-btn">
+
+  📸 {t.post_activity || "Post"}
+
+  <input
+    type="file"
+    accept="image/*"
+    hidden
+    onChange={uploadActivity}
+  />
+
+</label>
           </div>
 
           <div className="gdm-players-list">

@@ -1,6 +1,67 @@
 export const texts = {
 
 bg:{
+
+heroTitle: "Избери спорт. Намери игра.",
+
+favorite_player: "Любим",
+add_favorite: "Добави в любими",
+
+notification_favorite_game:
+  "Любим играч създаде игра",
+
+notification_favorite_game_body:
+  "Твой любим играч създаде нова игра",
+
+  heroSubtitle:
+    "Падел, тенис, плажен тенис, пикълбол, плажен волейбол, баскетбол и много други — всичко в едно приложение.",
+
+  download: "Свали приложението",
+openApp: "Към приложението",
+  openWebApp: "Отвори уеб приложението",
+
+  sectionTitle: "Опознай. Играй. Повтори.",
+
+  sectionSubtitle:
+    "Всичко необходимо за организиране и намиране на спортни игри.",
+
+  joinGames: "ПРИСЪЕДИНИ СЕ",
+
+  joinGamesTitle: "Влизай в игри моментално",
+
+  joinGamesText:
+    "Намери свободни места и се включи за секунди.",
+
+  createGames: "СЪЗДАЙ",
+
+  createGamesTitle: "Организирай свои игри",
+
+  createGamesText:
+    "Създавай публични, частни и турнирни игри лесно.",
+
+  availability: "НАЛИЧНОСТ",
+
+  availabilityTitle: "Покажи кога можеш да играеш",
+
+  availabilityText:
+    "Позволи на другите играчи да виждат кога си свободен.",
+
+  sportsTitle: "Спортове в Sportner",
+
+  communityTitle:
+    "Разрастваща се спортна общност в България",
+
+  communityText:
+    "Играй със спортни хора от София, Варна, Пловдив, Бургас, Русе и още.",
+
+  ctaTitle: "Готов ли си да играеш?",
+
+  ctaText:
+    "Свали Sportner и започни да играеш още днес.",
+
+  footer:
+    "© 2026 Sportner",
+
 push_enable_title: "Включи известия 🔔",
 push_enable_desc: "Получавай известия за игри, които съвпадат с твоите предпочитания",
 push_enable_btn: "Включи",
@@ -264,6 +325,68 @@ invite_copied: "Линкът за покана е копиран"
 },
 
 en:{
+
+ heroTitle: "Choose sport. Find game",
+
+favorite_player: "Favorite",
+add_favorite: "Add favorite",
+
+notification_favorite_game:
+  "Favorite player created a game",
+
+notification_favorite_game_body:
+  "Your favorite player created a new game",
+
+  heroSubtitle:
+    "Padel, tennis, beach tennis, pickleball, beach volley, basketball and many others — all in one app.",
+
+  download: "Download App",
+openApp: "Open App",
+
+  openWebApp: "Open Web App",
+
+  sectionTitle: "Meet. Play. Repeat.",
+
+  sectionSubtitle:
+    "Everything you need to organize and join sports games.",
+
+  joinGames: "JOIN GAMES",
+
+  joinGamesTitle: "Join games instantly",
+
+  joinGamesText:
+    "Find available spots and join games in seconds.",
+
+  createGames: "CREATE",
+
+  createGamesTitle: "Create your own games",
+
+  createGamesText:
+    "Organize public, private and tournament games easily.",
+
+  availability: "AVAILABILITY",
+
+  availabilityTitle: "Set when you can play",
+
+  availabilityText:
+    "Let players know when you're available and find better matches.",
+
+  sportsTitle: "Sports on Sportner",
+
+  communityTitle:
+    "Growing sports community in Bulgaria",
+
+  communityText:
+    "Join players from Sofia, Varna, Plovdiv, Burgas, Ruse and more.",
+
+  ctaTitle: "Ready to play?",
+
+  ctaText:
+    "Download Sportner and start joining games today.",
+
+  footer:
+    "© 2026 Sportner",
+
 push_enable_title: "Enable notifications 🔔",
 push_enable_desc: "Get notified when new games match your preferences",
 push_enable_btn: "Enable",

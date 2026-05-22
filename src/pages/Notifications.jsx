@@ -79,7 +79,9 @@ try {
     }
   }
 
-
+function extractSportnerLink(text){
+  return text?.match(/https?:\/\/sportner\.online\/\S+/)?.[0] || null
+}
 
 
 
@@ -157,8 +159,9 @@ try {
     return true
   })
   .map(n => {
-
 const mapped = mapNotification(n, t)
+const actionLink = extractSportnerLink(mapped.body)
+
 
               // 🔥 normalize (ако backend връща "0"/"1")
               const isUnread = !Number(n.is_read)
@@ -222,8 +225,22 @@ const formattedDate = payload.date
     </div>
 
     <div className={`inappnotifications-body ${isUnread ? "unread" : ""}`}>
-      {mapped.body}
-    </div>
+  {actionLink
+    ? mapped.body.replace(actionLink, "").trim()
+    : mapped.body}
+</div>
+
+{actionLink && (
+  <button
+    className="gdm-invite-btn"
+    onClick={(e) => {
+      e.stopPropagation()
+      window.location.href = actionLink
+    }}
+  >
+    🔗 {t.open || "Open"}
+  </button>
+)}
 
     <div className={`inappnotifications-meta ${isUnread ? "unread" : ""}`}>
 

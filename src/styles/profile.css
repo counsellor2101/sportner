@@ -646,3 +646,23 @@ max-height: 150px;
   font-weight: 600;
 }
 
+.profile-favorite-btn{
+  border:none;
+  background:transparent;
+  font-size:15px;
+  cursor:pointer;
+  margin-top:8px;
+  transition:transform .15s ease, opacity .15s ease;
+}
+
+.profile-favorite-btn:active{
+  transform:scale(.92);
+}
+
+.profile-favorite-btn.active{
+  opacity:1;
+}
+
+.profile-favorite-btn:not(.active){
+  opacity:.7;
+}

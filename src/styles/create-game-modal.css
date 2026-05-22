@@ -206,7 +206,7 @@ background:linear-gradient(
   font-size:14px;
 font-weight:650;
 font-style:italic;
-
+white-space: nowrap;
 }
 
 .cgm-venue-chip.active{

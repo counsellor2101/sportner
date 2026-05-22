@@ -12,7 +12,14 @@ export function mapNotification(n, t){
   const rawTitle = payload.title || n.title || ""
   const rawBody  = payload.body  || n.body  || ""
 
-  const type = n.type || detectType(rawTitle, rawBody)
+  let type = n.type || detectType(rawTitle, rawBody)
+
+if (
+  type === "game_discovery" &&
+  rawBody.toLowerCase().includes("favorite player activity")
+) {
+  type = "favorite_game"
+}
 
   return {
   id: n.id,
@@ -50,6 +57,8 @@ if (t.includes("player wants to connect")) {
     return "group_game_created"
   }
 
+
+
   if(b.includes("match: your preferences")){
     return "game_match"
   }
@@ -58,7 +67,7 @@ if (t.includes("player wants to connect")) {
     return "group_game_created"
   }
 
-if(body?.includes("Match: your availability")){
+if(b.includes("match: your availability")){
   return "game_availability"
 }
 
@@ -73,8 +82,10 @@ if(body?.includes("Match: your availability")){
 function resolveTitle(type, fallback, t){
 
   const map = {
+    favorite_game: t.notification_favorite_game || "Favorite player created a game",
     game_discovery: t.notification_new_game,
     game_match: t.notification_new_game,
+group_game: t.notification_group_game_created,
     group_game_created: t.notification_group_game_created,
     game_availability: t.notification_new_game,
 game_reminder: t.notification_game_reminder || "Game reminder",
@@ -92,8 +103,10 @@ player_contact: t.notification_player_contact || "Player wants to connect",
 function resolveBody(type, fallback, t, payload){
 
   const map = {
+    favorite_game: t.notification_favorite_game_body || "Your favorite player created a new game",
     game_discovery: t.notification_match_preferences,
     game_match: t.notification_match_preferences,
+group_game: t.notification_group_game_body,
     group_game_created: t.notification_group_game_body,
     game_availability: t.notification_match_availability,
 game_reminder: payload?.metadata?.[0]?.reminder_type === "2h"

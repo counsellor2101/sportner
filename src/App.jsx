@@ -23,6 +23,7 @@ import Notifications from "./pages/Notifications";
 import { usePushPrompt } from "./push/usePushPrompt";
 import PushPrompt from "./components/PushPrompt";
 import { registerPushIfAlreadyGranted } from "./push/pushService";
+import HomeLanding from "./pages/HomeLanding"
 
 
 
@@ -390,6 +391,11 @@ element={
 <Route path="/privacy" element={<Privacy />} />
 
 <Route path="/safety" element={<Safety />} />
+
+<Route
+  path="/landing"
+  element={<HomeLanding />}
+/>
 
 <Route path="/reset-password" element={<ResetPassword />} />
 

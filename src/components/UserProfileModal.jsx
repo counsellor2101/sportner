@@ -14,6 +14,7 @@ const t = texts[lang] || texts.bg
   const [loading, setLoading] = useState(true)
 const { user } = useAuth()
 const [contactOpen, setContactOpen] = useState(false)
+const [favoriteLoading, setFavoriteLoading] = useState(false)
 
 const sheetRef = useRef(null)
 const startY = useRef(0)
@@ -40,6 +41,47 @@ const dragging = useRef(false)
 
   const u = data?.user || {}
   const sports = data?.sports || []
+
+async function toggleFavorite() {
+
+  if (!data || favoriteLoading) return
+
+  try {
+
+    setFavoriteLoading(true)
+
+    const currentlyFavorite = data.is_favorite
+
+    // optimistic update
+    setData(prev => ({
+      ...prev,
+      is_favorite: !currentlyFavorite
+    }))
+
+    if (currentlyFavorite) {
+
+      await api.delete(`/users/${userId}/favorite`)
+
+    } else {
+
+      await api.post(`/users/${userId}/favorite`)
+    }
+
+  } catch (e) {
+
+    console.log("favorite toggle error", e)
+
+    // rollback
+    setData(prev => ({
+      ...prev,
+      is_favorite: !prev.is_favorite
+    }))
+
+  } finally {
+
+    setFavoriteLoading(false)
+  }
+}
 
 function startDrag(e) {
   dragging.current = true
@@ -135,11 +177,30 @@ useEffect(() => {
                     </span>
                   )}
 
-                </div>
+               
+
+ </div>
 
                 <div className="profile-name">
-                  {u.nickname || t.nickname}
+                  {u.nickname || t.nickname}{" "}
+
+
+
+
+
+
                 </div>
+<button
+  type="button"
+  className={`profile-favorite-btn ${data?.is_favorite ? "active" : ""}`}
+  onClick={toggleFavorite}
+  disabled={favoriteLoading}
+>
+  {data?.is_favorite
+    ? `⭐ ${t.favorite_player || "Favorite"}`
+    : `☆ ${t.add_favorite || "Add favorite"}`
+  }
+</button>
 
               </div>
             </div>

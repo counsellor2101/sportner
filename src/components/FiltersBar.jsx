@@ -1,5 +1,5 @@
 import "../styles/filters-bar.css"
-import { useRef, useEffect } from "react"
+import { useEffect } from "react"
 
 export default function FiltersBar({
   filters,
@@ -47,18 +47,9 @@ const sortedGroups = [
 ]
 
 
-const hideTimerRef = useRef(null)
 
-function startHideTimer(){
 
-  if(hideTimerRef.current){
-    clearTimeout(hideTimerRef.current)
-  }
 
-  hideTimerRef.current = setTimeout(() => {
-    setActiveFilter(null)
-  }, 4000) // 4 секунди
-}
 
 useEffect(() => {
 
@@ -95,7 +86,7 @@ useEffect(() => {
     return next
   })
 
-  startHideTimer()
+
 }}
     >
       {t.filter_city}
@@ -106,7 +97,7 @@ useEffect(() => {
   className={`filter-cat ${activeFilter === "venue" ? "active" : ""}`}
   onClick={() => {
     setActiveFilter(prev => prev === "venue" ? null : "venue")
-    startHideTimer()
+
   }}
 >
   {t.filter_venue}
@@ -118,7 +109,7 @@ useEffect(() => {
       className={`filter-cat ${activeFilter === "sport" ? "active" : ""}`}
       onClick={() => {
   setActiveFilter(prev => prev === "sport" ? null : "sport")
-  startHideTimer()
+
 }}
     >
       {t.filter_sport}
@@ -133,7 +124,7 @@ useEffect(() => {
     if (disabledFilters.includes("level")) return
 
     setActiveFilter(prev => prev === "level" ? null : "level")
-    startHideTimer()
+
   }}
 >
   {t.filter_level}
@@ -151,7 +142,7 @@ useEffect(() => {
     if (disabledFilters.includes("group")) return
 
     setActiveFilter(prev => prev === "group" ? null : "group")
-    startHideTimer()
+
   }}
 >
   {t.filter_group}
