@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "Z9MVSU583R.com.sportner.app",
+        "paths": ["*"]
+      }
+    ]
+  }
+}

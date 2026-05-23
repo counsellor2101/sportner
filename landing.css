@@ -1,0 +1,658 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2869
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 .landing \{\
+  min-height: 100vh;\
+\
+  background-size: cover;\
+  background-position: center;\
+  background-repeat: no-repeat;\
+\
+  overflow-x: hidden;\
+  color: white;\
+\
+  position: relative;\
+\}\
+\
+\
+.landing > *\{\
+  position:relative;\
+  z-index:1;\
+\}\
+\
+.landing-page\{\
+  min-height:100vh;\
+\
+  background-image:url("/images/back.jpg");\
+  background-size:cover;\
+  background-position:center;\
+  background-repeat:no-repeat;\
+\}\
+\
+/* TOP */\
+\
+.landing-top\{\
+  position:relative;\
+\
+  padding-top:20px;\
+  padding-bottom:0px;\
+\}\
+\
+.landing-screen\{\
+  position:relative;\
+\
+  width:100%;\
+  height:100vh;\
+\
+  overflow-y:auto;\
+  overflow-x:hidden;\
+\
+  padding-top: var(--safe-top);\
+  padding-bottom: var(--safe-bottom);\
+\
+  color:white;\
+\}\
+\
+/* HERO */\
+\
+.landing-hero \{\
+  position: relative;\
+  padding: 30px 24px 20px;\
+\}\
+\
+.landing-navbar\{\
+  position:relative;\
+\
+  display:flex;\
+  justify-content:center;\
+\
+  padding-top:20px;\
+\}\
+\
+\
+\
+.landing-lang\{\
+  display:flex;\
+  align-items:center;\
+  gap:4px;\
+\
+  color:#ffffff;\
+\
+  font-size:22px;\
+  font-style:italic;\
+  font-weight:700;\
+\
+  letter-spacing:0.5px;\
+\
+  text-shadow:0 1px 6px rgba(0,0,0,0.18);\
+\}\
+\
+.landing-lang button\{\
+  background:none;\
+  border:none;\
+  outline:none;\
+\
+  color:inherit;\
+  font:inherit;\
+  padding:0;\
+\
+  cursor:pointer;\
+\
+  opacity:0.95;\
+\}\
+\
+.landing-lang button.active\{\
+  opacity:1;\
+\}\
+\
+.landing-hero-content \{\
+  display: flex;\
+  align-items: center;\
+  justify-content: space-between;\
+  gap: 40px;\
+  margin-top: 0px;\
+\}\
+\
+.landing-logo-wrap\{\
+  position:relative;\
+\
+  display:flex;\
+  justify-content:center;\
+\
+  margin-top:20px;\
+  margin-bottom:0px;\
+\
+  z-index:2;\
+\}\
+\
+.landing-logo\{\
+  width:250px;\
+  max-width:72%;\
+  display:block;\
+\}\
+\
+.landing-text \{\
+  max-width:520px;\
+  margin:auto;\
+  z-index: 2;\
+\}\
+\
+.landing-text h1 \{\
+  font-size: 76px;\
+  line-height: 1.05;\
+  margin-bottom: 20px;\
+\}\
+\
+.landing-text p \{\
+  font-size: 24px;\
+  line-height: 1.5;\
+  opacity: 0.95;\
+  max-width: 520px;\
+font-weight: 700;\
+\}\
+\
+.landing-buttons \{\
+  display: flex;\
+  gap: 18px;\
+  margin: 30px 0;\
+  flex-wrap: wrap;\
+\}\
+\
+.landing-btn \{\
+  padding:13px 28px;\
+font-size:17px;\
+  border-radius: 18px;\
+  text-decoration: none;\
+  font-weight: 700;\
+  transition: 0.25s;\
+\}\
+\
+.landing-btn.primary \{\
+  background:\
+    linear-gradient(\
+      135deg,\
+      #3c63ff,\
+      #ff295f\
+    );\
+\
+  color: white;\
+\}\
+\
+.landing-btn.secondary \{\
+  background: rgba(255,255,255,0.2);\
+  backdrop-filter: blur(14px);\
+  color: white;\
+\}\
+\
+.landing-btn:hover \{\
+  transform: translateY(-3px);\
+\}\
+\
+.landing-phone-wrapper \{\
+  position: relative;\
+  z-index: 2;\
+\}\
+\
+.landing-phone \{\
+  width: 360px;\
+  border-radius: 42px;\
+  overflow: hidden;\
+  box-shadow:\
+    0 30px 80px rgba(0,0,0,0.25);\
+\}\
+\
+.landing-phone img \{\
+  width: 100%;\
+  display: block;\
+\}\
+\
+.landing-bg-glow \{\
+  position: absolute;\
+  border-radius: 50%;\
+  filter: blur(120px);\
+\}\
+\
+.landing-glow-1 \{\
+  width: 400px;\
+  height: 400px;\
+  background: #4ac7ff;\
+  top: -100px;\
+  left: -120px;\
+\}\
+\
+.landing-glow-2 \{\
+  width: 400px;\
+  height: 400px;\
+  background: #ff4b88;\
+  right: -100px;\
+  top: 100px;\
+\}\
+\
+/* SECTIONS */\
+\
+.landing-section \{\
+  padding: 20px 24px 0px;\
+\}\
+\
+.landing-section-header \{\
+  text-align: center;\
+  margin-bottom: 10px;\
+\}\
+\
+.landing-section-header h2 \{\
+  font-size: 50px;\
+  margin-bottom: 16px;\
+\}\
+\
+.landing-section-header p \{\
+  font-size: 22px;\
+  opacity: 0.95;\
+\}\
+\
+/* FEATURES */\
+\
+.landing-feature \{\
+  display: flex;\
+  align-items: center;\
+  justify-content: center;\
+  gap: 40px;\
+  margin-bottom: 40px;\
+  flex-wrap: wrap;\
+\}\
+\
+.landing-feature.reverse \{\
+  flex-direction: row-reverse;\
+\}\
+\
+.landing-feature-phone \{\
+  width: 320px;\
+  border-radius: 36px;\
+  overflow: hidden;\
+  box-shadow:\
+    0 25px 70px rgba(0,0,0,0.25);\
+\}\
+\
+.landing-feature-phone img \{\
+  width: 100%;\
+  display: block;\
+\}\
+\
+.landing-feature-text \{\
+  max-width: 420px;\
+\}\
+\
+.landing-feature-text span \{\
+  font-size: 14px;\
+  font-weight: 700;\
+  letter-spacing: 2px;\
+  opacity: 0.8;\
+\}\
+\
+.landing-feature-text h3 \{\
+  font-size: 54px;\
+  line-height: 1.1;\
+  margin: 14px 0 22px;\
+\}\
+\
+.landing-feature-text p \{\
+  font-size: 22px;\
+  line-height: 1.6;\
+  opacity: 0.95;\
+\}\
+\
+/* SPORTS */\
+\
+.landing-sports \{\
+  padding: 20px 24px;\
+\}\
+\
+.landing-sports h2 \{\
+  text-align: center;\
+  font-size: 50px;\
+  margin-bottom: 30px;\
+\}\
+\
+.landing-sport-grid \{\
+  display: grid;\
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));\
+  gap: 22px;\
+  max-width: 1100px;\
+  margin: auto;\
+\}\
+\
+.landing-sport-card \{\
+  background: rgba(255,255,255,0.16);\
+  backdrop-filter: blur(16px);\
+\
+  border-radius: 26px;\
+\
+  padding: 40px;\
+\
+  display:flex;\
+\
+  align-items:center;\
+  justify-content:center;\
+\
+  gap:18px;\
+\
+  text-align:center;\
+\
+  font-size:24px;\
+  font-weight:700;\
+\}\
+\
+.landing-sport-icon\{\
+  width:40px;\
+  height:40px;\
+\
+  object-fit:contain;\
+  flex-shrink:0;\
+\}\
+\
+/* COMMUNITY */\
+\
+.landing-community \{\
+  padding: 80px 24px;\
+  display:flex;\
+  justify-content:center;\
+\}\
+\
+.landing-community-card \{\
+  max-width: 900px;\
+  margin-bottom: 20px;\
+\
+  background: rgba(255,255,255,0.16);\
+\
+  backdrop-filter: blur(20px);\
+\
+  border-radius: 36px;\
+\
+  padding: 24px;\
+  text-align: center;\
+\}\
+\
+.landing-community-card h2 \{\
+  font-size: 30px;\
+  margin-bottom: 20px;\
+\}\
+\
+.landing-community-card p \{\
+  font-size: 24px;\
+  line-height: 1.6;\
+\}\
+\
+/* CTA */\
+\
+.landing-cta \{\
+  padding: 50px 24px;\
+  text-align: center;\
+\}\
+\
+.landing-cta h2 \{\
+  font-size: 70px;\
+  margin-bottom: 20px;\
+\}\
+\
+.landing-cta p \{\
+  font-size: 24px;\
+  margin-bottom: 20px;\
+\}\
+\
+.landing-buttons.center \{\
+  justify-content: center;\
+\}\
+\
+/* FOOTER */\
+\
+.landing-footer \{\
+  padding: 40px 24px 80px;\
+  text-align: center;\
+\}\
+\
+.landing-footer-logo \{\
+  width: 140px;\
+  margin-bottom: 20px;\
+\}\
+\
+/* MOBILE */\
+\
+\
+@media (max-width: 768px) \{\
+\
+.landing-hero-content\{\
+    flex-direction:column;\
+    text-align:center;\
+    gap:12px;\
+  \}\
+\
+  .landing-hero \{\
+    padding-top: 20px;\
+  \}\
+\
+  .landing-logo \{\
+    width: 350px;\
+  \}\
+\
+  .landing-lang \{\
+    font-size: 18px;\
+  \}\
+\
+  .landing-text h1\{\
+  font-size:40px;\
+  line-height:1.08;\
+\}\
+\
+.landing-text p\{\
+    font-size:16px;\
+    line-height:1.4;\
+font-weight: 650;\
+  \}\
+\
+  .landing-phone \{\
+    width: 260px;\
+  \}\
+\
+  .landing-btn \{\
+    width: 100%;\
+  \}\
+\
+  .landing-feature-phone \{\
+    width: 260px;\
+  \}\
+\
+  .landing-feature-text h3 \{\
+    font-size: 36px;\
+  \}\
+\
+  .landing-cta h2 \{\
+    font-size: 48px;\
+  \}\
+\
+\}\
+\
+/* STATS */\
+\
+.landing-stats\{\
+  display:grid;\
+\
+  grid-template-columns:\
+    repeat(auto-fit, minmax(180px,1fr));\
+\
+  gap:20px;\
+\
+  padding:0 24px;\
+\
+  max-width:1200px;\
+  margin:auto;\
+\}\
+\
+.landing-stat-card\{\
+  background:rgba(255,255,255,0.14);\
+\
+  backdrop-filter:blur(18px);\
+\
+  border-radius:28px;\
+\
+  padding:34px 24px;\
+\
+  text-align:center;\
+\
+  box-shadow:\
+    0 10px 30px rgba(0,0,0,0.14);\
+\}\
+\
+.landing-stat-card h3\{\
+  font-size:54px;\
+  line-height:1;\
+\
+  margin-bottom:14px;\
+\
+  font-weight:900;\
+\}\
+\
+.landing-stat-card p\{\
+  font-size:18px;\
+  font-weight:700;\
+\
+  opacity:0.95;\
+\}	\
+\
+/* VENUES */\
+\
+.landing-venues\{\
+  padding:80px 24px;\
+\}\
+\
+.landing-venue-grid\{\
+  display:grid;\
+\
+  grid-template-columns:\
+    repeat(auto-fit,minmax(240px,1fr));\
+\
+  gap:22px;\
+\
+  max-width:1200px;\
+  margin:auto;\
+\}\
+\
+.landing-venue-card\{\
+  background:\
+    rgba(255,255,255,0.14);\
+\
+  backdrop-filter:blur(18px);\
+\
+  border-radius:30px;\
+\
+  padding:30px;\
+\
+  min-height:140px;\
+\
+  display:flex;\
+  flex-direction:column;\
+  justify-content:space-between;\
+\
+  box-shadow:\
+    0 12px 35px rgba(0,0,0,0.15);\
+\
+  transition:0.25s;\
+\}\
+\
+.landing-venue-card:hover\{\
+  transform:translateY(-4px);\
+\}\
+\
+.landing-venue-card h3\{\
+  font-size:26px;\
+  line-height:1.2;\
+\
+  margin:0;\
+\}\
+\
+.landing-venue-card span\{\
+  font-size:17px;\
+  opacity:0.85;\
+\}\
+\
+.landing-venue-card.more\{\
+  justify-content:center;\
+  align-items:center;\
+  text-align:center;\
+\}\
+\
+.landing-venue-card.more h3\{\
+  font-size:52px;\
+\}\
+\
+.reveal\{\
+  opacity:0;\
+\
+  transform:\
+    translateY(60px);\
+\
+  filter:blur(10px);\
+\
+  transition:\
+    opacity 0.9s ease,\
+    transform 0.9s ease,\
+    filter 0.9s ease;\
+\}\
+\
+.reveal.active\{\
+  opacity:1;\
+\
+  transform:\
+    translateY(0);\
+\
+  filter:blur(0);\
+\}\
+\
+.landing-topbar\{\
+  display:flex;\
+  align-items:center;\
+  justify-content:space-between;\
+ top:calc(var(--safe-top) + 10px);\
+  padding:0 24px;\
+\}\
+\
+.landing-open-app\{\
+  display:flex;\
+  align-items:center;\
+  gap:10px;\
+\
+  padding:8px 14px;\
+\
+  border-radius:18px;\
+\
+  background:\
+    rgba(255,255,255,0.14);\
+\
+  backdrop-filter:blur(16px);\
+\
+  color:#fff;\
+\
+  text-decoration:none;\
+\
+  font-size:15px;\
+  font-weight:800;\
+\
+  box-shadow:\
+    0 6px 20px rgba(0,0,0,0.14);\
+\
+  transition:0.2s;\
+\}\
+\
+.landing-open-app-logo\{\
+  width:30px;\
+  display:block;\
+\}\
+\
+.landing-open-app:hover\{\
+  transform:translateY(-2px);\
+\
+  background:\
+    rgba(255,255,255,0.20);\
+\}}

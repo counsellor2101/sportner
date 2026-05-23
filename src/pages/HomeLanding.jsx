@@ -2,11 +2,32 @@ import "../styles/home-landing.css"
 import { texts } from "../i18n/texts"
 import "../styles/login.css";
 import { useEffect } from "react"
+import { Capacitor } from "@capacitor/core"
 
 export default function HomeLanding() {
 
   const lang = localStorage.getItem("lang") || "bg"
   const t = texts[lang] || texts.bg
+
+const isApple =
+  /iPhone|iPad|iPod|Macintosh/i.test(
+    navigator.userAgent
+  )
+
+const storeLink = isApple
+  ? "https://apps.apple.com/app/id6768100727"
+  : "https://play.google.com/store/apps/details?id=com.sportner.app"
+
+useEffect(() => {
+
+  if (Capacitor.isNativePlatform()) {
+
+    window.location.replace("/")
+
+    return
+  }
+
+}, [])
 
 useEffect(() => {
 
@@ -52,9 +73,24 @@ useEffect(() => {
  <section className="landing-top">
 <div className="landing-topbar">
 
-<a
-  href="https://sportner.online/"
+{!isApple && (
+
+<button
+  type="button"
   className="landing-open-app"
+  onClick={() => {
+
+    window.location.href =
+      "intent://sportner.online/#Intent;scheme=https;package=com.sportner.app;end"
+
+    setTimeout(() => {
+
+      window.location.href =
+        "https://play.google.com/store/apps/details?id=com.sportner.app"
+
+    }, 1500)
+
+  }}
 >
 
   <img
@@ -67,7 +103,9 @@ useEffect(() => {
     {t.openApp}
   </span>
 
-</a>
+</button>
+
+)}
 
 
   <div className="landing-lang">
@@ -135,14 +173,14 @@ useEffect(() => {
             <div className="landing-buttons">
 
               <a
-                href="#"
-                className="landing-btn primary"
-              >
-                {t.download}
-              </a>
+  href={storeLink}
+  className="landing-btn primary"
+>
+  {t.download}
+</a>
 
               <a
-                href="#"
+                href="/"
                 className="landing-btn secondary"
               >
                 {t.openWebApp}
@@ -557,23 +595,35 @@ useEffect(() => {
 
 
 
-        <div className="landing-buttons center">
+        <div className="landing-store-buttons">
 
-          <a
-            href="#"
-            className="landing-btn primary"
-          >
-            App Store
-          </a>
+  <a
+    href="https://apps.apple.com/app/id6768100727"
+    className="landing-store-link"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <img
+      src="/images/app_store.png"
+      alt="Download on the App Store"
+      className="landing-store-badge"
+    />
+  </a>
 
-          <a
-            href="#"
-            className="landing-btn secondary"
-          >
-            Google Play
-          </a>
+  <a
+    href="https://play.google.com/store/apps/details?id=com.sportner.app"
+    className="landing-store-link"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <img
+      src="/images/GetItOnGooglePlay_Badge.png"
+      alt="Get it on Google Play"
+      className="landing-store-badge"
+    />
+  </a>
 
-        </div>
+</div>
 
       </section>
 

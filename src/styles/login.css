@@ -319,3 +319,36 @@
   }
 
 }
+
+.login-store-buttons{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+
+  width:100%;
+
+  gap:10px;
+padding-bottom:70px;
+  margin-top:22px;
+}
+
+.login-store-buttons a{
+  display:flex;
+  justify-content:center;
+
+  width:100%;
+}
+
+.login-store-badge{
+  width:160px;
+  height:auto;
+
+  display:block;
+
+  transition:0.2s;
+}
+
+.login-store-badge:hover{
+  transform:translateY(-2px);
+}

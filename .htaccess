@@ -1,6 +1,18 @@
+<Files "apple-app-site-association">
+
+  ForceType application/json
+
+</Files>
+
+AddType text/html .html
+
 RewriteEngine On
 
 RewriteBase /sportner/
+
+RewriteRule ^landing\.html$ - [L]
+
+RewriteRule ^landing\.css$ - [L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

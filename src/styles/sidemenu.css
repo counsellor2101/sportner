@@ -169,3 +169,31 @@ margin-top: 8px;
 .side-menu{
   z-index: 1000;
 }
+
+.side-store-buttons{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+
+  gap:8px;
+
+  margin-top:18px;
+  padding-bottom:16px;
+}
+
+.side-store-badge{
+  width:150px;
+  height:auto;
+
+  display:block;
+
+  opacity:0.95;
+
+  transition:0.2s;
+}
+
+.side-store-badge:hover{
+  opacity:1;
+
+  transform:translateY(-1px);
+}
