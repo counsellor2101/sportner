@@ -10,8 +10,9 @@ import ReportModal from "../components/ReportModal"
 import { useAuth } from "../context/authcontext"
 
 export default function Notifications(){
-const [openGroup, setOpenGroup] = useState(null)
+
   const [items, setItems] = useState([])
+const [messageItems, setMessageItems] = useState([])
 
 const [filter, setFilter] = useState("all")
 
@@ -22,7 +23,94 @@ const { user } = useAuth()
 
 const lastIdsRef = useRef("")
 
+const loadingRef = useRef(false)
 
+async function load(){
+
+  if (loadingRef.current) return
+  loadingRef.current = true
+
+  try{
+    const res = await api.get("/me/notifications")
+    const newData = res.data?.data || []
+
+try {
+
+  const msgRes = await api.get("/messages/inbox")
+  const inbox = msgRes.data?.data || []
+
+  setMessageItems(inbox)
+
+} catch(e) {
+
+  console.error("messages inbox failed", e)
+
+}
+
+    const ids = newData.map(i => `${i.id}-${i.is_read}`).join(",")
+
+    if (ids !== lastIdsRef.current) {
+      setItems(newData)
+      lastIdsRef.current = ids
+    }
+
+  }catch(e){
+    console.error(e)
+  } finally {
+    loadingRef.current = false
+  }
+}
+
+useEffect(() => {
+  load()
+}, [])
+
+
+useEffect(() => {
+
+  const refresh = () => {
+    load()
+  }
+
+  // 🔥 refresh когато app-ът прати event
+  window.addEventListener("notificationsUpdated", refresh)
+
+  // 🔥 refresh при връщане в app-а
+  const onFocus = () => {
+    load()
+  }
+
+  window.addEventListener("focus", onFocus)
+
+  // 🔥 iOS / Android WebView resume
+  const onVisibility = () => {
+    if (!document.hidden) {
+      load()
+    }
+  }
+
+  document.addEventListener("visibilitychange", onVisibility)
+
+  return () => {
+
+    window.removeEventListener(
+      "notificationsUpdated",
+      refresh
+    )
+
+    window.removeEventListener(
+      "focus",
+      onFocus
+    )
+
+    document.removeEventListener(
+      "visibilitychange",
+      onVisibility
+    )
+
+  }
+
+}, [])
 
 
 
@@ -38,7 +126,12 @@ setItems(prev =>
 window.dispatchEvent(new Event("notificationsUpdated"))
 
 try {
-  await api.post("/me/notifications/read-all")
+  await Promise.all([
+  api.post("/me/notifications/read-all"),
+  api.post("/messages/read-all")
+])
+
+load()
 } catch (e) {
   console.error(e)
   load() // fallback
@@ -49,42 +142,9 @@ try {
     }
   }
 
-
-
-
-
-
-
-async function load(){
-  try{
-    if (filter === "messages") {
-      const res = await api.get("/me/conversation")
-      setItems(res.data?.data || [])
-    } else {
-      const res = await api.get("/me/notifications")
-      setItems(res.data?.data || [])
-    }
-  }catch(e){
-    console.error(e)
-  }
+function extractSportnerLink(text){
+  return text?.match(/https?:\/\/sportner\.online\/\S+/)?.[0] || null
 }
-
-
-useEffect(() => {
-  load()
-
-  const interval = setInterval(load, 10000)
-  return () => clearInterval(interval)
-}, [filter])
-
-
-
-
-
-
-
-
-
 
 
 
@@ -139,84 +199,67 @@ useEffect(() => {
 
 </div>
 
-        {items.length === 0 && (
-          <p>{t.no_notifications || "You do not have any notifications yet"}</p>
-        )}
+        {filter !== "messages" && items.length === 0 && (
+  <p>{t.no_notifications || "You do not have any notifications yet"}</p>
+)}
 
-        {items.length > 0 && (
+{filter === "messages" && messageItems.length === 0 && (
+  <p>{t.no_messages || "No messages yet"}</p>
+)}
 
+        {(items.length > 0 || messageItems.length > 0) && (
 
-<div className="inappnotifications notif-compact">
+          <div className="inappnotifications notif-compact">
 
-{filter === "messages" && items.map(group => {
+{filter === "messages" ? (
 
-  const last = (group.items || []).slice(-1)[0]
+  messageItems.map(m => (
 
-  return (
     <div
-  key={group.user_id}
-  className="inappnotifications-item"
-  onClick={() =>
-    setOpenGroup(prev => prev === group.user_id ? null : group.user_id)
-  }
->
+      key={m.id}
+      className="inappnotifications-item"
+    >
 
       <div className="inappnotifications-content">
 
         <div className="inappnotifications-texts">
 
           <div className="inappnotifications-title">
-            {group.user_name}
+            {m.other_user_name}
           </div>
 
           <div className="inappnotifications-body">
-            {last?.payload?.message || ""}
+            {m.message}
           </div>
 
-          <div className="inappnotifications-meta">
-            {(group.items || []).length} messages
-          </div>
+          {!!Number(m.unread_count) && (
+            <div className="inappnotifications-meta unread">
+              {m.unread_count} unread
+            </div>
+          )}
 
-        </div>
+          <button
+            className="inappnotifications-btn"
+            onClick={() => {
+              setReplyUserId(m.other_user_id)
+            }}
+          >
+            {t.reply || "Reply"}
+          </button>
 
-        <button
-          className="inappnotifications-btn"
-          onClick={(e) => {
-            e.stopPropagation()
-            setReplyUserId(group.user_id)
-          }}
-        >
-          {t.reply || "Reply"}
-        </button>
-
-      </div>
-{openGroup === group.user_id && (
-
-  <div className="notif-expanded">
-
-    {(group.items || []).filter(Boolean).map(msg => (
-
-      <div key={msg.id} className="notif-message-row">
-
-        <div className="notif-message-text">
-          <strong>
-            {msg?.payload?.from_user_id === user?.user?.id ? "You" : group.user_name}:
-          </strong>{" "}
-          {msg?.payload?.message || ""}
         </div>
 
       </div>
 
-    ))}
-
-  </div>
-
-)}
     </div>
-  )
-})}
 
-{filter !== "messages" && items
+  ))
+
+) : (
+
+(
+
+items
   .filter(n => {
 
     if (filter === "all") return true
@@ -225,15 +268,14 @@ useEffect(() => {
       return n.type !== "player_contact"
     }
 
-    if (filter === "messages") {
-      return n.type === "player_contact"
-    }
+    
 
     return true
   })
   .map(n => {
-
 const mapped = mapNotification(n, t)
+const actionLink = extractSportnerLink(mapped.body)
+
 
               // 🔥 normalize (ако backend връща "0"/"1")
               const isUnread = !Number(n.is_read)
@@ -254,8 +296,6 @@ const formattedDate = payload.date
       year: "numeric"
     })
   : null
-
-
 
 
 
@@ -299,8 +339,22 @@ const formattedDate = payload.date
     </div>
 
     <div className={`inappnotifications-body ${isUnread ? "unread" : ""}`}>
-      {mapped.body}
-    </div>
+  {actionLink
+    ? mapped.body.replace(actionLink, "").trim()
+    : mapped.body}
+</div>
+
+{actionLink && (
+  <button
+    className="gdm-invite-btn"
+    onClick={(e) => {
+      e.stopPropagation()
+      window.location.href = actionLink
+    }}
+  >
+    🔗 {t.open || "Open"}
+  </button>
+)}
 
     <div className={`inappnotifications-meta ${isUnread ? "unread" : ""}`}>
 
@@ -424,7 +478,9 @@ const formattedDate = payload.date
                 </div>
 
               )
-            })}
+            })
+)
+)}
 
           </div>
 

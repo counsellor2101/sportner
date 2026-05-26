@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useRef } from "react"
 import api from "../api/api"
 import { texts } from "../i18n/texts"
 import "../styles/pwa-install.css"
@@ -12,6 +12,8 @@ export default function ReportModal({
 }) {
 
   const [text, setText] = useState("")
+const sendingRef = useRef(false)
+const [sending, setSending] = useState(false)
   const lang = (localStorage.getItem("lang") || "bg").toLowerCase()
   const t = texts[lang] ?? texts.bg
 
@@ -56,9 +58,19 @@ export default function ReportModal({
 
           <button
             className="pwa-btn pwa-btn-primary"
-            disabled={!text.trim()}
+            disabled={!text.trim() || sending}
             onClick={async () => {
-              if (!text.trim()) return
+if (sendingRef.current) return
+
+sendingRef.current = true
+setSending(true)
+              if (!text.trim()) {
+
+  sendingRef.current = false
+  setSending(false)
+
+  return
+}
 
               const payload = {
   message: text,
@@ -80,21 +92,32 @@ export default function ReportModal({
 }
 
               try{
-                await api.post("/me/report", payload)
 
-                alert(
-  type === "suggestion"
-    ? (t.suggest_sent || "Suggestion sent")
-    : type === "contact_player"
-    ? (t.message_sent || "Message sent")
-    : (t.report_sent || "Report sent")
-)
-              }catch(e){
-                alert(t.report_error || "Failed to send")
-              }
+  await api.post("/me/report", payload)
 
-              setText("")
-              onClose()
+  alert(
+    type === "suggestion"
+      ? (t.suggest_sent || "Suggestion sent")
+      : type === "contact_player"
+      ? (t.message_sent || "Message sent")
+      : (t.report_sent || "Report sent")
+  )
+
+setText("")
+onClose()
+
+
+}catch(e){
+
+  alert(t.report_error || "Failed to send")
+
+} finally {
+
+  sendingRef.current = false
+  setSending(false)
+
+}
+
             }}
           >
             {t.send || "Send"}

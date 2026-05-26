@@ -350,7 +350,7 @@ display:flex;
 align-items:center;
 justify-content:center;
 
-z-index:2;
+z-index:4;
 
 background:linear-gradient(
 135deg,
@@ -754,4 +754,81 @@ line-height: 1.5;
   z-index: 1;
 font-size:15px;
 font-weight:700;
+}
+
+.gdm-activities{
+  margin:16px 0;
+}
+
+.gdm-activities-list{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.gdm-activity-card{
+
+  background:white;
+
+  border-radius:16px;
+
+  overflow:hidden;
+
+  box-shadow:
+    0 2px 10px rgba(0,0,0,0.06);
+}
+
+.gdm-activity-image{
+  width:100%;
+  display:block;
+
+  object-fit:contain;
+
+  max-height:320px;
+
+  background:#f3f3f3;
+}
+
+.gdm-activity-caption{
+
+  padding:12px 14px;
+
+  font-size:14px;
+  line-height:1.45;
+
+  color:#333;
+
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+
+.gdm-activity-card{
+  position:relative;
+}
+
+.gdm-activity-delete{
+
+  position:absolute;
+
+  top:10px;
+  right:10px;
+
+  width:28px;
+  height:28px;
+
+  border:none;
+
+  border-radius:50%;
+
+  background:rgba(0,0,0,0.55);
+
+  color:white;
+
+  font-size:16px;
+
+  cursor:pointer;
+
+  z-index:3;
+
+  backdrop-filter:blur(4px);
 }

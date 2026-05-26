@@ -12,8 +12,13 @@ import { useAuth } from "../context/authcontext"
 export default function Notifications(){
 
   const [items, setItems] = useState([])
+const [messageItems, setMessageItems] = useState([])
 
-const [filter, setFilter] = useState("all")
+const [openConversation, setOpenConversation] = useState(null)
+const [conversationMessages, setConversationMessages] = useState([])
+const [loadingConversation, setLoadingConversation] = useState(false)
+
+const [filter, setFilter] = useState("games")
 
   const lang = (localStorage.getItem("lang") || "bg").toLowerCase()
   const t = texts[lang] ?? texts.bg
@@ -33,6 +38,19 @@ async function load(){
     const res = await api.get("/me/notifications")
     const newData = res.data?.data || []
 
+try {
+
+  const msgRes = await api.get("/messages/inbox")
+  const inbox = msgRes.data?.data || []
+
+  setMessageItems(inbox)
+
+} catch(e) {
+
+  console.error("messages inbox failed", e)
+
+}
+
     const ids = newData.map(i => `${i.id}-${i.is_read}`).join(",")
 
     if (ids !== lastIdsRef.current) {
@@ -49,9 +67,89 @@ async function load(){
 
 useEffect(() => {
   load()
+}, [])
 
-  const interval = setInterval(load, 15000)
-  return () => clearInterval(interval)
+async function toggleConversation(userId){
+
+  // close
+  if (openConversation === userId) {
+
+    setOpenConversation(null)
+    setConversationMessages([])
+
+    return
+  }
+
+  try {
+
+    setLoadingConversation(true)
+
+    const res = await api.get(
+      `/messages/${userId}`
+    )
+
+    setConversationMessages(
+      res.data?.data || []
+    )
+
+    setOpenConversation(userId)
+
+  } catch(e) {
+
+    console.error(e)
+
+  } finally {
+
+    setLoadingConversation(false)
+
+  }
+}
+
+
+useEffect(() => {
+
+  const refresh = () => {
+    load()
+  }
+
+  // 🔥 refresh когато app-ът прати event
+  window.addEventListener("notificationsUpdated", refresh)
+
+  // 🔥 refresh при връщане в app-а
+  const onFocus = () => {
+    load()
+  }
+
+  window.addEventListener("focus", onFocus)
+
+  // 🔥 iOS / Android WebView resume
+  const onVisibility = () => {
+    if (!document.hidden) {
+      load()
+    }
+  }
+
+  document.addEventListener("visibilitychange", onVisibility)
+
+  return () => {
+
+    window.removeEventListener(
+      "notificationsUpdated",
+      refresh
+    )
+
+    window.removeEventListener(
+      "focus",
+      onFocus
+    )
+
+    document.removeEventListener(
+      "visibilitychange",
+      onVisibility
+    )
+
+  }
+
 }, [])
 
 
@@ -68,7 +166,12 @@ setItems(prev =>
 window.dispatchEvent(new Event("notificationsUpdated"))
 
 try {
-  await api.post("/me/notifications/read-all")
+  await Promise.all([
+  api.post("/me/notifications/read-all"),
+  api.post("/messages/read-all")
+])
+
+load()
 } catch (e) {
   console.error(e)
   load() // fallback
@@ -113,12 +216,7 @@ function extractSportnerLink(text){
 
         <div className="filters-selected">
 
-  <div
-    className={`filter-chip ${filter === "all" ? "" : "active"}`}
-    onClick={() => setFilter("all")}
-  >
-    {t.all || "All"}
-  </div>
+
 
   <div
     className={`filter-chip ${filter === "games" ? "" : "active"}`}
@@ -136,25 +234,189 @@ function extractSportnerLink(text){
 
 </div>
 
-        {items.length === 0 && (
-          <p>{t.no_notifications || "You do not have any notifications yet"}</p>
-        )}
+        {filter !== "messages" && items.length === 0 && (
+  <p>{t.no_notifications || "You do not have any notifications yet"}</p>
+)}
 
-        {items.length > 0 && (
+{filter === "messages" && messageItems.length === 0 && (
+  <p>{t.no_messages || "No messages yet"}</p>
+)}
+
+        {(items.length > 0 || messageItems.length > 0) && (
 
           <div className="inappnotifications notif-compact">
-{items
+
+{filter === "messages" ? (
+
+  messageItems.map(m => (
+
+    <div
+      key={m.id}
+      className={`inappnotifications-item ${
+  Number(m.unread_count) ? "unread" : ""
+}`}
+    >
+
+      <div className="inappnotifications-content">
+
+{Number(m.unread_count) > 0 && (
+  <div className="inappnotifications-dot" />
+)}
+
+        <div className="inappnotifications-texts">
+
+          <div className={`inappnotifications-title ${
+  Number(m.unread_count) ? "unread" : ""
+}`}>
+
+
+            {m.other_user_name}
+          </div>
+
+
+          <div className={`inappnotifications-body ${
+  Number(m.unread_count) ? "unread" : ""
+}`}>
+            {m.message}
+          </div>
+
+          {!!Number(m.unread_count) && (
+            <div className="inappnotifications-meta unread">
+              {m.unread_count} unread
+            </div>
+          )}
+
+<button
+  className="inappnotifications-btn"
+  onClick={(e) => {
+
+    e.stopPropagation()
+
+setMessageItems(prev =>
+  prev.map(item =>
+    item.other_user_id === m.other_user_id
+      ? {
+          ...item,
+          unread_count: 0
+        }
+      : item
+  )
+)
+
+    toggleConversation(m.other_user_id)
+
+  }}
+>
+  {openConversation === m.other_user_id
+    ? (t.close || "Close")
+    : (t.open || "Open")}
+</button>
+
+{openConversation === m.other_user_id && (
+
+  <div className="conversation-expanded">
+
+    {loadingConversation && (
+      <div className="conversation-loading">
+        Loading...
+      </div>
+    )}
+
+    {!loadingConversation && conversationMessages.map(msg => {
+
+      const mine =
+        Number(msg.sender_id) === Number(user?.id)
+
+      return (
+
+        <div
+          key={msg.id}
+          className={`conversation-msg ${
+            mine ? "mine" : "theirs"
+          }`}
+        >
+          <strong>
+  {Number(msg.sender_id) === Number(user?.id)
+    ? (t.me || "Me")
+    : "User"}
+:
+</strong>{" "}
+
+{(() => {
+
+  const link = extractSportnerLink(msg.message)
+
+  if (!link) {
+    return msg.message
+  }
+
+  return (
+    <>
+      {msg.message.replace(link, "").trim()}
+
+      <button
+        className="gdm-invite-btn"
+        onClick={(e) => {
+
+          e.stopPropagation()
+
+          window.location.href = link
+
+        }}
+      >
+        🔗 {t.open || "Open"}
+      </button>
+    </>
+  )
+
+})()}
+        </div>
+
+      )
+
+    })}
+
+  </div>
+
+)}
+
+<button
+  className="inappnotifications-btn"
+  onClick={(e) => {
+
+    e.stopPropagation()
+
+    setReplyUserId(m.other_user_id)
+
+  }}
+>
+  {t.reply || "Reply"}
+</button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  ))
+
+) : (
+
+(
+
+items
   .filter(n => {
 
-    if (filter === "all") return true
+  if (filter === "games") {
+    return n.type !== "player_contact"
+  }
 
-    if (filter === "games") {
-      return n.type !== "player_contact"
-    }
+  if (filter === "messages") {
+    return false
+  }
 
-    if (filter === "messages") {
-      return n.type === "player_contact"
-    }
+    
 
     return true
   })
@@ -364,7 +626,9 @@ const formattedDate = payload.date
                 </div>
 
               )
-            })}
+            })
+)
+)}
 
           </div>
 

@@ -21,6 +21,7 @@ const [selectedUserId, setSelectedUserId] = useState(null)
   const { user, loading: userLoading } = useAuth()
 
   const [game, setGame] = useState(null)
+const [activities, setActivities] = useState([])
   const [loading, setLoading] = useState(false)
 
   const sheetRef = useRef(null)
@@ -47,6 +48,13 @@ const [savingNote, setSavingNote] = useState(false)
     try {
       const res = await api.get(`/games/${gameId}`)
       setGame(res.data)
+const activitiesRes = await api.get(
+  `/games/${gameId}/activities`
+)
+
+setActivities(
+  activitiesRes.data?.data || []
+)
     } catch (e) {
       console.log("game reload error", e)
     }
@@ -490,6 +498,18 @@ ${game.court_reserved ? "✅ Court booked" : "❌ No court booked"}
   `.trim()
 }
 
+function buildActivityCaption(game) {
+
+  return `
+${game.venue_name} | ${
+  lang === "bg"
+    ? game.city_name
+    : game.city_name_en || game.city_name
+} | ${formatGameDate(game.game_date, lang)}
+
+  `.trim()
+}
+
 async function handleShare() {
   if (!game) return
 
@@ -561,7 +581,7 @@ async function uploadActivity(e){
 
     fd.append(
       "caption",
-      buildShareText(game)
+      buildActivityCaption(game)
     )
 
     fd.append(
@@ -595,7 +615,8 @@ async function uploadActivity(e){
     alert(
       t.activity_uploaded ||
       "Activity uploaded"
-    )
+     )
+await reloadGame()
 
   } catch(e) {
 
@@ -859,6 +880,84 @@ async function uploadActivity(e){
 
           </div>
         </div>
+
+{activities.length > 0 && (
+
+  <div className="gdm-activities">
+
+    <div className="gdm-note-title">
+      {t.activities || "Activities"}
+    </div>
+
+    <div className="gdm-activities-list">
+
+      {activities.map(a => (
+
+        <div
+  key={a.id}
+  className="gdm-activity-card"
+>
+
+  {Number(a.user_id) === Number(user?.user?.id) && (
+
+    <button
+      className="gdm-activity-delete"
+      onClick={async (e) => {
+
+        e.stopPropagation()
+
+        const ok = window.confirm(
+          t.delete_activity_confirm ||
+          "Delete activity?"
+        )
+
+        if (!ok) return
+
+        try {
+
+          await api.delete(
+            `/activities/${a.id}`
+          )
+
+          setActivities(prev =>
+            prev.filter(x => x.id !== a.id)
+          )
+
+        } catch(e) {
+
+          console.log(
+            "delete activity error",
+            e
+          )
+        }
+      }}
+    >
+      ✕
+    </button>
+
+  )}
+
+          <img
+            src={a.media_url}
+            className="gdm-activity-image"
+          />
+
+          {a.caption && (
+
+            <div className="gdm-activity-caption">
+              {a.caption}
+            </div>
+
+          )}
+
+        </div>
+      ))}
+
+    </div>
+
+  </div>
+)}
+
 {/* NOTE */}
 {(game.note || isOwner) && (
 

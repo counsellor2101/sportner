@@ -7,6 +7,7 @@ export default function Header({ onMenuToggle }){
 
 
 const [unread, setUnread] = useState(0)
+const [messagesUnread, setMessagesUnread] = useState(0)
 const navigate = useNavigate()
 const loadingRef = useRef(false)
 
@@ -37,14 +38,42 @@ async function loadUnread(){
   loadingRef.current = true
 
   try{
-    const res = await api.get("/me/notifications/unread-count")
-    setUnread(res.data?.unread ?? res.data?.count ?? 0)
+
+    const [
+      notifRes,
+      msgRes
+    ] = await Promise.all([
+
+      api.get("/me/notifications/unread-count"),
+      api.get("/messages/unread-count")
+
+    ])
+
+    const notifUnread =
+      notifRes.data?.unread ??
+      notifRes.data?.count ??
+      0
+
+    const msgUnread =
+      msgRes.data?.unread ??
+      msgRes.data?.count ??
+      0
+
+    setUnread(notifUnread)
+    setMessagesUnread(msgUnread)
+
   }catch(e){
+
     console.error("notif error", e)
+
   } finally {
+
     loadingRef.current = false
+
   }
 }
+
+const totalUnread = unread + messagesUnread
 
 return(
 
@@ -74,9 +103,9 @@ return(
 
 <img src="/images/bell.png" alt="Notifications" />
 
-{unread > 0 && (
+{totalUnread > 0 && (
   <span className="notification-badge">
-    {unread}
+    {totalUnread}
   </span>
 )}
 

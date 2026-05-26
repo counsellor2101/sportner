@@ -3,9 +3,25 @@ export const texts = {
 bg:{
 
 heroTitle: "Избери спорт. Намери игра.",
+me: "Аз",
+close: "Затвори",
 
 favorite_player: "Любим",
 add_favorite: "Добави в любими",
+
+activities: "Истории",
+
+activity_uploaded:
+  "Историята е качена",
+
+delete_activity_confirm:
+  "Изтриване на историята?",
+
+delete_activity:
+  "Изтрий историята",
+
+post_activity:
+  "Сподели",
 
 notification_favorite_game:
   "Любим играч създаде игра",
@@ -328,8 +344,25 @@ en:{
 
  heroTitle: "Choose sport. Find game",
 
+me: "Me",
+close: "Close",
+
 favorite_player: "Favorite",
 add_favorite: "Add favorite",
+
+post_activity:
+  "Post",
+
+activities: "Stories",
+
+activity_uploaded:
+  "Story uploaded",
+
+delete_activity_confirm:
+  "Delete story?",
+
+delete_activity:
+  "Delete story",
 
 notification_favorite_game:
   "Favorite player created a game",

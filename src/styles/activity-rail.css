@@ -1,0 +1,124 @@
+.activity-grid{
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap:6px;
+
+  margin-top:12px;
+}
+
+.activity-grid-item{
+
+  position:relative;
+
+  aspect-ratio:1/1;
+
+  overflow:hidden;
+
+  border-radius:12px;
+
+  background:#eee;
+
+  cursor:pointer;
+}
+
+.activity-grid-image{
+
+  width:100%;
+  height:100%;
+
+  object-fit:cover;
+
+  display:block;
+
+  transition:transform .2s ease;
+}
+
+.activity-grid-item:active
+.activity-grid-image{
+
+  transform:scale(0.97);
+}
+
+.activity-viewer{
+
+  position:fixed;
+flex-direction:column;
+
+  inset:0;
+
+  backdrop-filter:blur(8px);
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  z-index:9999;
+
+  padding:20px;
+
+}
+
+.activity-viewer-image{
+
+  max-width:90vw;
+  max-height:60vh;
+
+  width:auto;
+  height:auto;
+
+  object-fit:contain;
+
+  border-radius:14px;
+
+  box-shadow:
+    0 10px 40px rgba(0,0,0,0.45);
+}
+
+.activity-viewer-caption{
+
+  margin-bottom:14px;
+
+  max-width:90vw;
+
+  text-align:center;
+
+  color:#111;
+
+  font-size:15px;
+font-weight:600;
+
+  line-height:1.45;
+
+  white-space:pre-wrap;
+  word-break:break-word;
+
+  opacity:.95;
+}
+
+.activity-viewer-delete{
+
+  margin-bottom:14px;
+
+  padding:10px 16px;
+
+  border:none;
+
+  border-radius:12px;
+
+  background:#111;
+
+  color:white;
+
+  font-size:14px;
+  font-weight:600;
+
+  cursor:pointer;
+
+  box-shadow:
+    0 4px 14px rgba(0,0,0,0.22);
+}

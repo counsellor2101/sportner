@@ -8,6 +8,7 @@ import ProfileRow from "../components/ProfileRow"
 import "../styles/profile.css"
 import ConfirmModal from "../components/ConfirmModal"
 import { triggerPushPrompt } from "../push/pushBus"
+import ActivityRail from "../components/ActivityRail"
 
 
 export default function Profile() {
@@ -657,7 +658,7 @@ async function handleDeleteAccount() {
           </div>
 
 
-
+<ActivityRail userId={u.id} />
 
 <div className="profile-danger">
  <div className="danger-text">

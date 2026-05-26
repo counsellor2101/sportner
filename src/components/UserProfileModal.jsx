@@ -4,6 +4,7 @@ import "../styles/profile.css"
 import ReportModal from "./ReportModal"
 import { useAuth } from "../context/authcontext"
 import { texts } from "../i18n/texts"
+import ActivityRail from "./ActivityRail"
 
 export default function UserProfileModal({ userId, onClose }) {
 
@@ -231,6 +232,10 @@ useEffect(() => {
 >
   {t.contact_player}
 </button>
+
+
+<ActivityRail userId={userId} />
+
 
               {/* SPORTS */}
               <div className="profile-section">
