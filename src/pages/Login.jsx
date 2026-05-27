@@ -6,6 +6,7 @@ import { texts } from "../i18n/texts";
 import AppShell from "../components/AppShell";
 import "../styles/login.css";
 import { registerPushIfAlreadyGranted } from "../push/pushService";
+import { Capacitor } from "@capacitor/core";
 
 export default function Login(){
 
@@ -25,7 +26,8 @@ const location = useLocation();
   const { login } = useAuth();
   const navigate = useNavigate();
 
-
+const isNative = Capacitor.isNativePlatform();
+const isIOS = Capacitor.getPlatform() === "ios";
 
 
 function getSafeRedirect(raw) {
@@ -341,29 +343,33 @@ setLoading(false);
 
 <div className="login-store-buttons">
 
-  <a
-    href="https://apps.apple.com/app/id6768100727"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    <img
-      src="/images/app_store.png"
-      alt="App Store"
-      className="login-store-badge"
-    />
-  </a>
+  {(!isNative || isIOS) && (
+    <a
+      href="https://apps.apple.com/app/id6768100727"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img
+        src="/images/app_store.png"
+        alt="App Store"
+        className="login-store-badge"
+      />
+    </a>
+  )}
 
-  <a
-    href="https://play.google.com/store/apps/details?id=com.sportner.app"
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    <img
-      src="/images/GetItOnGooglePlay_Badge.png"
-      alt="Google Play"
-      className="login-store-badge"
-    />
-  </a>
+  {(!isNative || !isIOS) && (
+    <a
+      href="https://play.google.com/store/apps/details?id=com.sportner.app"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img
+        src="/images/GetItOnGooglePlay_Badge.png"
+        alt="Google Play"
+        className="login-store-badge"
+      />
+    </a>
+  )}
 
 </div>
     </div>
