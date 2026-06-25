@@ -20,7 +20,11 @@ console.log("city found:", cityMap[venue.city_id])
       </div>
 
 <div className="venue-city">
-<img src="/images/location_icon.png" className="row-icon" />
+<img
+    src="/images/location_icon.png"
+    className="gdm-info-icon"
+    alt="location"
+  />
   {lang === "bg"
     ? city?.name_bg
     : city?.name_en}

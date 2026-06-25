@@ -1,15 +1,54 @@
 import { useEffect, useRef, useState } from "react"
 import TimeSlot from "./TimeSlot"
 import api from "../api/api"
+import PromotionCard from "./PromotionCard"
 
-export default function Timeline({ selectedDate, filters, isDesktop, onOpenGame, profileComplete, onCreateGame }){
+
+
+function isPastSlot(slot, selectedDate){
+  const now = new Date()
+
+  const [h, m] = slot.split(":").map(Number)
+
+
+
+  const slotDate = new Date(selectedDate)
+  slotDate.setHours(h, m, 0, 0)
+
+  return slotDate < now
+}
+
+
+export default function Timeline({
+  selectedDate,
+  filters,
+  isDesktop,
+  onOpenGame,
+  profileComplete,
+  onCreateGame,
+  fullSlotClickable = false,
+  startSlot = null,
+  endSlot = null,
+  selectedRanges = [],   // 🔥 ново
+showGames = true,   // 🔥 НОВО
+alerts = [],   // 🔥
+  cities = [],
+  sports = [],
+  venues = []
+}){
 
 const timelineRef = useRef(null)
-const [currentTop, setCurrentTop] = useState(null)
+
 const [expandedSlots, setExpandedSlots] = useState({})
 
 const maxCards = isDesktop ? 4 : 2
 const [games,setGames] = useState({})
+
+const [promotions, setPromotions] = useState([])
+
+
+
+const loadingRef = useRef(false)
 
 function generateTimeSlots(){
 
@@ -42,9 +81,26 @@ setExpandedSlots(prev => ({
 
 }
 
+
+
+
+
+
+
+
+
 useEffect(()=>{
 
 async function loadGames(){
+
+
+
+  if (!selectedDate) return   // 🔥 защита за date
+
+  if (loadingRef.current) return
+  loadingRef.current = true
+
+
 
 try{
 
@@ -59,6 +115,7 @@ String(date.getDate()).padStart(2,'0')
 const date = formatLocalDate(selectedDate)
 
 const res = await api.get("/games/timeline",{
+silent: true,
 params:{
   date,
   ...(filters.city_ids.length && { city_ids: filters.city_ids }),
@@ -69,9 +126,28 @@ params:{
 }
 })
 
-if(res && res.data && res.data.slots){
+if(res && res.data){
 
-setGames(res.data.slots)
+  const newSlots = res.data.slots || {}
+  const newPromotions = res.data.promotions || []
+
+  setGames(prev => {
+
+    if(JSON.stringify(prev) === JSON.stringify(newSlots)){
+      return prev
+    }
+
+    return newSlots
+  })
+
+  setPromotions(prev => {
+
+    if(JSON.stringify(prev) === JSON.stringify(newPromotions)){
+      return prev
+    }
+
+    return newPromotions
+  })
 
 }
 
@@ -79,7 +155,9 @@ setGames(res.data.slots)
 
 console.log("timeline error", e)
 
-}
+} finally {
+    loadingRef.current = false
+  }
 
 }
 
@@ -126,55 +204,7 @@ setExpandedSlots({})
   JSON.stringify(filters?.group_ids) // 🔥
 ])
 
-/* red line realtime */
 
-useEffect(() => {
-
-function updateCurrentLine(){
-
-const now = new Date()
-
-let hours = now.getHours()
-let minutes = now.getMinutes()
-
-if(hours < 6){
-hours = 6
-minutes = 0
-}
-
-if(hours >= 24){
-hours = 23
-minutes = 59
-}
-
-const slotMinutes = minutes < 30 ? "00" : "30"
-
-const slotId =
-"slot-" + String(hours).padStart(2,"0") + ":" + slotMinutes
-
-const slotElement = document.getElementById(slotId)
-
-if(!slotElement) return
-
-const slotTop = slotElement.offsetTop
-const slotHeight = slotElement.offsetHeight
-
-const minutesInsideSlot = minutes % 30
-const pixelsPerMinute = slotHeight / 30
-
-const top = slotTop + minutesInsideSlot * pixelsPerMinute
-
-setCurrentTop(top)
-
-}
-
-updateCurrentLine()
-
-const interval = setInterval(updateCurrentLine,1000)
-
-return () => clearInterval(interval)
-
-},[])
 
 /* AUTO SCROLL */
 
@@ -212,43 +242,112 @@ behavior: "smooth"
 },[])
 
 
+function isSlotInAvailability(slot, item){
+  const start = item.start?.slice(0,5)
+  let end = item.end?.slice(0,5)
+
+  if(!start || !end) return false
+
+  // 00:00 в availability означава край на деня = 24:00
+  if(end === "00:00"){
+    end = "24:00"
+  }
+
+  return slot >= start && slot <= end
+}
+
+
 return(
 
 <div className="timeline" ref={timelineRef}>
 
 <div className="timeline-inner">
 
-{currentTop !== null && (
 
-<div
-className="current-time-line"
-style={{top:currentTop+"px"}}
->
-
-<div className="current-time-dot"></div>
-
-</div>
-
-)}
 
 {slots.map(slot => {
+const dateStr = selectedDate.toISOString().split("T")[0]
+
+const inSavedRange = selectedRanges.some(r =>
+  r.date === dateStr &&
+  slot >= r.start &&
+  slot <= r.end
+)
+
+const isStartSaved = selectedRanges.some(r =>
+  r.date === dateStr &&
+  r.start === slot
+)
+
+const isEndSaved = selectedRanges.some(r =>
+  r.date === dateStr &&
+  r.end === slot
+)
+
+const isPendingStart =
+  startSlot &&
+  startSlot.date === dateStr &&
+  startSlot.time === slot
 
 const slotGames = games[slot] || []
+const slotPromotions = promotions.filter(
+  p => p.slot_after === slot
+)
+const isPast = isPastSlot(slot, selectedDate)
+
+
+const slotAlerts = alerts.filter(a =>
+  a.date === dateStr &&
+  isSlotInAvailability(slot, a)
+)
+
+const alertStarts = alerts.filter(a =>
+  a.date === dateStr &&
+  a.start === slot
+)
+
+
+
 
 return(
 
-<TimeSlot
-key={slot}
-slot={slot}
-slotGames={slotGames}
-expanded={expandedSlots[slot]}
-toggleSlot={toggleSlot}
-maxCards={maxCards}
-profileComplete={profileComplete}
-onOpenGame={onOpenGame}
-onCreateGame={onCreateGame}
+<>
 
+<TimeSlot
+  key={slot}
+  slot={slot}
+  slotGames={slotGames}
+  expanded={expandedSlots[slot]}
+  toggleSlot={toggleSlot}
+  maxCards={maxCards}
+  profileComplete={profileComplete}
+  onOpenGame={onOpenGame}
+  onCreateGame={onCreateGame}
+  fullSlotClickable={fullSlotClickable}
+  isSelected={inSavedRange || isPendingStart}
+isStart={isStartSaved || isPendingStart}
+isEnd={isEndSaved}
+showGames={showGames}   // 🔥
+hasAlert={slotAlerts.length > 0}
+isAlertStart={alertStarts.length > 0}
+alert={alertStarts[0] || null}
+cities={cities}
+sports={sports}
+venues={venues}
+alerts={alerts}
+isPast={isPast}
 />
+
+{slotPromotions.map(promo => (
+
+  <PromotionCard
+    key={`promo-${promo.id}`}
+    promotion={promo}
+  />
+
+))}
+
+</>
 
 )
 

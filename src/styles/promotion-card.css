@@ -1,0 +1,100 @@
+.timeline-promotion-card{
+  position: relative;
+  width: calc(100% + 20px);
+  margin-top: 12px;
+  margin-bottom: 12px;
+  margin-left: -10px;
+
+  padding: 20px 16px;
+
+  border-radius: 0;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,140,0,0.9),
+      rgba(255,80,80,0.9)
+    );
+
+
+
+  cursor: pointer;
+
+  transition: opacity .2s ease;
+}
+
+.timeline-promotion-card:hover{
+  opacity: .95;
+}
+
+.timeline-promotion-card:active{
+  transform: scale(0.98);
+}
+
+
+
+.timeline-promotion-badge{
+  position: absolute;
+
+  top: 4px;
+  right: 4px;
+
+  display: inline-flex;
+
+  padding: 2px 7px;
+
+  border-radius: 999px;
+
+  font-size: 8px;
+  font-weight: 650;
+
+  background: rgba(255,255,255,0.12);
+
+  color: #fff;
+
+  margin-bottom: 0;
+}
+
+.timeline-promotion-title{
+  font-size: 14px;
+  font-weight: 700;
+
+  color: white;
+
+  min-height:22px;
+display:flex;
+  align-items:center;
+  margin-bottom: 6px;
+}
+
+.timeline-promotion-subtitle{
+  font-size: 13px;
+font-weight: 600;
+  line-height: 1.4;
+
+  color: rgba(255,255,255,0.78);
+}
+
+.timeline-promotion-title-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.timeline-promotion-sport-icon{
+  width:22px;
+  height:22px;
+  object-fit:contain;
+  flex-shrink:0;
+margin-bottom: 6px;
+
+}
+
+.timeline-promotion-complete_profile{
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,80,80,0.95),
+      rgba(220,38,38,0.95)
+    );
+}

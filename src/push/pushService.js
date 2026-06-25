@@ -247,9 +247,15 @@ export async function initNativePushListeners() {
   const { PushNotifications } = await import("@capacitor/push-notifications");
 
   await PushNotifications.addListener(
-    "pushNotificationReceived",
-    () => {}
-  );
+  "pushNotificationReceived",
+  () => {
+
+    window.dispatchEvent(
+      new Event("notificationsUpdated")
+    );
+
+  }
+);
 
   await PushNotifications.addListener(
     "pushNotificationActionPerformed",

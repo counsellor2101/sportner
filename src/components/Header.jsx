@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react"
 import api from "../api/api"
 import "../styles/header.css"
 import { useNavigate } from "react-router-dom"
+import { Capacitor } from "@capacitor/core"
 
 export default function Header({ onMenuToggle }){
 
@@ -13,22 +14,42 @@ const loadingRef = useRef(false)
 
 
 useEffect(() => {
+
   loadUnread()
 
-  // 🔥 слушаме за промени
   function handleUpdate(){
     loadUnread()
   }
 
-  window.addEventListener("notificationsUpdated", handleUpdate)
+  window.addEventListener(
+  "notificationsUpdated",
+  handleUpdate
+)
 
-  // optional polling
-  const interval = setInterval(loadUnread, 15000)
+let interval = null
 
-  return () => {
+if (!Capacitor.isNativePlatform()) {
+
+  interval = setInterval(
+    loadUnread,
+    15000
+  )
+
+}
+
+return () => {
+
+  if (interval) {
     clearInterval(interval)
-    window.removeEventListener("notificationsUpdated", handleUpdate)
   }
+
+  window.removeEventListener(
+    "notificationsUpdated",
+    handleUpdate
+  )
+
+}
+
 }, [])
 
 async function loadUnread(){
@@ -40,14 +61,21 @@ async function loadUnread(){
   try{
 
     const [
-      notifRes,
-      msgRes
-    ] = await Promise.all([
+  notifRes,
+  msgRes
+] = await Promise.all([
 
-      api.get("/me/notifications/unread-count"),
-      api.get("/messages/unread-count")
+  api.get(
+    "/me/notifications/unread-count",
+    { silent: true }
+  ),
 
-    ])
+  api.get(
+    "/messages/unread-count",
+    { silent: true }
+  )
+
+])
 
     const notifUnread =
       notifRes.data?.unread ??

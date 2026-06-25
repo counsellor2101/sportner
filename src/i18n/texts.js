@@ -5,6 +5,78 @@ bg:{
 heroTitle: "Избери спорт. Намери игра.",
 me: "Аз",
 close: "Затвори",
+view: "Изглед",
+free_spot_join: "Натисни за включване",
+link_copied: "Линкът е копиран",
+reserve_spot: "Запази място",
+
+played_games: "Изиграни мачове (сетове или цели игри)",
+
+advanced_results_disabled:
+  "Разширените резултати не са достъпни при запазени места, защото в играта може да има участници без профил, ниво или рейтинг.",
+
+add_match: "Добави мач",
+match: "Мач",
+
+team_a: "Отбор A",
+team_b: "Отбор B",
+
+score: "Резултат",
+
+game_result: "Резултат и рейтинг",
+
+results_simple: "Опростено",
+results_advanced: "Разширено",
+
+feedback_already_submitted:
+  "Вече сте дали оценка за тази игра.",
+
+feedback_submit_failed:
+  "Грешка при записване на оценката.",
+
+
+feedback_submit: "Изпрати",
+feedback_thanks: "Благодарим за обратната връзка",
+
+
+feedback_title: "Обратна връзка за играта",
+feedback_sub: "Помогни ни да подобрим нивата и съвпаденията между играчите",
+
+feedback_best_player:
+  "Кой от останалите играчи се представи най-добре днес?",
+feedback_level: "Как беше нивото на играта за теб?",
+
+level_below: "Под моето ниво",
+level_same: "На моето ниво",
+level_above: "Над моето ниво",
+
+invite_link: "Покани",
+
+reserved_spot_for: "Запазено място за",
+accept_reserved_spot: "Приеми запазеното място",
+
+reserved_spot_accepted:
+  "Запазеното място е прието",
+
+repeat_weekly: "Седмично повторение",
+weeks_short: "седм.",
+
+activity_type: "Тип събитие",
+activity_type_game: "Игра",
+activity_type_training: "Тренировка",
+activity_type_tournament: "Турнир",
+coach: "Треньор",
+
+promotion_featured: "Препоръчано",
+promotion_open: "Отвори",
+club_search: "Търси клуб...",
+today: "Днес",
+tomorrow: "Утре",
+
+games: "Игри",
+messages: "Съобщения",
+
+unread: "непрочетени",
 
 favorite_player: "Любим",
 add_favorite: "Добави в любими",
@@ -55,7 +127,7 @@ openApp: "Към приложението",
   createGamesText:
     "Създавай публични, частни и турнирни игри лесно.",
 
-  availability: "НАЛИЧНОСТ",
+  availability: "Вашата наличност",
 
   availabilityTitle: "Покажи кога можеш да играеш",
 
@@ -344,8 +416,83 @@ en:{
 
  heroTitle: "Choose sport. Find game",
 
+link_copied: "Invite link copied",
+
+reserve_spot: "Reserve Spot",
+
+free_spot_join: "Tap to join",
+
+invite_link: "Invite",
+
+game_result: "Result",
+match: "Match",
+
+team_a: "Team A",
+team_b: "Team B",
+
+score: "Score and Rating",
+
+played_games: "Played Matches (Complete Sets/Games)",
+
+
+feedback_title: "Game Feedback",
+feedback_sub: "Help us improve ratings and player matching",
+
+feedback_best_player:
+  "Which of the other players performed best today?",
+feedback_level: "How was the game level for you?",
+
+level_below: "Below my level",
+level_same: "At my level",
+level_above: "Above my level",
+
+results_simple: "Simple",
+results_advanced: "Advanced",
+
+add_match: "Add Match",
+
+
+feedback_submit: "Submit",
+feedback_thanks: "Thank you for your feedback",
+
+feedback_already_submitted:
+  "You have already submitted feedback for this game.",
+
+feedback_submit_failed:
+  "Failed to submit feedback.",
+
+advanced_results_disabled:
+  "Advanced results are unavailable when reserved players are in the game because some participants may not have a profile, level or rating yet.",
+
 me: "Me",
 close: "Close",
+view: "View",
+club_search: "Search club...",
+games: "Games",
+messages: "Messages",
+
+repeat_weekly: "Weekly repeat",
+weeks_short: "wks",
+
+reserved_spot_accepted:
+  "Reserved spot accepted",
+
+reserved_spot_for: "Reserved spot for",
+accept_reserved_spot: "Accept Reserved Spot",
+
+activity_type: "Activity type",
+activity_type_game: "Game",
+activity_type_training: "Training",
+activity_type_tournament: "Tournament",
+coach: "Coach",
+
+today: "Today",
+tomorrow: "Tomorrow",
+
+promotion_featured: "Featured",
+promotion_open: "Open",
+
+unread: "unread",
 
 favorite_player: "Favorite",
 add_favorite: "Add favorite",
@@ -397,7 +544,7 @@ openApp: "Open App",
   createGamesText:
     "Organize public, private and tournament games easily.",
 
-  availability: "AVAILABILITY",
+  availability: "Your availability",
 
   availabilityTitle: "Set when you can play",
 

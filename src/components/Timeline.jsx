@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import TimeSlot from "./TimeSlot"
 import api from "../api/api"
+import PromotionCard from "./PromotionCard"
 
 
 
@@ -20,6 +21,7 @@ function isPastSlot(slot, selectedDate){
 
 export default function Timeline({
   selectedDate,
+  dateLoadingRef,
   filters,
   isDesktop,
   onOpenGame,
@@ -42,6 +44,10 @@ const [expandedSlots, setExpandedSlots] = useState({})
 
 const maxCards = isDesktop ? 4 : 2
 const [games,setGames] = useState({})
+
+const [promotions, setPromotions] = useState([])
+
+
 
 const loadingRef = useRef(false)
 
@@ -88,9 +94,24 @@ useEffect(()=>{
 
 async function loadGames(){
 
+
+
   if (!selectedDate) return   // 🔥 защита за date
 
-  if (loadingRef.current) return
+  if (loadingRef.current) {
+
+  if (dateLoadingRef?.current) {
+
+    dateLoadingRef.current = false
+
+    window.dispatchEvent(
+      new Event("globalLoadingEnd")
+    )
+
+  }
+
+  return
+}
   loadingRef.current = true
 
 
@@ -108,6 +129,7 @@ String(date.getDate()).padStart(2,'0')
 const date = formatLocalDate(selectedDate)
 
 const res = await api.get("/games/timeline",{
+silent: true,
 params:{
   date,
   ...(filters.city_ids.length && { city_ids: filters.city_ids }),
@@ -118,15 +140,54 @@ params:{
 }
 })
 
-if(res && res.data && res.data.slots){
+if(res && res.data){
 
-setGames(res.data.slots)
+  const newSlots = res.data.slots || {}
+  const newPromotions = res.data.promotions || []
+
+  setGames(prev => {
+
+    if(JSON.stringify(prev) === JSON.stringify(newSlots)){
+      return prev
+    }
+
+    return newSlots
+  })
+
+  setPromotions(prev => {
+
+    if(JSON.stringify(prev) === JSON.stringify(newPromotions)){
+      return prev
+    }
+
+    return newPromotions
+  })
+
+if (dateLoadingRef?.current) {
+
+  dateLoadingRef.current = false
+
+  window.dispatchEvent(
+    new Event("globalLoadingEnd")
+  )
+
+}
 
 }
 
 }catch(e){
 
 console.log("timeline error", e)
+
+if (dateLoadingRef?.current) {
+
+  dateLoadingRef.current = false
+
+  window.dispatchEvent(
+    new Event("globalLoadingEnd")
+  )
+
+}
 
 } finally {
     loadingRef.current = false
@@ -263,6 +324,9 @@ const isPendingStart =
   startSlot.time === slot
 
 const slotGames = games[slot] || []
+const slotPromotions = promotions.filter(
+  p => p.slot_after === slot
+)
 const isPast = isPastSlot(slot, selectedDate)
 
 
@@ -280,6 +344,8 @@ const alertStarts = alerts.filter(a =>
 
 
 return(
+
+<>
 
 <TimeSlot
   key={slot}
@@ -306,7 +372,16 @@ alerts={alerts}
 isPast={isPast}
 />
 
+{slotPromotions.map(promo => (
 
+  <PromotionCard
+    key={`promo-${promo.id}`}
+    promotion={promo}
+  />
+
+))}
+
+</>
 
 )
 

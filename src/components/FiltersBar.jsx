@@ -1,5 +1,5 @@
 import "../styles/filters-bar.css"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 export default function FiltersBar({
   filters,
@@ -41,6 +41,38 @@ const sortedVenues = [
   ...(venues || []).filter(v => !(filters.venue_ids || []).includes(v.id))
 ]
 
+const [showVenueSearch, setShowVenueSearch] = useState(false)
+const [venueSearch, setVenueSearch] = useState("")
+
+const searchableVenues = sortedVenues.filter(v => {
+
+  if (!venueSearch.trim()) return true
+
+  const search = venueSearch.toLowerCase()
+
+  const city = cities.find(c => c.id === v.city_id)
+
+  const venueSports = sports.filter(s =>
+    v.sport_ids?.includes(s.id)
+  )
+
+  const keywords = [
+    v.name,
+
+    city?.name_bg,
+    city?.name_en,
+
+    ...venueSports.map(s => s.name_bg),
+    ...venueSports.map(s => s.name_en),
+    ...venueSports.map(s => s.slug)
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase()
+
+  return keywords.includes(search)
+})
+
 const sortedGroups = [
   ...(groups || []).filter(g => (filters.group_ids || []).includes(g.id)),
   ...(groups || []).filter(g => !(filters.group_ids || []).includes(g.id))
@@ -53,24 +85,23 @@ const sortedGroups = [
 
 useEffect(() => {
 
+  if(!activeFilter) return
+
   function handleScroll(){
     setActiveFilter(null)
   }
 
   const el = document.querySelector(".timeline")
 
-  if(el){
-    el.addEventListener("scroll", handleScroll)
-  }
+  if(!el) return
+
+  el.addEventListener("scroll", handleScroll)
 
   return () => {
-    if(el){
-      el.removeEventListener("scroll", handleScroll)
-    }
+    el.removeEventListener("scroll", handleScroll)
   }
 
-}, [])
-
+}, [activeFilter, setActiveFilter])
   return (
 
 <div className="filters-wrapper">
@@ -184,6 +215,11 @@ useEffect(() => {
 
 }}
         >
+<img
+    src={`/images/${s.icon}`}
+    alt=""
+    className="filter-sport-icon"
+  />
           {s.name_en} ✕
         </div>
       )
@@ -297,7 +333,15 @@ useEffect(() => {
             toggleFilter("sport_ids", sport.id)
           }}
         >
-          {sport.name_en}
+          <>
+  <img
+    src={`/images/${sport.icon}`}
+    alt=""
+    className="filter-sport-icon"
+  />
+
+  {sport.name_en}
+</>
         </div>
       )
     })}
@@ -315,8 +359,50 @@ useEffect(() => {
       </div>
     ))}
 
-    {/* VENUES */}
-    {activeFilter === "venue" && sortedVenues.map(v => (
+   {/* VENUES */}
+{activeFilter === "venue" && (
+  <>
+{!showVenueSearch ? (
+
+  <div
+    className="filter-chip"
+    onClick={() => setShowVenueSearch(true)}
+  >
+    🔍
+  </div>
+
+) : (
+
+  <div className="filter-search-chip">
+    <input
+      autoFocus
+      type="text"
+      placeholder={t.club_search}
+      value={venueSearch}
+      onChange={e => setVenueSearch(e.target.value)}
+      onBlur={() => {
+        if (!venueSearch.trim()) {
+          setShowVenueSearch(false)
+        }
+      }}
+      className="filter-search-input"
+    />
+ <span
+  className="filter-search-clear"
+  onMouseDown={(e) => e.preventDefault()}
+  onClick={() => {
+    setVenueSearch("")
+    setShowVenueSearch(false)
+  }}
+>
+  ✕
+</span>
+  </div>
+
+)}
+
+{searchableVenues.map(v => (
+
       <div
         key={v.id}
         className={`filter-chip ${(filters.venue_ids || []).includes(v.id) ? "active" : ""}`}
@@ -327,6 +413,8 @@ useEffect(() => {
         {v.name}
       </div>
     ))}
+  </>
+)}
 
     {/* GROUPS */}
     {activeFilter === "group" && sortedGroups.map(g => (

@@ -90,7 +90,8 @@ function mergeRanges(ranges){
 
 function handleSlotPick(slot){
 
-  const dateStr = selectedDate.toISOString().split("T")[0]
+  const dateStr =
+    `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}-${String(selectedDate.getDate()).padStart(2, "0")}`
 
   const fullSlot = {
     date: dateStr,
@@ -468,7 +469,7 @@ return(
 <div className="discover-panel">
 
 <div className="discover-title">
-{t.discover}
+{t.availability}
 </div>
 </div>
 

@@ -8,7 +8,7 @@
 
   border-radius: 12px;
 
-  padding: 6px 6px 6px 12px;
+  padding: 3px 3px 3px 8px;
 
   margin: 3px 0;
 
@@ -46,8 +46,11 @@ background:#c9d4f4;
 /* JOINED GAME */
 
 .game-card.joined-game{
-background:#88f6aa;
-transform:scale(1.01);
+  border:3px solid rgba(237,36,31,0.70);
+
+
+
+  transform:none;
 }
 
 
@@ -80,7 +83,7 @@ background:#ffeaea;
 display:flex;
 align-items:center;
 justify-content:space-between;
-margin-bottom:2px;
+margin-bottom:4px;
 gap: 4px;
 }
 
@@ -92,32 +95,18 @@ font-weight:600;
 }
 
 .sport-icon{
-width:22px;
-height:22px;
+width:20px;
+height:20px;
 }
 
 .sport-name{
-font-size:12px;
+font-size:11px;
 }
 
 
 /* LEVEL */
 
-.level-badge{
-display:flex;
-align-items:center;
-gap:5px;
-padding:2px 6px;
-background:#f2f2f2;
-border-radius:6px;
-font-size:11px;
-}
 
-.level-dot{
-width:8px;
-height:8px;
-border-radius:50%;
-}
 
 
 /* DIVIDER */
@@ -133,17 +122,44 @@ margin:2px 0;
 /* ROWS */
 
 .game-row{
-display:flex;
+display:inline-flex;
 align-items:center;
-gap:6px;
-margin-top:1px;
-font-size:12px;
+width:fit-content;
+
+background:rgba(255,255,255,0.92);
+
+padding:0px 8px 0px 0px;
+
+border-radius:999px;
+gap:4px;
+margin-top:3px;
+margin-bottom:2px;
+font-size:11px;
+}
+
+.row-icon-wrap{
+  width:17px;
+  height:17px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:#ff2d2d;
+  border-radius:50%;
+
+  flex-shrink:0;
 }
 
 .row-icon{
-width:14px;
-height:14px;
-opacity:0.75;
+width:12px;
+height:12px;
+
+
+filter:brightness(0) invert(1);
+
+  opacity:1;
+
 }
 
 
@@ -249,19 +265,19 @@ color:#666;
 font-size:11px;
 }
 
-.level-badge{
+.game-detail-level-badge{
 display:flex;
 align-items:center;
-gap:5px;
+gap:4px;
 padding:1px 4px;
 border-radius:7px;
 font-size:11px;
 border:1px solid transparent;
 }
 
-.level-dot{
-width:8px;
-height:8px;
+.game-detail-level-dot{
+width:6px;
+height:6px;
 border-radius:50%;
 }
 
@@ -313,9 +329,10 @@ color:#c01818;
 background:#FF3B30;
 }
 
-.level-text{
+.game-detail-level-text{
 text-transform:capitalize;
-font-weight:600;
+font-weight:500;
+font-size: 10px;
 }
 
 .cancelled-game {
@@ -456,3 +473,90 @@ line-height: 1.2;
   );
 }
 
+/* =========================
+   GAME CARD APPEAR
+   ========================= */
+
+.game-card{
+  animation: gameCardBubbleIn .35s ease-out;
+}
+
+@keyframes gameCardBubbleIn{
+
+  from{
+    opacity:0;
+    transform:translateY(12px) scale(.98);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+
+}
+
+.game-card{
+  overflow:hidden;
+}
+
+.game-card::after{
+  content:"";
+  position:absolute;
+  
+  left:0;
+  right:0;
+  top:25px;   /* 🔥 започва под header-а */
+  bottom:0;
+
+  background-image:var(--card-bg);
+  background-size:cover;
+  background-position:center;
+
+  opacity:1;
+
+  pointer-events:none;
+  z-index:0;
+}
+
+.game-card > *{
+  position:relative;
+  z-index:1;
+}
+
+.level-beginner .game-detail-level-dot{
+  background:#3ae766;
+}
+
+.level-intermediate .game-detail-level-dot{
+  background:#2D7DF6;
+}
+
+.level-advanced .game-detail-level-dot{
+  background:#c58600;
+}
+
+.level-pro .game-detail-level-dot{
+  background:#FF3B30;
+}
+
+.level-badge{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  padding:1px 4px;
+  border-radius:7px;
+  font-size:11px;
+  border:1px solid transparent;
+}
+
+.level-dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  flex-shrink:0;
+}
+
+.level-text{
+  text-transform:capitalize;
+  font-weight:600;
+}

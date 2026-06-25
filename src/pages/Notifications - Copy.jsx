@@ -14,7 +14,11 @@ export default function Notifications(){
   const [items, setItems] = useState([])
 const [messageItems, setMessageItems] = useState([])
 
-const [filter, setFilter] = useState("all")
+const [openConversation, setOpenConversation] = useState(null)
+const [conversationMessages, setConversationMessages] = useState([])
+const [loadingConversation, setLoadingConversation] = useState(false)
+
+const [filter, setFilter] = useState("games")
 
   const lang = (localStorage.getItem("lang") || "bg").toLowerCase()
   const t = texts[lang] ?? texts.bg
@@ -64,6 +68,42 @@ try {
 useEffect(() => {
   load()
 }, [])
+
+async function toggleConversation(userId){
+
+  // close
+  if (openConversation === userId) {
+
+    setOpenConversation(null)
+    setConversationMessages([])
+
+    return
+  }
+
+  try {
+
+    setLoadingConversation(true)
+
+    const res = await api.get(
+      `/messages/${userId}`
+    )
+
+    setConversationMessages(
+      res.data?.data || []
+    )
+
+    setOpenConversation(userId)
+
+  } catch(e) {
+
+    console.error(e)
+
+  } finally {
+
+    setLoadingConversation(false)
+
+  }
+}
 
 
 useEffect(() => {
@@ -176,12 +216,7 @@ function extractSportnerLink(text){
 
         <div className="filters-selected">
 
-  <div
-    className={`filter-chip ${filter === "all" ? "" : "active"}`}
-    onClick={() => setFilter("all")}
-  >
-    {t.all || "All"}
-  </div>
+
 
   <div
     className={`filter-chip ${filter === "games" ? "" : "active"}`}
@@ -217,20 +252,43 @@ function extractSportnerLink(text){
 
     <div
       key={m.id}
-      className="inappnotifications-item"
+      className={`inappnotifications-item ${
+  Number(m.unread_count) ? "unread" : ""
+}`}
     >
 
-      <div className="inappnotifications-content">
+<div className={`conversation-user-header ${
+  Number(m.unread_count) ? "unread" : ""
+}`}>
 
-        <div className="inappnotifications-texts">
-
-          <div className="inappnotifications-title">
             {m.other_user_name}
           </div>
 
-          <div className="inappnotifications-body">
-            {m.message}
-          </div>
+      <div className="inappnotifications-content">
+
+{Number(m.unread_count) > 0 && (
+  <div className="inappnotifications-dot" />
+)}
+
+        <div className="inappnotifications-texts">
+
+          
+
+
+          <div className={`inappnotifications-body ${
+  Number(m.unread_count) ? "unread" : ""
+}`}>
+
+  <strong>
+  {Number(m.sender_id) === Number(user?.id)
+    ? (t.me || "Me")
+    : m.sender_name}
+  :
+</strong>{" "}
+
+  {m.message}
+
+</div>
 
           {!!Number(m.unread_count) && (
             <div className="inappnotifications-meta unread">
@@ -238,14 +296,112 @@ function extractSportnerLink(text){
             </div>
           )}
 
-          <button
-            className="inappnotifications-btn"
-            onClick={() => {
-              setReplyUserId(m.other_user_id)
-            }}
-          >
-            {t.reply || "Reply"}
-          </button>
+<button
+  className="inappnotifications-btn"
+  onClick={(e) => {
+
+    e.stopPropagation()
+
+setMessageItems(prev =>
+  prev.map(item =>
+    item.other_user_id === m.other_user_id
+      ? {
+          ...item,
+          unread_count: 0
+        }
+      : item
+  )
+)
+
+    toggleConversation(m.other_user_id)
+
+  }}
+>
+  {openConversation === m.other_user_id
+    ? (t.close || "Close")
+    : (t.open || "Open")}
+</button>
+
+{openConversation === m.other_user_id && (
+
+  <div className="conversation-expanded">
+
+    {loadingConversation && (
+      <div className="conversation-loading">
+        Loading...
+      </div>
+    )}
+
+    {!loadingConversation && conversationMessages.map(msg => {
+
+      const mine =
+        Number(msg.sender_id) === Number(user?.id)
+
+      return (
+
+        <div
+          key={msg.id}
+          className={`conversation-msg ${
+            mine ? "mine" : "theirs"
+          }`}
+        >
+<strong>
+  {Number(msg.sender_id) === Number(user?.id)
+    ? (t.me || "Me")
+    : msg.sender_name}
+:
+</strong>{" "}
+
+{(() => {
+
+  const link = extractSportnerLink(msg.message)
+
+  if (!link) {
+    return msg.message
+  }
+
+  return (
+    <>
+      {msg.message.replace(link, "").trim()}
+
+      <button
+        className="gdm-invite-btn"
+        onClick={(e) => {
+
+          e.stopPropagation()
+
+          window.location.href = link
+
+        }}
+      >
+        🔗 {t.open || "Open"}
+      </button>
+    </>
+  )
+
+})()}
+        </div>
+
+      )
+
+    })}
+
+  </div>
+
+)}
+
+<button
+  className="inappnotifications-btn"
+  onClick={(e) => {
+
+    e.stopPropagation()
+
+    setReplyUserId(m.other_user_id)
+
+  }}
+>
+  {t.reply || "Reply"}
+</button>
 
         </div>
 
@@ -262,11 +418,13 @@ function extractSportnerLink(text){
 items
   .filter(n => {
 
-    if (filter === "all") return true
+  if (filter === "games") {
+    return n.type !== "player_contact"
+  }
 
-    if (filter === "games") {
-      return n.type !== "player_contact"
-    }
+  if (filter === "messages") {
+    return false
+  }
 
     
 

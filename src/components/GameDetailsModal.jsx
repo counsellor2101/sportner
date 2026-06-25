@@ -12,7 +12,12 @@ import UserProfileModal from "./UserProfileModal"
 import { triggerPushPrompt } from "../push/pushBus"
 import { Capacitor } from "@capacitor/core"
 
-export default function GameDetailsModal({ gameId, onClose }) {
+
+export default function GameDetailsModal({
+  gameId,
+  inviteToken,
+  onClose
+}) {
 
 const [confirmType, setConfirmType] = useState(null)
 // "leave" | "cancel" | null
@@ -31,7 +36,12 @@ const [activities, setActivities] = useState([])
 
 const gameState = game ? computeGameState(game, user) : null
 const actionType = gameState ? getGameActionType(gameState) : null
+
+
+
 const isTournament = !!game?.name && game.name.trim() !== ""
+const isTraining =
+  game?.activity_type === "training"
 
 const [isEditingNote, setIsEditingNote] = useState(false)
 const [noteValue, setNoteValue] = useState("")
@@ -41,6 +51,16 @@ const [savingNote, setSavingNote] = useState(false)
 
   const lang = localStorage.getItem("lang") || "bg"
   const t = texts[lang] || texts.bg
+
+const [showReserveInput, setShowReserveInput] = useState(false)
+const [reservedName, setReservedName] = useState("")
+
+
+
+
+
+
+const [inviteInfo, setInviteInfo] = useState(null)
 
   /* LOAD GAME */
 
@@ -65,10 +85,30 @@ setActivities(
   }, [gameId])
 
 useEffect(() => {
-  if (game) {
+
+  if (!inviteToken) return
+
+  api.get(
+    `/reserved-invite/${inviteToken}`
+  )
+  .then(res => {
+
+    setInviteInfo(res.data)
+
+  })
+  .catch(() => {
+
+    setInviteInfo(null)
+
+  })
+
+}, [inviteToken])
+
+useEffect(() => {
+  if (game && !isEditingNote) {
     setNoteValue(game.note || "")
   }
-}, [game])
+}, [game, isEditingNote])
 
 async function saveNote() {
   if (savingNote) return
@@ -108,6 +148,54 @@ const isOwner =
     return () =>
       window.removeEventListener("gamesUpdated", handleGamesUpdated)
   }, [gameId])
+
+useEffect(() => {
+
+  async function pollGame() {
+
+    try {
+
+      const res = await api.get(
+        `/games/${gameId}`,
+        {
+          silent: true
+        }
+      )
+
+      setGame(res.data)
+
+      const activitiesRes = await api.get(
+        `/games/${gameId}/activities`,
+        {
+          silent: true
+        }
+      )
+
+      setActivities(
+        activitiesRes.data?.data || []
+      )
+
+    } catch(e) {
+
+      console.log(
+        "game polling error",
+        e
+      )
+
+    }
+
+  }
+
+  const interval = setInterval(
+    pollGame,
+    5000
+  )
+
+  return () => {
+    clearInterval(interval)
+  }
+
+}, [gameId])
 
   function formatGameDate(date, lang = "bg") {
     if (!date) return ""
@@ -249,7 +337,6 @@ if (e.cancelable && dragging.current) {
       })
     )
 
-    onClose()
   }
 
   async function joinGame() {
@@ -323,6 +410,39 @@ if (isNative) {
     }
   }
 
+async function acceptReservedInvite(){
+
+  if (!inviteToken) return
+
+  try {
+
+    await api.post(
+      `/reserved-invite/${inviteToken}/accept`
+    )
+
+    await reloadGame()
+
+    setInviteInfo(null)
+
+    window.dispatchEvent(
+      new Event("gamesUpdated")
+    )
+
+    alert(
+      t.reserved_spot_accepted ||
+      "Reserved spot accepted"
+    )
+
+  } catch(e) {
+
+    console.log(
+      "accept reserved error",
+      e
+    )
+
+  }
+}
+
  async function leaveGame() {
   if (loading) return
 
@@ -357,6 +477,10 @@ async function cancelGame() {
     setLoading(false)
   }
 }
+console.log(
+  "inviteInfo state",
+  inviteInfo
+)
 
   if (!game || userLoading) return null
 
@@ -406,6 +530,31 @@ function renderAction() {
       >
         {t.leave}
       </button>
+    </div>
+  )
+
+case "owner_not_joined":
+  return (
+    <div className="game-card-actions owner-actions">
+
+      <button
+        className="gdm-join-btn"
+        onClick={joinGame}
+        disabled={loading || Number(game?.is_full) === 1}
+      >
+        {Number(game?.is_full) === 1
+          ? (t.full || "Full")
+          : (t.play || "Play")}
+      </button>
+
+      <button
+        className="game-card-btn cancel"
+        onClick={() => setConfirmType("cancel")}
+        disabled={loading}
+      >
+        {t.cancel}
+      </button>
+
     </div>
   )
 
@@ -463,19 +612,25 @@ function renderAction() {
 }
 
 function buildShareText(game) {
-  
- const tournamentLine = game.name
-  ? `🏆 ${game.name}\n`
-  : ""
 
- return `
-${tournamentLine}📍 ${lang === "bg" ? game.city_name : game.city_name_en}
+  const tournamentLine = game.name
+    ? `🏆 ${game.name}\n`
+    : ""
+
+  const sportLine =
+    `🏅 ${game.sport_name}\n`
+
+  return `
+${tournamentLine}${sportLine}
+📍 ${lang === "bg" ? game.city_name : game.city_name_en}
 🏟 ${game.venue_name}
 🗓 ${formatGameDate(game.game_date, lang)}
 ⏰ ${formatTime(game.start_time)} - ${formatTime(game.end_time)}
 📶 ${game.level_required}
 ${(() => {
+
   const players = game.players || []
+  const reservedPlayers = game.reserved_players || []
   const max = game.max_players || players.length
 
   const lines = []
@@ -485,18 +640,27 @@ ${(() => {
     lines.push(`👤 ${p.nickname}`)
   })
 
-  // празни места
-  for (let i = players.length; i < max; i++) {
+  // reserved играчи
+  reservedPlayers.forEach(p => {
+    lines.push(`👤 ${p.reserved_name}`)
+  })
+
+  // свободни места
+  const occupied =
+    players.length + reservedPlayers.length
+
+  for (let i = occupied; i < max; i++) {
     lines.push("👤 ")
   }
 
   return lines.join("\n")
+
 })()}
 ${game.court_reserved ? "✅ Court booked" : "❌ No court booked"}
 
 👉 https://sportner.online/game/${game.id}
   `.trim()
-}
+} 	
 
 function buildActivityCaption(game) {
 
@@ -562,12 +726,50 @@ async function toggleCourt() {
   }
 }
 
+async function addReservedPlayer(){
+
+  const name = reservedName.trim()
+
+  if (!name) return
+
+  try {
+
+    await api.post(
+      `/games/${game.id}/reserved-players`,
+      {
+        name
+      }
+    )
+
+    setReservedName("")
+    setShowReserveInput(false)
+
+    await reloadGame()
+
+    window.dispatchEvent(
+      new Event("gamesUpdated")
+    )
+
+  } catch(e) {
+
+    console.log(
+      "add reserved error",
+      e
+    )
+
+  }
+}
 
 const maxPlayers = game.max_players || 0
 const players = game.players || []
 
 const mainPlayers = players.slice(0, maxPlayers)
 const reservePlayers = players.slice(maxPlayers)
+
+const reservedPlayers =
+  game.reserved_players || []
+
+
 
 async function uploadActivity(e){
 
@@ -626,14 +828,45 @@ await reloadGame()
     )
 
     alert(
-      t.upload_failed ||
-      "Upload failed"
-    )
+
+  e?.response?.data?.error ||
+
+  t.upload_failed ||
+
+  "Upload failed"
+)
   }
 
   e.target.value = ""
 }
 
+
+function renderNote(text) {
+
+  if (!text) return null
+
+  const urlRegex = /(https?:\/\/[^\s]+)/g
+
+  return text.split(urlRegex).map((part, i) => {
+
+    if (part.match(urlRegex)) {
+
+      return (
+        <a
+          key={i}
+          href={part}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="gdm-note-link-btn"
+        >
+          🔗 Open link
+        </a>
+      )
+    }
+
+    return part
+  })
+}
 
   return (
 
@@ -712,17 +945,17 @@ await reloadGame()
 
 
           <div className="gdm-info-row">
-            <img src="/images/calendar_icon.png" className="row-icon" />
+            <img src="/images/calendar_icon.png" className="gdm-info-icon" />
             {formatGameDate(game.game_date, lang)}
           </div>
 
           <div className="gdm-info-row">
-            <img src="/images/clock_icon.png" className="row-icon" />
+            <img src="/images/clock_icon.png" className="gdm-info-icon" />
             {formatTime(game.start_time)} – {formatTime(game.end_time)}
           </div>
 
           <div className="gdm-info-row">
-            <img src="/images/location_icon.png" className="row-icon" />
+            <img src="/images/location_icon.png" className="gdm-info-icon" />
              <span className="venue-text">
     {game.venue_name}
 
@@ -735,7 +968,7 @@ await reloadGame()
           </div>
 
           <div className="gdm-info-row">
-            <img src="/images/players_icon.png" className="row-icon" />
+            <img src="/images/players_icon.png" className="gdm-info-icon" />
             {game.players_count}/{game.max_players} {t.players}
           </div>
 
@@ -745,8 +978,49 @@ await reloadGame()
 
         <div className="gdm-players-section">
 
-          <div className="gdm-players-title">
-            <span>{t.player_details}</span>
+{inviteInfo && !game.is_joined && (
+
+  <div className="reserved-invite-box">
+
+    <div className="reserved-invite-title">
+
+      {t.reserved_spot_for || "Reserved spot for"}
+
+      {" "}
+
+      <strong>
+        {inviteInfo.reserved_name}
+      </strong>
+
+    </div>
+
+    <button
+      className="gdm-join-btn"
+      onClick={acceptReservedInvite}
+    >
+      {t.accept_reserved_spot || "Accept Reserved Spot"}
+    </button>
+
+  </div>
+
+)}
+
+          
+
+<div className="gdm-players-actions">
+
+{isOwner && (
+
+  <button
+    className="gdm-invite-btn"
+    onClick={() =>
+      setShowReserveInput(v => !v)
+    }
+  >
+    ➕ {t.reserve_spot || "Reserve"}
+  </button>
+
+)}
 
   <button
     className="gdm-invite-btn"
@@ -767,18 +1041,82 @@ await reloadGame()
   />
 
 </label>
+
+<button
+  className={`gdm-invite-btn ${
+    gameState !== "FINISHED"
+      ? "disabled-feedback-btn"
+      : ""
+  }`}
+  disabled={gameState !== "FINISHED"}
+  onClick={() => {
+
+  if (gameState !== "FINISHED") {
+    return
+  }
+
+  window.dispatchEvent(
+    new CustomEvent(
+      "openFeedbackModal",
+      {
+        detail: {
+          gameId: game.id
+        }
+      }
+    )
+  )
+
+}}
+>
+  🏆 {t.game_result || "Game Result"}
+</button>
+
+
           </div>
 
+<div className="gdm-players-title">
+            <span>{t.player_details}</span>
+</div>
+
           <div className="gdm-players-list">
+
+{showReserveInput && (
+
+  <div className="reserve-player-box">
+
+    <input
+      className="reserve-player-input"
+      value={reservedName}
+      onChange={(e) =>
+        setReservedName(e.target.value)
+      }
+      placeholder="Name"
+    />
+
+    <button
+      className="gdm-invite-btn"
+      onClick={addReservedPlayer}
+    >
+      Save
+    </button>
+
+  </div>
+
+)}
 
             {/* MAIN PLAYERS */}
 {mainPlayers.map(p => {
   const isPlayerOwner = p.id === game.creator_id
+  const isCoach =
+  isTraining &&
+  isPlayerOwner
 
   return (
     <div
       key={p.id}
-      className="gdm-player-row"
+      className={`gdm-player-row ${
+  isCoach ? "coach-row" : ""
+}`}
       onClick={() => setSelectedUserId(p.id)}
       style={{ cursor: "pointer" }}
     >
@@ -794,7 +1132,13 @@ await reloadGame()
         <div className="player-row1">
           <span className="gdm-player-name">{p.nickname}</span>
 
-          {isPlayerOwner && <span className="player-owner">👑</span>}
+          {isPlayerOwner && (
+  <span className="player-owner">
+    {isCoach
+      ? t.coach
+      : "👑"}
+  </span>
+)}
 
           <span className={`player-level level-${p.level || "mid"}`}>
             {p.level || "—"}
@@ -821,6 +1165,100 @@ await reloadGame()
   </div>
 )}
 
+{reservedPlayers.map(p => (
+
+  <div
+    key={`reserved-${p.id}`}
+    className="gdm-player-row"
+  >
+
+    <div className="gdm-player-avatar gdm-free-avatar">
+      👤
+    </div>
+
+    <div className="gdm-player-info">
+
+      <div className="player-row1 reserved-row-header">
+
+        <span className="gdm-player-name">
+          {p.reserved_name}
+        </span>
+
+        {isOwner && (
+  <div className="reserved-actions">
+
+    <button
+  className="gdm-invite-btn"
+  onClick={async (e) => {
+
+    e.stopPropagation()
+
+    const link =
+      `https://sportner.online/game/${game.id}?invite=${p.invite_token}`
+
+    try {
+
+      await navigator.clipboard.writeText(
+        link
+      )
+
+      alert(
+        t.link_copied ||
+        "Invite link copied"
+      )
+
+    } catch(e) {
+
+      console.log(
+        "copy link error",
+        e
+      )
+
+    }
+
+  }}
+>
+  🔗 {t.invite_link || "Invite"}
+</button>
+
+    <button
+      className="reserved-remove-btn"
+      onClick={async (e) => {
+
+        e.stopPropagation()
+
+        if (!window.confirm(
+          "Remove reserved player?"
+        )) {
+          return
+        }
+
+        await api.delete(
+          `/games/${game.id}/reserved-players/${p.id}`
+        )
+
+        await reloadGame()
+
+        window.dispatchEvent(
+          new Event("gamesUpdated")
+        )
+
+      }}
+    >
+      ✕
+    </button>
+
+  </div>
+)}
+
+      </div>
+
+    </div>
+
+  </div>
+
+))}
+
 {/* RESERVES */}
 {reservePlayers.map(p => (
   <div
@@ -840,9 +1278,9 @@ await reloadGame()
     <div className="gdm-player-info">
 
       <div className="player-row1">
-        <span className="gdm-player-name">
-          {p.nickname}
-        </span>
+       <span className="gdm-player-name">
+    {p.nickname}
+  </span>
 
         <span className={`player-level level-${p.level || "mid"}`}>
           {p.level || "—"}
@@ -863,20 +1301,42 @@ await reloadGame()
 ))}
 
             {Array.from({ length: freeSpots }).map((_, i) => (
-              <div key={"free" + i} className="gdm-player-row gdm-free">
+  <div
+    key={"free" + i}
+    className="gdm-player-row gdm-free"
+    style={{
+      cursor:
+        actionType === "join" ||
+        actionType === "profile"
+          ? "pointer"
+          : "default"
+    }}
+    onClick={() => {
 
-                <div className="gdm-player-avatar gdm-free-avatar">
-                  +
-                </div>
+      if (actionType === "profile") {
+        openProfileSetupFlow()
+        return
+      }
 
-                <div className="gdm-player-info">
-                  <div className="gdm-player-name">
-                    Free spot
-                  </div>
-                </div>
+      if (actionType === "join") {
+        joinGame()
+      }
 
-              </div>
-            ))}
+    }}
+  >
+
+    <div className="gdm-player-avatar gdm-free-avatar">
+      +
+    </div>
+
+    <div className="gdm-player-info">
+      <div className="gdm-player-name">
+        {t.free_spot_join || "Join game"}
+      </div>
+    </div>
+
+  </div>
+))}
 
           </div>
         </div>
@@ -1008,8 +1468,11 @@ await reloadGame()
       </>
     ) : (
       <div className="gdm-note-text">
-        {game.note || (isOwner ? (t.add_note || "Add note...") : "")}
-      </div>
+  {game.note
+    ? renderNote(game.note)
+    : (isOwner ? (t.add_note || "Add note...") : "")
+  }
+</div>
     )}
 
   </div>

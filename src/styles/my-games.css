@@ -9,11 +9,27 @@
 }
 
 /* Day title */
-.my-day-title {
-  font-size: 12px;
-  font-weight: 700;
-  color: #666;
-  margin: 6px 0;
+.my-day-title{
+
+  display:inline-flex;
+  align-items:center;
+
+  padding:4px 8px;
+
+  font-size:12px;
+  font-weight:600;
+
+  color:white;
+
+  border-radius:8px;
+
+  background:linear-gradient(
+    135deg,
+    rgba(79,99,255,0.9),
+    rgba(45,55,123,0.9)
+  );
+
+  margin-bottom:8px;
 }
 
 /* Games list inside day */
@@ -56,3 +72,16 @@
 .my-games {}
 .my-games-list {}
 */
+
+
+
+.mygames-page .filters-wrapper{
+  top: 70px;
+}
+
+.mygames-page .games-view{
+  top: 70px;
+}
+
+
+

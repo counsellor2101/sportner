@@ -29,27 +29,28 @@ const lastIdsRef = useRef("")
 
 const loadingRef = useRef(false)
 
-async function load(){
+async function load(silent = false){
 
   if (loadingRef.current) return
   loadingRef.current = true
 
   try{
-    const res = await api.get("/me/notifications")
-    const newData = res.data?.data || []
+    const [res, msgRes] = await Promise.all([
 
-try {
+  api.get("/me/notifications", {
+    silent
+  }),
 
-  const msgRes = await api.get("/messages/inbox")
-  const inbox = msgRes.data?.data || []
+  api.get("/messages/inbox", {
+    silent
+  })
 
-  setMessageItems(inbox)
+])
 
-} catch(e) {
+const newData = res.data?.data || []
+const inbox = msgRes.data?.data || []
 
-  console.error("messages inbox failed", e)
-
-}
+setMessageItems(inbox)
 
     const ids = newData.map(i => `${i.id}-${i.is_read}`).join(",")
 
@@ -109,24 +110,24 @@ async function toggleConversation(userId){
 useEffect(() => {
 
   const refresh = () => {
-    load()
-  }
+  load(true)
+}
 
   // 🔥 refresh когато app-ът прати event
   window.addEventListener("notificationsUpdated", refresh)
 
   // 🔥 refresh при връщане в app-а
-  const onFocus = () => {
-    load()
-  }
+const onFocus = () => {
+  load(true)
+}
 
   window.addEventListener("focus", onFocus)
 
   // 🔥 iOS / Android WebView resume
   const onVisibility = () => {
     if (!document.hidden) {
-      load()
-    }
+  load(true)
+}
   }
 
   document.addEventListener("visibilitychange", onVisibility)
@@ -163,18 +164,25 @@ setItems(prev =>
   prev.map(item => ({ ...item, is_read: 1 }))
 )
 
-window.dispatchEvent(new Event("notificationsUpdated"))
-
 try {
-  await Promise.all([
-  api.post("/me/notifications/read-all"),
-  api.post("/messages/read-all")
-])
 
-load()
+  await Promise.all([
+    api.post("/me/notifications/read-all"),
+    api.post("/messages/read-all")
+  ])
+
+  window.dispatchEvent(
+    new Event("notificationsUpdated")
+  )
+
+  load(true)
+
 } catch (e) {
+
   console.error(e)
-  load() // fallback
+
+  load()
+
 }
 
     }catch(e){
@@ -219,18 +227,36 @@ function extractSportnerLink(text){
 
 
   <div
-    className={`filter-chip ${filter === "games" ? "" : "active"}`}
-    onClick={() => setFilter("games")}
-  >
-    {t.games || "Games"}
-  </div>
+  className={`filter-chip ${filter === "games" ? "" : "active"}`}
+  onClick={() => setFilter("games")}
+>
+
+  {(items || []).some(
+  n =>
+    n.type !== "player_contact"
+    && !Number(n.is_read)
+) && (
+    <span className="tab-unread-dot" />
+  )}
+
+  {t.games || "Games"}
+
+</div>
 
   <div
-    className={`filter-chip ${filter === "messages" ? "" : "active"}`}
-    onClick={() => setFilter("messages")}
-  >
-    {t.messages || "Messages"}
-  </div>
+  className={`filter-chip ${filter === "messages" ? "" : "active"}`}
+  onClick={() => setFilter("messages")}
+>
+
+  {(messageItems || []).some(
+    m => Number(m.unread_count) > 0
+  ) && (
+    <span className="tab-unread-dot" />
+  )}
+
+  {t.messages || "Messages"}
+
+</div>
 
 </div>
 
@@ -252,37 +278,47 @@ function extractSportnerLink(text){
 
     <div
       key={m.id}
-      className={`inappnotifications-item ${
+      className={`chat-thread-card ${
   Number(m.unread_count) ? "unread" : ""
 }`}
     >
 
-      <div className="inappnotifications-content">
-
+<div className={`conversation-user-header ${
+  Number(m.unread_count) ? "unread" : ""
+}`}>
 {Number(m.unread_count) > 0 && (
   <div className="inappnotifications-dot" />
 )}
-
-        <div className="inappnotifications-texts">
-
-          <div className={`inappnotifications-title ${
-  Number(m.unread_count) ? "unread" : ""
-}`}>
-
-
             {m.other_user_name}
           </div>
+
+      <div className="chat-thread-body">
+
+
+
+        <div className="chat-thread-texts">
+
+          
 
 
           <div className={`inappnotifications-body ${
   Number(m.unread_count) ? "unread" : ""
 }`}>
-            {m.message}
-          </div>
+
+  <strong>
+  {Number(m.sender_id) === Number(user?.id)
+    ? (t.me || "Me")
+    : m.sender_name}
+  :
+</strong>{" "}
+
+  {m.message}
+
+</div>
 
           {!!Number(m.unread_count) && (
             <div className="inappnotifications-meta unread">
-              {m.unread_count} unread
+              {m.unread_count} {t.unread || "unread"}
             </div>
           )}
 
@@ -312,6 +348,19 @@ setMessageItems(prev =>
     : (t.open || "Open")}
 </button>
 
+<button
+  className="background-replybtn"
+  onClick={(e) => {
+
+    e.stopPropagation()
+
+    setReplyUserId(m.other_user_id)
+
+  }}
+>
+  {t.reply || "Reply"}
+</button>
+
 {openConversation === m.other_user_id && (
 
   <div className="conversation-expanded">
@@ -325,7 +374,7 @@ setMessageItems(prev =>
     {!loadingConversation && conversationMessages.map(msg => {
 
       const mine =
-        Number(msg.sender_id) === Number(user?.id)
+        Number(msg.sender_id) === Number(user?.user?.id)
 
       return (
 
@@ -335,10 +384,10 @@ setMessageItems(prev =>
             mine ? "mine" : "theirs"
           }`}
         >
-          <strong>
-  {Number(msg.sender_id) === Number(user?.id)
+<strong>
+  {Number(msg.sender_id) === Number(user?.user?.id)
     ? (t.me || "Me")
-    : "User"}
+    : msg.sender_name}
 :
 </strong>{" "}
 
@@ -380,18 +429,7 @@ setMessageItems(prev =>
 
 )}
 
-<button
-  className="inappnotifications-btn"
-  onClick={(e) => {
 
-    e.stopPropagation()
-
-    setReplyUserId(m.other_user_id)
-
-  }}
->
-  {t.reply || "Reply"}
-</button>
 
         </div>
 
@@ -456,20 +494,28 @@ const formattedDate = payload.date
 
   if (isUnread) {
 
-  // 🔥 optimistic update (instant UX)
   setItems(prev =>
     prev.map(item =>
       item.id === n.id ? { ...item, is_read: 1 } : item
     )
   )
 
-  window.dispatchEvent(new Event("notificationsUpdated"))
-
   try {
-    await api.post(`/me/notifications/${n.id}/read`)
+
+    await api.post(
+      `/me/notifications/${n.id}/read`
+    )
+
+    window.dispatchEvent(
+      new Event("notificationsUpdated")
+    )
+
   } catch (e) {
+
     console.error(e)
-    load() // fallback ако fail-не
+
+    load()
+
   }
 }
 
@@ -556,7 +602,7 @@ const formattedDate = payload.date
   </div>
 {/* GROUP NAME */}
 {payload.group_name && (
-  <div className="gdm-group-name">
+  <div className="gdm-group-chip">
     {payload.group_name}
   </div>
 )}
@@ -569,24 +615,24 @@ const formattedDate = payload.date
 
   {/* DATE */}
   {formattedDate && (
-    <div className="gdm-info-row-compact">
-      <img src="/images/calendar_icon.png" className="row-icon" />
+    <div className="gdm-info-row">
+      <img src="/images/calendar_icon.png" className="gdm-info-icon" />
       {formattedDate}
     </div>
   )}
 
   {/* TIME */}
   {payload.time && (
-    <div className="gdm-info-row-compact">
-      <img src="/images/clock_icon.png" className="row-icon" />
+    <div className="gdm-info-row">
+      <img src="/images/clock_icon.png" className="gdm-info-icon" />
       {payload.time}
     </div>
   )}
 
   {/* VENUE */}
   {payload.venue && (
-    <div className="gdm-info-row-compact">
-      <img src="/images/location_icon.png" className="row-icon" />
+    <div className="gdm-info-row">
+      <img src="/images/location_icon.png" className="gdm-info-icon" />
       {payload.venue}
     </div>
   )}

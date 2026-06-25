@@ -616,6 +616,9 @@ color:#777;
   line-height: 1.4;
   color: #333;
 font-style:italic;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .gdm-share-btn {
@@ -627,9 +630,9 @@ font-style:italic;
 }
 
 .gdm-invite-btn {
-  font-size: 14px;
-margin-left: 10px;
-  padding: 4px 8px;
+  font-size: 13px;
+margin-left: 2px;
+  padding: 3px 8px;
   border-radius: 8px;
   border: 1px solid #ddd;
   background: #e0e0e0;
@@ -831,4 +834,102 @@ font-weight:700;
   z-index:3;
 
   backdrop-filter:blur(4px);
+}
+
+.gdm-note-text{
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.gdm-note-link-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 12px;
+  border-radius:10px;
+  background:#1f1f1f;
+  color:#fff;
+  text-decoration:none;
+  font-weight:600;
+  margin-top:6px;
+}
+
+.gdm-info-icon{
+  width:16px;
+  height:16px;
+  opacity:.8;
+
+  filter:none;
+}
+
+.coach-row{
+  border:2px solid #2563eb;
+  border-radius:14px;
+  background:rgba(37,99,235,.04);
+}
+
+.coach-row .player-owner{
+  background:#2563eb;
+  color:#fff;
+}
+
+.reserved-row-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  width:100%;
+}
+
+.reserved-remove-btn{
+  border:none;
+  background:none;
+  font-size:18px;
+  cursor:pointer;
+  opacity:.7;
+}
+
+.reserve-player-box{
+  display:flex;
+  gap:8px;
+  margin-bottom:12px;
+}
+
+.reserve-player-input{
+  flex:1;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:10px;
+  padding:10px 12px;
+  background:white;
+}
+
+.gdm-players-actions{
+  display:flex;
+  gap:2px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+
+.reserved-actions{
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+
+.reserved-link-btn{
+  border:none;
+  background:none;
+  font-size:18px;
+  cursor:pointer;
+  padding:4px;
+}
+
+.reserved-invite-box .gdm-join-btn{
+  margin-top:10px;
+  margin-bottom:10px;
+}
+
+.disabled-feedback-btn{
+  opacity:.5;
+  cursor:not-allowed;
 }

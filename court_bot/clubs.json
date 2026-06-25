@@ -1,0 +1,51 @@
+[
+  {
+    "id": 40003,
+    "slug": "padel-club-sofia",
+    "name": "Padel Club Sofia",
+    "city": "Sofia",
+    "sport": "padel"
+  },
+  {
+    "id": 40002,
+    "slug": "amik-sport",
+    "name": "Amik Sofia",
+    "city": "Sofia",
+    "sport": "padel"
+  },
+{
+  "id": 40018,
+  "slug": "zone-one-padel-and-tennis-complex",
+  "name": "Zone One",
+  "city": "Sofia",
+  "sport": "padel"
+},
+{
+  "id": 40005,
+  "slug": "smash-padel-%D0%BF%D0%BB%D0%BE%D0%B2%D0%B4%D0%B8%D0%B2",
+  "name": "Smash Padel Plovdiv",
+  "city": "Plovdiv",
+  "sport": "padel"
+},
+{
+  "id": 40006,
+  "slug": "%D0%BF%D0%B0%D0%B4%D0%B5%D0%BB-%D0%B0%D1%80%D0%B5%D0%BD%D0%B0-%D0%B2%D0%B0%D1%80%D0%BD%D0%B0",
+  "name": "Padel Arena Varna",
+  "city": "Varna",
+  "sport": "padel"
+},
+{
+  "id": 40015,
+  "slug": "betvam-padel-club",
+  "name": "Betvam Padel Club",
+  "city": "Sofia",
+  "sport": "padel"
+},
+{
+  "id": 40016,
+  "slug": "%D0%BF%D0%B0%D0%B4%D0%B5%D0%BB-%D0%B1%D0%B0%D1%80",
+  "name": "Padel Bar",
+  "city": "Sofia",
+  "sport": "padel"
+}
+]

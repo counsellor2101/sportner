@@ -199,6 +199,12 @@ z-index:20;
   display:flex;
   flex-direction:column;
   gap:8px;
+
+max-height:350px;
+
+overflow-y:auto;
+
+-webkit-overflow-scrolling:touch;
 }
 
 .conversation-loading{
@@ -215,26 +221,128 @@ z-index:20;
 
   word-break:break-word;
   overflow-wrap:anywhere;
-
-  max-width:100%;
+  display:inline-block;
+  max-width:85%;
 }
 
 .conversation-msg.mine{
-  background:rgba(45,125,246,.14);
+  background:#bebdbd;
 
-  align-self:flex-end;
+  color:white;
+
+  align-self:flex-start;
 
   border-bottom-right-radius:6px;
 }
 
 .conversation-msg.theirs{
-  background:rgba(255,255,255,.06);
+  background:#ffd9b7;
 
-  align-self:flex-start;
+  color:#222;
+
+  align-self:flex-end;
 
   border-bottom-left-radius:6px;
 }
 
 .conversation-msg a{
   word-break:break-all;
+}
+
+.conversation-user-header{
+  display:flex;
+  align-items:center;
+
+  padding:12px 14px;
+
+  background:#cfe0ff;
+
+  border-bottom:1px solid #cfd8e6;
+  gap:8px;
+  font-size:15px;
+  font-weight:700;
+}
+
+.conversation-user-header.unread{
+  background:#c8d4e8;
+}
+
+.conversation-card-body{
+  padding:14px;
+
+  background:white;
+
+  border-radius:0 0 14px 14px;
+}
+
+.chat-thread-card{
+  background:#fff;
+
+  border-radius:14px;
+
+  overflow:hidden;
+
+  margin-bottom:14px;
+
+  border:1px solid rgba(0,0,0,.06);
+
+  box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+
+.chat-thread-card.unread{
+  background:rgba(45,125,246,.15);
+
+  border:1px solid rgba(45,125,246,.25);
+}
+
+.chat-thread-body{
+  padding:14px;
+}
+
+.chat-thread-texts{
+  display:flex;
+  flex-direction:column;
+
+  gap:8px;
+
+  min-width:0;
+}
+
+.conversation-user-header .inappnotifications-dot{
+  margin:0;
+}
+
+.filter-chip{
+  position:relative;
+}
+
+.tab-unread-dot{
+  position:absolute;
+
+  top:3px;
+  right:3px;
+
+  width:8px;
+  height:8px;
+
+  border-radius:50%;
+
+  background:#fce41c;
+}
+
+
+.background-replybtn {
+  margin-top: 6px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: none;
+  background:linear-gradient(
+  135deg,
+  #11998e,
+  #38ef7d
+);
+  color: white;
+  font-size: 14px;
+font-weight: 600;
+  cursor: pointer;
 }

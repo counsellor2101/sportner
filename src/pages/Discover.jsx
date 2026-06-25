@@ -7,17 +7,20 @@ import { useEffect, useState } from "react"
 import DaySelector from "../components/DaySelector"
 import FiltersBar from "../components/FiltersBar"
 import Timeline from "../components/Timeline"
+import GamesView from "../components/GamesView"
 import { texts } from "../i18n/texts"
 import GameDetailsModal from "../components/GameDetailsModal"
 import api from "../api/api"
 import { useParams, useNavigate, useLocation } from "react-router-dom"
 import { useCreateGame } from "../context/CreateGameContext"
+import { useAuth } from "../context/AuthContext"
 
 import { useRef } from "react"
 
 export default function Discover(){
 
 const { openCreateGame } = useCreateGame()
+const { loading: authLoading } = useAuth()
 
 const { id } = useParams()
 const navigate = useNavigate()
@@ -33,15 +36,23 @@ useEffect(() => {
 
   const gameId = Number(id);
 
-  // 🔥 първо отваряме modal-а
+  const inviteToken =
+    new URLSearchParams(
+      location.search
+    ).get("invite");
+
   setSelectedGameId(gameId);
+
+  setSelectedInviteToken(
+    inviteToken
+  );
 
   // 🔥 след малък delay махаме URL-то (за стабилност)
   setTimeout(() => {
     navigate("/", { replace: true });
   }, 0);
 
-}, [id, navigate]);
+}, [id, location.search, navigate]);
 
 
 
@@ -86,6 +97,10 @@ const [levels, setLevels] = useState([])
 const [selectedDate,setSelectedDate] = useState(new Date())
 const [isDesktop,setIsDesktop] = useState(window.innerWidth >= 900)
 const [activeFilter, setActiveFilter] = useState("city")
+
+const [view, setView] = useState(
+  localStorage.getItem("discover_view") || "timeline"
+)
 
 useEffect(() => {
 
@@ -202,6 +217,8 @@ const lang = localStorage.getItem("lang") || "bg"
 const t = texts[lang] || texts.bg
 
 const [selectedGameId,setSelectedGameId] = useState(null)
+const [selectedInviteToken, setSelectedInviteToken] = useState(null)
+
 function openGame(id){
 setSelectedGameId(id)
 }
@@ -261,10 +278,175 @@ return ()=>window.removeEventListener("resize",handleResize)
 },[])
 
 
+function formatDateKey(date){
+  return date.getFullYear() + "-" +
+    String(date.getMonth() + 1).padStart(2, "0") + "-" +
+    String(date.getDate()).padStart(2, "0")
+}
+
+const programmaticScrollRef = useRef(false)
+
+const dateLoadingRef = useRef(false)
+
+
+function handleDaySelect(day){
+
+  if(
+    selectedDate.getFullYear() === day.getFullYear() &&
+    selectedDate.getMonth() === day.getMonth() &&
+    selectedDate.getDate() === day.getDate()
+  ){
+    return
+  }
+
+dateLoadingRef.current = true
+
+  if (view === "timeline") {
+
+  window.dispatchEvent(
+    new Event("globalLoadingStart")
+  )
+
+}
+
+setSelectedDate(day)
+
+if(view !== "games") return
+
+  setTimeout(() => {
+
+    const dateKey = formatDateKey(day)
+
+    const exactEl = document.getElementById(`day-${dateKey}`)
+
+    if(exactEl){
+
+      programmaticScrollRef.current = true
+
+      exactEl.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      })
+
+      setTimeout(() => {
+        programmaticScrollRef.current = false
+      }, 700)
+
+      return
+    }
+
+    const sections = [
+      ...document.querySelectorAll(".my-day[data-date]")
+    ]
+
+    if(!sections.length){
+      return
+    }
+
+    const targetTime = new Date(dateKey).getTime()
+
+    let closest = null
+    let closestDiff = Infinity
+
+    sections.forEach(section => {
+
+      const sectionDate = section.dataset.date
+      const sectionTime = new Date(sectionDate).getTime()
+
+      const diff = Math.abs(sectionTime - targetTime)
+
+      if(diff < closestDiff){
+        closestDiff = diff
+        closest = section
+      }
+
+    })
+
+    if(closest){
+
+      programmaticScrollRef.current = true
+
+      closest.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      })
+
+      setTimeout(() => {
+        programmaticScrollRef.current = false
+      }, 700)
+
+    }
+
+  }, 50)
+}
 
 
 
 
+useEffect(() => {
+
+  if(view !== "games") return
+
+  function handleScroll(){
+
+    if(programmaticScrollRef.current){
+      return
+    }
+
+    const days = [
+      ...document.querySelectorAll(".my-day[data-date]")
+    ]
+
+    let activeDay = null
+
+    days.forEach(day => {
+
+      const rect = day.getBoundingClientRect()
+
+      if(rect.top <= 180){
+        activeDay = day
+      }
+
+    })
+
+    if(!activeDay){
+      return
+    }
+
+    const dateStr = activeDay.dataset.date
+
+    const d = new Date(dateStr)
+
+    setSelectedDate(prev => {
+
+      if(
+        prev.getFullYear() === d.getFullYear() &&
+        prev.getMonth() === d.getMonth() &&
+        prev.getDate() === d.getDate()
+      ){
+        return prev
+      }
+
+      return d
+    })
+
+  }
+
+  const el = document.querySelector(".timeline")
+
+if(!el) return
+
+el.addEventListener("scroll", handleScroll)
+
+return () => {
+  el.removeEventListener("scroll", handleScroll)
+}
+
+}, [view])
+
+if (authLoading) {
+  return null
+}
 
 return(
 <>
@@ -275,14 +457,46 @@ return(
 
 <div className="discover-panel">
 
-<div className="discover-title">
-{t.discover}
-</div>
+  <div className="discover-title">
+    {t.discover}
+  </div>
+
+  <div className="discover-view-switch">
+
+    <span className="discover-view-label">
+      {t.view}
+    </span>
+
+    <button
+      className={`discover-switch ${
+        view === "games" ? "active" : ""
+      }`}
+      onClick={() => {
+
+        const nextView =
+          view === "timeline"
+            ? "games"
+            : "timeline"
+
+        setView(nextView)
+
+        localStorage.setItem(
+          "discover_view",
+          nextView
+        )
+
+      }}
+    >
+      <span className="discover-switch-thumb" />
+    </button>
+
+  </div>
+
 </div>
 
 <DaySelector
-selectedDate={selectedDate}
-setSelectedDate={setSelectedDate}
+  selectedDate={selectedDate}
+  setSelectedDate={handleDaySelect}
 />
 
 <FiltersBar
@@ -301,12 +515,14 @@ setSelectedDate={setSelectedDate}
   t={t}
 />
 
+{view === "timeline" ? (
 <Timeline
   selectedDate={selectedDate}
   filters={filters}
   isDesktop={isDesktop}
   onOpenGame={openGame}
   profileComplete={true}
+  dateLoadingRef={dateLoadingRef}
 onCreateGame={(data) => {
 
   openCreateGame({
@@ -323,6 +539,13 @@ onCreateGame={(data) => {
 
 }}
 />
+) : (
+
+  <GamesView
+    filters={filters}
+  />
+
+)}
 
 </div>
 
@@ -332,9 +555,10 @@ onCreateGame={(data) => {
 </AppShell>
 {selectedGameId && (
 <GameDetailsModal
-gameId={selectedGameId}
-onClose={closeGame}
-profileComplete={true}
+  gameId={selectedGameId}
+  inviteToken={selectedInviteToken}
+  onClose={closeGame}
+  profileComplete={true}
 />
 )}
 

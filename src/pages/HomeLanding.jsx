@@ -229,7 +229,7 @@ useEffect(() => {
   </div>
 
   <div className="landing-stat-card">
-    <h3>8</h3>
+    <h3>10</h3>
     <p>{lang === "bg" ? "Спорта" : "Sports"}</p>
   </div>
 

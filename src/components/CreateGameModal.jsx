@@ -36,7 +36,8 @@ function getCityName(c){
 if (loading) return <div className="cgm-loading">Loading...</div>
 
 const defaultForm = {
-  game_type: "public",   // 🔥 ново
+  game_type: "public",
+  activity_type: "game",
   group_id: null,
   sport_id: null,
   city_id: null,
@@ -78,6 +79,11 @@ const [form, setForm] = useState(() => ({
 
 const [duration, setDuration] = useState(120)
 
+const [repeatEnabled, setRepeatEnabled] = useState(false)
+const [repeatWeeks, setRepeatWeeks] = useState(4)
+
+const [venueSearch, setVenueSearch] = useState("")
+const [showVenueSearch, setShowVenueSearch] = useState(false)
 
 const availableCities = venues
   .filter(v =>
@@ -95,6 +101,35 @@ const filteredVenues = venues.filter(v =>
   (!form?.sport_id || v.sport_ids?.includes(form.sport_id)) &&
   (!form?.city_id || v.city_id === form.city_id)
 )
+
+const searchableVenues = filteredVenues.filter(v => {
+
+  if (!venueSearch.trim()) return true
+
+  const search = venueSearch.toLowerCase()
+
+  const city = cities.find(c => c.id === v.city_id)
+
+  const venueSports = sports.filter(s =>
+    v.sport_ids?.includes(s.id)
+  )
+
+  const keywords = [
+    v.name,
+
+    city?.name_bg,
+    city?.name_en,
+
+    ...venueSports.map(s => s.name_bg),
+    ...venueSports.map(s => s.name_en),
+    ...venueSports.map(s => s.slug)
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase()
+
+  return keywords.includes(search)
+})
 
 useEffect(() => {
   if (!form?.sport_id && sports.length && !initialData){
@@ -250,6 +285,8 @@ const end_time = form.start_time
   }
 }
 
+
+
   function endDrag() {
     if (!dragging.current) return
     if (!sheetRef.current) return
@@ -404,7 +441,7 @@ function validateForm(){
   if (form.game_type === "group" && !form.group_id) {
     e.group_id = "Select group"}
 
-  if (form.game_type === "tournament" && !form.name) {
+  if (form.activity_type === "tournament" && !form.name) {
   e.name = true
 }
 
@@ -472,14 +509,22 @@ async function handleCreate(e) {
       note: form.note || null,
       court_reserved: form.court_reserved ? 1 : 0,
       group_id: form.game_type === "group" ? form.group_id : null,
-      name: form.game_type === "tournament"
-  ? (form.name?.trim() || null)
-  : null,
+      name: form.activity_type === "tournament"
+      ? (form.name?.trim() || null)
+      : null,
+
+    activity_type: form.activity_type,
+    repeat_weeks: repeatEnabled ? repeatWeeks : 0,
     }
 
     console.log("CREATE GAME:", payload)
 
-    await api.post("/games", payload)
+    const endpoint =
+  repeatEnabled
+    ? "/games/repeated"
+    : "/games"
+
+await api.post(endpoint, payload)
 
     window.dispatchEvent(new Event("gamesUpdated"))
 
@@ -514,6 +559,22 @@ const perm = await PushNotifications.checkPermissions()
 
     const error = e.response?.data?.error
     const status = e.response?.status
+
+if (error?.code === "PROFILE_INCOMPLETE") {
+
+  const selectedSport = sports.find(
+    s => s.id === form.sport_id
+  )
+
+  setProfileModalSport({
+    sport_id: selectedSport?.id,
+    sport_name: selectedSport?.name_en,
+    sport_icon: selectedSport?.icon,
+    sport_color: selectedSport?.color
+  })
+
+  return
+}
 
 if (error?.code === "SPORT_NOT_ALLOWED") {
 
@@ -583,7 +644,35 @@ const sortedCities = [
   UI
   */
 
+const repeatRangeText = (() => {
 
+  if (!form.date) return ""
+
+  const start = new Date(form.date)
+
+  const end = new Date(form.date)
+
+  end.setDate(
+    end.getDate() + ((repeatWeeks - 1) * 7)
+  )
+
+  const format = (d) =>
+    d.toLocaleDateString(
+      lang === "bg" ? "bg-BG" : "en-GB",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+      }
+    )
+
+  if (lang === "bg") {
+    return `От ${format(start)} до ${format(end)}`
+  }
+
+  return `From ${format(start)} to ${format(end)}`
+
+})()
 
 
 
@@ -817,6 +906,64 @@ const sortedCities = [
       </div>
     ))}
   </div>
+
+
+
+<div className="cgm-repeat-switch">
+
+  <span className="cgm-repeat-label">
+    {t.repeat_weekly}
+  </span>
+
+  <button
+    type="button"
+    className={`cgm-switch ${
+      repeatEnabled ? "active" : ""
+    }`}
+    onClick={() => {
+      setRepeatEnabled(prev => !prev)
+    }}
+  >
+    <span className="cgm-switch-thumb" />
+  </button>
+
+</div>
+
+{repeatEnabled && (
+  <>
+    <div className="cgm-row">
+
+      {[4, 8, 12].map(weeks => (
+        <div
+          key={weeks}
+          onClick={() => setRepeatWeeks(weeks)}
+          className={`cgm-chip ${
+            repeatWeeks === weeks ? "active" : ""
+          }`}
+        >
+          {weeks} {t.weeks_short}
+        </div>
+      ))}
+
+    </div>
+
+    <div className="cgm-time-row">
+
+      <div className="cgm-row-icon">
+        <img
+          src="/images/calendar_icon.png"
+          alt="repeat"
+        />
+      </div>
+
+      {repeatRangeText}
+
+    </div>
+  </>
+)}
+
+
+
 <div className="cgm-time-row">
       
  <div className="cgm-row-icon">
@@ -842,44 +989,33 @@ const sortedCities = [
     {t.cgm_setup}
   </div>
 
+<div className="cgm-section-title">
+  {t.activity_type}
+</div>
 
-
-  <div className="cgm-section-title">
-    {t.game_type}
-  </div>
 <div className="cgm-row">
+  {["game", "training", "tournament"].map(type => {
+    const isActive = form.activity_type === type
 
-    {["public","group","tournament"].map(type => {
+    return (
+      <div
+        key={type}
+        onClick={() => {
+          setForm(prev => ({
+            ...prev,
+            activity_type: type,
+            name: type === "tournament" ? prev.name : ""
+          }))
+        }}
+        className={`cgm-chip ${isActive ? "active" : ""}`}
+      >
+        {t[`activity_type_${type}`]}
+      </div>
+    )
+  })}
+</div>
 
-      
-      const isActive = form.game_type === type
-
-      return (
-        <div
-          key={type}
-          onClick={() => {
-            
-
-            setForm(prev => ({
-              ...prev,
-              game_type: type,
-              group_id: null,
-              name: type === "tournament" ? prev.name : "" // 🔥 важно
-            }))
-          }}
-          className={`cgm-chip 
-            ${isActive ? "active" : ""} 
-            
-          `}
-        >
-          {t[`game_type_${type}`]}
-        </div>
-      )
-    })}
-
-  </div>
-
-{form.game_type === "tournament" && (
+{form.activity_type === "tournament" && (
   <div className={`cgm-section ${errors.name ? "error" : ""}`}>
 
     <div className="cgm-section-title">
@@ -912,6 +1048,43 @@ const sortedCities = [
 
   </div>
 )}
+
+  <div className="cgm-section-title">
+    {t.game_type}
+  </div>
+<div className="cgm-row">
+
+    {["public","group"].map(type => {
+
+      
+      const isActive = form.game_type === type
+
+      return (
+        <div
+          key={type}
+          onClick={() => {
+            
+
+            setForm(prev => ({
+              ...prev,
+              game_type: type,
+              group_id: null,
+              name: type === "tournament" ? prev.name : "" // 🔥 важно
+            }))
+          }}
+          className={`cgm-chip 
+            ${isActive ? "active" : ""} 
+            
+          `}
+        >
+          {t[`game_type_${type}`]}
+        </div>
+      )
+    })}
+
+  </div>
+
+
 
 
 {/* 🔥 Group SECTION */}
@@ -1052,7 +1225,44 @@ const sortedCities = [
 
   <div className="cgm-row">
 
-    {filteredVenues.map(v => (
+{!showVenueSearch ? (
+
+  <div
+    className="cgm-chip cgm-venue-chip"
+    onClick={() => setShowVenueSearch(true)}
+  >
+    🔍
+  </div>
+
+) : (
+
+  <div className="cgm-venue-search-wrap">
+
+    <input
+      autoFocus
+      type="text"
+      placeholder={t.club_search}
+      value={venueSearch}
+      onChange={e => setVenueSearch(e.target.value)}
+      className="cgm-venue-search-input"
+    />
+
+    <span
+      className="cgm-venue-search-clear"
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={() => {
+        setVenueSearch("")
+        setShowVenueSearch(false)
+      }}
+    >
+      ✕
+    </span>
+
+  </div>
+
+)}
+
+    {searchableVenues.map(v => (
       <div
         key={v.id}
         onClick={() =>

@@ -1,6 +1,7 @@
 import GameCard from "./GameCard"
 import { texts } from "../i18n/texts"
 import api from "../api/api"
+import PromotionCard from "./PromotionCard"
 
 export default function TimeSlot({
 slot,
@@ -31,7 +32,15 @@ const t = texts[lang] || texts.bg
 
 const isHour = slot.endsWith(":00")
 
-let visibleGames = showGames ? slotGames : []
+const promotions = slotGames.filter(
+  g => g.type === "promotion"
+)
+
+const realGames = slotGames.filter(
+  g => g.type !== "promotion"
+)
+
+let visibleGames = showGames ? realGames : []
 
 if(showGames && !expanded && slotGames.length > maxCards){
 visibleGames = slotGames.slice(0,maxCards)
@@ -220,7 +229,20 @@ if (isPast) return   // 🛑 блок
 
   <div className="slot-games-row">
 
+{promotions.map(promo => (
+
+  <PromotionCard
+    key={`promo-${promo.id}`}
+    promotion={promo}
+  />
+
+))}
+
+
     {showGames && visibleGames.map(game => (
+
+
+
       <GameCard
         key={game.id}
         game={game}

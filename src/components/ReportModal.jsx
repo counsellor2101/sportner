@@ -95,6 +95,10 @@ setSending(true)
 
   await api.post("/me/report", payload)
 
+window.dispatchEvent(
+  new Event("notificationsUpdated")
+)
+
   alert(
     type === "suggestion"
       ? (t.suggest_sent || "Suggestion sent")

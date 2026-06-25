@@ -25,7 +25,7 @@ import PushPrompt from "./components/PushPrompt";
 import { registerPushIfAlreadyGranted } from "./push/pushService";
 import HomeLanding from "./pages/HomeLanding"
 
-
+import FeedbackModalHost from "./components/FeedbackModalHost"
 
 
 import Venues from "./pages/Venues";
@@ -403,6 +403,8 @@ element={
 </Routes>
 
 <CreateGameRoot levels={["beginner","intermediate","advanced","pro"]} />
+
+<FeedbackModalHost />
 
 {push.visible && (
       <PushPrompt

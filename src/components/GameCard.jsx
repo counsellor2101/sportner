@@ -260,6 +260,34 @@ disabled={loadingAction}
         </div>
       )
 
+case "owner_not_joined":
+  return (
+    <div className="game-card-actions owner-actions">
+
+      <button
+        className="game-card-btn"
+        onClick={joinGame}
+        disabled={
+          loadingAction ||
+          Number(game?.is_full) === 1
+        }
+      >
+        {Number(game?.is_full) === 1
+          ? (t.full || "Full")
+          : (t.play || "Play")}
+      </button>
+
+      <button
+        className="game-card-btn cancel"
+        onClick={confirmCancel}
+        disabled={loadingAction}
+      >
+        {t.cancel}
+      </button>
+
+    </div>
+  )
+
     case "leave":
       return (
         <button
@@ -310,7 +338,12 @@ const actions = renderActions()
   <div
   className={`${cardClass} ${isMyGames ? "my-games" : ""} ${isTournament ? "tournament-game" : ""}`}
   onClick={handleOpen}
-  style={{ "--sport-color": sportColor }}
+  style={{
+  "--sport-color": sportColor,
+  "--card-bg": game.card_background
+    ? `url(/images/${game.card_background})`
+    : "none"
+}}
 >
 
       <div className="game-row1">
@@ -334,54 +367,54 @@ const actions = renderActions()
     🔒
   </div>
 ) : null}
-        <div className={`level-badge level-${game.level_required}`}>
-
-<span className="level-dot"></span>
-
-<span className="level-text">
-{game.level_required}
-</span>
-
+        <div className={`game-detail-level-badge level-${game.level_required}`}>
+  <span className="game-detail-level-dot"></span>
+  <span className="game-detail-level-text">
+    {game.level_required}
+  </span>
 </div>
       </div>
 
-      <div className="game-divider"></div>
+      
 
-      <div className="game-row">
-        <img
-          src="/images/location_icon.png"
-          className="row-icon"
-          alt="location"
-        />
-
-        <span className="venue-text">
-  {venue?.name || game.venue_name || ""}
-
-  <span className="venue-divider">|</span>
-
-  {cityName}
+<div className="game-row">
+<span className="row-icon-wrap">
+  <img
+    src="/images/location_icon.png"
+    className="row-icon"
+    alt="location"
+  />
 </span>
-      </div>
+  <span className="venue-text">
+    {venue?.name || game.venue_name || ""}
+
+    <span className="venue-divider">|</span>
+
+    {cityName}
+  </span>
+</div>
 
       <div className="game-row">
+<span className="row-icon-wrap">
         <img
           src="/images/clock_icon.png"
           className="row-icon"
           alt="time"
         />
-
+</span>
         <span>
           {game.start_time?.slice(0, 5)} - {game.end_time?.slice(0, 5)}
         </span>
       </div>
 
       <div className="game-row">
+<span className="row-icon-wrap">
         <img
           src="/images/players_icon.png"
           className="row-icon"
           alt="players"
         />
-
+</span>
         <span>
           {players}/{game.max_players} {t.players}
         </span>

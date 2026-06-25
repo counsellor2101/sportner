@@ -8,12 +8,16 @@ export function computeGameStatus(game) {
   }
 
   function toTimestamp(date, time) {
-    const [y, m, d] = date.split("-").map(Number)
-    const [hh, mm] = time.split(":").map(Number)
+  const [y, m, d] = date.split("-").map(Number)
 
-    return new Date(y, m - 1, d, hh, mm).getTime()
-  }
+  const cleanTime = String(time).includes(" ")
+    ? String(time).split(" ")[1]
+    : String(time)
 
+  const [hh, mm] = cleanTime.split(":").map(Number)
+
+  return new Date(y, m - 1, d, hh, mm).getTime()
+}
   const now = Date.now()
 
   const start = toTimestamp(game.game_date, game.start_time)
@@ -78,8 +82,13 @@ if (conflict && !isJoined && !isOwner) {
 
 
 
-if (isOwner && !isTournament) return "OWNER"
-  if (isJoined) return "JOINED"
+if (isOwner && isJoined) return "OWNER"
+
+if (isOwner && !isJoined) {
+  return "OWNER_NOT_JOINED"
+}
+
+if (isJoined) return "JOINED"
 
   // 🔥 GAME STATES
   if (isFull) return "FULL"
@@ -129,6 +138,9 @@ case "CONFLICT":
 
     case "OWNER":
       return "owner"
+
+case "OWNER_NOT_JOINED":
+  return "owner_not_joined"
 
     case "JOINED":
       return "leave"

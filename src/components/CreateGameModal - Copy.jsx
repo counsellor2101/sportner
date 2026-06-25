@@ -4,6 +4,10 @@ import api from "../api/api"
 import { useMeta } from "../context/meta-context"
 import { texts } from "../i18n/texts"
 import DaySelector from "./DaySelector"
+import ProfileSetupModal from "./ProfileSetupModal"
+import { triggerPushPrompt } from "../push/pushBus"
+import { Capacitor } from "@capacitor/core"
+
 
 
 
@@ -16,8 +20,12 @@ const [errors, setErrors] = useState({})
 const { sports, cities, venues, loading } = useMeta()
 const [groups, setGroups] = useState([])
 const [groupsLoading, setGroupsLoading] = useState(false)
+const [profileModalSport, setProfileModalSport] = useState(null)
 
+const timeLineRef = useRef(null)
 
+const [creating, setCreating] = useState(false)
+const creatingRef = useRef(false)
 
 function getCityName(c){
   return lang === "bg"
@@ -38,7 +46,8 @@ const defaultForm = {
   start_time: null,
   max_players: null,
   note: "",
-  court_reserved: true
+  court_reserved: true,
+name: "" // 🔥 ADD
 }
 
 
@@ -222,24 +231,24 @@ const end_time = form.start_time
   }
 
   function moveDrag(e) {
-    if (!dragging.current) return
-    if (!sheetRef.current) return
+  if (!dragging.current) return
+  if (!sheetRef.current) return
 
-    if (e.cancelable) {
-      e.preventDefault()
-    }
-
-    currentY.current = e.touches
-      ? e.touches[0].clientY
-      : e.clientY
-
-    const diff = currentY.current - startY.current
-
-    if (diff > 0) {
-      sheetRef.current.style.transition = "none"
-      sheetRef.current.style.transform = `translateY(${diff}px)`
-    }
+  if (e.cancelable && dragging.current) {
+    e.preventDefault()
   }
+
+  currentY.current = e.touches
+    ? e.touches[0].clientY
+    : e.clientY
+
+  const diff = currentY.current - startY.current
+
+  if (diff > 0) {
+    sheetRef.current.style.transition = "none"
+    sheetRef.current.style.transform = `translateY(${diff}px)`
+  }
+}
 
   function endDrag() {
     if (!dragging.current) return
@@ -297,16 +306,16 @@ function minutesToTime(mins){
 }
 
 const BASE_MIN_TIME = 8 * 60
-const MAX_TIME = 24 * 60 + 180 // до 03:00
+const MAX_TIME = 23 * 60 + 30 // 23:30
 const STEP = 30
 
 const dynamicMinTime = (() => {
   if (!isToday(form.date)) return BASE_MIN_TIME
 
   const now = getNowMinutes()
+  const rounded = Math.ceil(now / STEP) * STEP
 
-  // закръгляме нагоре до STEP (30мин)
-  return Math.ceil(now / STEP) * STEP
+  return Math.max(BASE_MIN_TIME, rounded) // ✅ ЕДИНСТВЕН return
 })()
 
 
@@ -360,6 +369,29 @@ useEffect(() => {
   }
 }, [form.date])
 
+useEffect(() => {
+  if (!timeLineRef.current) return
+  if (!form.start_time) return
+
+  const index = Array.from({
+    length: (MAX_TIME - dynamicMinTime) / STEP + 1
+  }).findIndex((_, i) => {
+    const mins = dynamicMinTime + i * STEP
+    return minutesToTime(mins) === form.start_time
+  })
+
+  if (index === -1) return
+
+  const ITEM_WIDTH = 56
+  const GAP = 6
+
+  timeLineRef.current.scrollTo({
+    left: index * (ITEM_WIDTH + GAP),
+    behavior: "auto"
+  })
+
+}, [form.start_time, dynamicMinTime])
+
 
 function validateForm(){
 
@@ -372,15 +404,32 @@ function validateForm(){
   if (form.game_type === "group" && !form.group_id) {
     e.group_id = "Select group"}
 
+  if (form.game_type === "tournament" && !form.name) {
+  e.name = true
+}
+
   setErrors(e)
 
   return Object.keys(e).length === 0
 }
 
 
-async function handleCreate() {
+async function handleCreate(e) {
 
-  if (!validateForm()) return
+  e?.preventDefault?.()
+  e?.stopPropagation?.()
+
+  // 🔒 HARD LOCK
+  if (creatingRef.current) return
+
+  creatingRef.current = true
+  setCreating(true)
+
+  if (!validateForm()) {
+    creatingRef.current = false
+    setCreating(false)
+    return
+  }
 
   try {
 
@@ -422,7 +471,10 @@ async function handleCreate() {
       max_players: form.max_players,
       note: form.note || null,
       court_reserved: form.court_reserved ? 1 : 0,
-      group_id: form.game_type === "group" ? form.group_id : null
+      group_id: form.game_type === "group" ? form.group_id : null,
+      name: form.game_type === "tournament"
+  ? (form.name?.trim() || null)
+  : null,
     }
 
     console.log("CREATE GAME:", payload)
@@ -430,6 +482,28 @@ async function handleCreate() {
     await api.post("/games", payload)
 
     window.dispatchEvent(new Event("gamesUpdated"))
+
+window.dispatchEvent(new Event("gameCreated"))
+
+const isNative = Capacitor.isNativePlatform()
+
+if (isNative) {
+  // native (android / ios)
+  const { PushNotifications } = await import("@capacitor/push-notifications")
+
+const perm = await PushNotifications.checkPermissions()
+
+  if (perm?.receive !== "granted") {
+    triggerPushPrompt("create_game")
+  }
+
+} else {
+  // web
+  if (typeof Notification !== "undefined" && Notification.permission !== "granted") {
+    triggerPushPrompt("create_game")
+  }
+}
+
     onClose()
 
   } catch (e) {
@@ -441,6 +515,20 @@ async function handleCreate() {
     const error = e.response?.data?.error
     const status = e.response?.status
 
+if (error?.code === "SPORT_NOT_ALLOWED") {
+
+  const selectedSport = sports.find(s => s.id === form.sport_id)
+
+  setProfileModalSport({
+    sport_id: selectedSport?.id,
+    sport_name: selectedSport?.name_en,
+    sport_icon: selectedSport?.icon,
+    sport_color: selectedSport?.color
+  })
+
+  return
+}
+
     if (status === 422 && error === "Time overlap") {
       setErrors(prev => ({
         ...prev,
@@ -450,9 +538,11 @@ async function handleCreate() {
     }
 
     console.error("create game unexpected error", e)
+
+  } finally {
+    creatingRef.current = false
+    setCreating(false)
   }
-
-
 }
 
 function isFormValid(){
@@ -529,8 +619,8 @@ const sortedCities = [
 <div className="cgm-card">
 <div className={`cgm-section ${errors.sport_id ? "error" : ""}`}>
 
-  <div className="cgm-section-title">
-    {t.sport}
+  <div className="cgm-section-title1">
+    {t.cgm_sport}
   </div>
 
   <div className="cgm-row">
@@ -629,32 +719,157 @@ const sortedCities = [
 <div className="cgm-card">
 <div className="cgm-section">
 
+  <div className="cgm-section-title1">
+    {t.cgm_time}
+  </div>
+
+  
+
+
+
+
+
+{/* 🔥 Date SECTION */}
+
+<DaySelector
+  selectedDate={form.date}
+  setSelectedDate={(date) =>
+    setForm(prev => ({
+      ...prev,
+      date
+    }))
+  }
+/>
+
+
+{/* 🔥 TIME SECTION */}
+
+<div className="cgm-time-info">
+
+  <div className={`cgm-section ${errors.start_time ? "error" : ""}`}>
+
+
+
+    <div className="cgm-time-line" ref={timeLineRef}>
+
+  <div className="cgm-time-track" />
+
+  {Array.from({
+    length: (MAX_TIME - dynamicMinTime) / STEP + 1
+  }).map((_, i) => {
+
+    const mins = dynamicMinTime + i * STEP
+    const time = minutesToTime(mins)
+    const isActive = form.start_time === time
+
+    const isHour = mins % 60 === 0
+
+    return (
+      <div
+        key={time}
+        className="cgm-time-item"
+        onClick={() => {
+          setForm(prev => ({
+            ...prev,
+            start_time: time
+          }))
+
+          setErrors(prev => ({
+            ...prev,
+            start_time: null
+          }))
+        }}
+      >
+        <div
+          className={`
+            cgm-time-label
+            ${isHour ? "hour" : "half"}
+            ${isActive ? "active" : ""}
+          `}
+        >
+          {time}
+        </div>
+      </div>
+    )
+  })}
+
+</div>
+
+    {/* 🔴 error ВЪТРЕ */}
+    {errors.start_time && (
+      <div className="cgm-error">
+        {errors.start_time}
+      </div>
+    )}
+
+  </div>
+    
+
+
+  <div className="cgm-row-wrap">
+    {[30,60,90,120].map(d => (
+      <div
+        key={d}
+        onClick={() => setDuration(d)}
+        className={`cgm-chip ${duration === d ? "active" : ""}`}
+      >
+        {d}m
+      </div>
+    ))}
+  </div>
+<div className="cgm-time-row">
+      
+ <div className="cgm-row-icon">
+<img src="/images/clock_icon.png" alt="time"/></div>
+{t.start} {form.start_time} - {t.end} {end_time}
+    </div>
+
+
+
+
+
+</div>
+</div>
+</div>
+
+
+
+{/* 🔥 Players SECTION */}
+<div className="cgm-card">
+<div className="cgm-section">
+
+  <div className="cgm-section-title1">
+    {t.cgm_setup}
+  </div>
+
+
+
   <div className="cgm-section-title">
     {t.game_type}
   </div>
-
-  <div className="cgm-row">
+<div className="cgm-row">
 
     {["public","group","tournament"].map(type => {
 
-      const isDisabled = type === "tournament"
+      
       const isActive = form.game_type === type
 
       return (
         <div
           key={type}
           onClick={() => {
-            if (isDisabled) return
+            
 
             setForm(prev => ({
               ...prev,
               game_type: type,
-  group_id: null // 🔥 важно
+              group_id: null,
+              name: type === "tournament" ? prev.name : "" // 🔥 важно
             }))
           }}
           className={`cgm-chip 
             ${isActive ? "active" : ""} 
-            ${isDisabled ? "disabled" : ""}
+            
           `}
         >
           {t[`game_type_${type}`]}
@@ -664,7 +879,39 @@ const sortedCities = [
 
   </div>
 
+{form.game_type === "tournament" && (
+  <div className={`cgm-section ${errors.name ? "error" : ""}`}>
 
+    <div className="cgm-section-title">
+      {t.tournament_name}
+    </div>
+
+    <input
+      type="text"
+      className="cgm-note-input"
+      placeholder={t.tournament_name_placeholder}
+      value={form.name || ""}
+      onChange={(e) => {
+        setForm(prev => ({
+          ...prev,
+          name: e.target.value
+        }))
+
+        setErrors(prev => ({
+          ...prev,
+          name: null
+        }))
+      }}
+    />
+
+    {errors.name && (
+      <div className="cgm-error">
+        {t.tournament_name_error}
+      </div>
+    )}
+
+  </div>
+)}
 
 
 {/* 🔥 Group SECTION */}
@@ -675,7 +922,10 @@ const sortedCities = [
   <div className={`cgm-section ${errors.group_id ? "error" : ""}`}>
 
     <div className="cgm-section-title">
-      Select group
+
+    {t.filter_group}
+
+
     </div>
 
     {groupsLoading && (
@@ -696,7 +946,7 @@ const sortedCities = [
           return (
             <div
               key={g.id}
-              className={`cgm-chip ${isActive ? "active" : ""}`}
+              className={`cgm-chip cgm-venue-chip ${isActive ? "active" : ""}`}
               onClick={() => {
                 setForm(prev => ({
                   ...prev,
@@ -724,122 +974,38 @@ const sortedCities = [
 
   </div>
 )}
- </div>
 
-
-
-
-
-{/* 🔥 Date SECTION */}
-
-<DaySelector
-  selectedDate={form.date}
-  setSelectedDate={(date) =>
-    setForm(prev => ({
-      ...prev,
-      date
-    }))
-  }
-/>
-
-
-{/* 🔥 TIME SECTION */}
-
-<div className="cgm-time-info">
-
-  <div className={`cgm-section ${errors.start_time ? "error" : ""}`}>
-
-    <div className="cgm-section-title">
-      {t.start}: {form.start_time}
-    </div>
-
-    <input
-      type="range"
-      min={dynamicMinTime}
-      max={MAX_TIME}
-      step={STEP}
-      value={timeToMinutes(form.start_time || getNowTimeRounded())}
-      onChange={(e) => {
-        const mins = Number(e.target.value)
-
-        setForm(prev => ({
-          ...prev,
-          start_time: minutesToTime(mins)
-        }))
-
-        // 🔥 маха error веднага
-        setErrors(prev => ({
-          ...prev,
-          start_time: null
-        }))
-      }}
-      className="cgm-slider"
-    />
-
-    {/* 🔴 error ВЪТРЕ */}
-    {errors.start_time && (
-      <div className="cgm-error">
-        {errors.start_time}
-      </div>
-    )}
-
+        <div className="cgm-section-title">
+    {t.player_details}
   </div>
+  <div className="cgm-time-line">
 
-  <div className="cgm-time-row">
-    {t.end}: {end_time}
-  </div>
+  {Array.from({ length: 19 }).map((_, i) => {
 
-  <div className="cgm-row-wrap">
-    {[30,60,90,120].map(d => (
+    const num = i + 2 // 2 → 20
+    const isActive = form.max_players === num
+
+    return (
       <div
-        key={d}
-        onClick={() => setDuration(d)}
-        className={`cgm-chip ${duration === d ? "active" : ""}`}
+        key={num}
+        className="cgm-time-item"
+        onClick={() => {
+          setPlayersTouched(true)
+
+          setForm(prev => ({
+            ...prev,
+            max_players: num
+          }))
+        }}
       >
-        {d}m
+        <div className={`cgm-time-label ${isActive ? "active" : ""}`}>
+          {num}
+        </div>
       </div>
-    ))}
-  </div>
+    )
+  })}
 
 </div>
-</div>
-
-
-
-
-{/* 🔥 Players SECTION */}
-<div className="cgm-card">
-<div className="cgm-section">
-
-  <div className="cgm-section-title">
-    {t.players}
-  </div>
-
-  <div className="cgm-row">
-
-    {[2,4,6,8].map(num => {
-console.log("RENDER:", form.max_players, typeof form.max_players, num)
-  const isActive = form.max_players === num
-
-  return (
-    <div
-      key={num}
-      onClick={() => {
-        setPlayersTouched(true)
-
-        setForm(prev => ({
-          ...prev,
-          max_players: num
-        }))
-      }}
-      className={`cgm-chip ${isActive ? "active" : ""}`}
-    >
-      {num}
-    </div>
-  )
-})}
-
-  </div>
 
 </div>
 
@@ -952,14 +1118,14 @@ console.log("RENDER:", form.max_players, typeof form.max_players, num)
 
 <div className="cgm-card">
 
-  <div className="gdm-note-card">
 
-    <div className="gdm-note-title">
+
+    <div className="cgm-section-title">
       {t.note}
     </div>
 
     <textarea
-      className="gdm-note-input"
+      className="cgm-note-input"
       placeholder={t.note_placeholder}
       value={form.note}
       onChange={(e) =>
@@ -968,21 +1134,21 @@ console.log("RENDER:", form.max_players, typeof form.max_players, num)
           note: e.target.value
         }))
       }
-      rows={3}
+      rows={2}
       maxLength={120}
     />
 
-    <div className="gdm-note-footer">
-      <div className="gdm-note-hint">
+    <div className="cgm-note-footer">
+      <div className="cgm-note-hint">
         {t.note_hint || ""}
       </div>
 
-      <div className="gdm-note-count">
+      <div className="cgm-note-count">
         {form.note.length}/120
       </div>
     </div>
 
-  </div>
+
 
 </div>
 
@@ -992,27 +1158,28 @@ console.log("RENDER:", form.max_players, typeof form.max_players, num)
 <button
   className="cgm-create-btn"
   onClick={handleCreate}
-  disabled={!isFormValid()}
+  disabled={
+  !isFormValid() ||
+  creating
+}
 >
-  {t.create_game}
+  {creating ? t.creating_game : t.create_game}
 </button>
 
 </div>
 
 
-
-
-          <div className="cgm-debug">
-            {initialData?.date?.toString()}
-            <br />
-            {initialData?.start_time}
-          </div>
-
-          {/* 🔜 тук ще идват полетата */}
-
         </div>
 
       </div>
+
+
+{profileModalSport && (
+  <ProfileSetupModal
+    sport={profileModalSport}
+    onClose={() => setProfileModalSport(null)}
+  />
+)}
 
     </div>
   )
